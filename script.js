@@ -38,7 +38,13 @@ function createBoard() {
 
       cell.classList.add("cell");
       cell.id = `cell_${row}_${col}`;
-      cell.addEventListener("click", () => revealCell(row, col));
+      cell.addEventListener("click", () => {
+        if (board[`${row},${col}`].adjacentMines === 0) {
+          revealAdjacentZeros(row, col);
+        } else {
+          revealCell(row, col);
+        }
+      });
       cell.addEventListener("contextmenu", (e) => {
         e.preventDefault();
         toggleFlag(row, col);
@@ -94,11 +100,24 @@ function initializeBoard() {
 //handles creation of each cell, mine placment and default rules.
 function createCell(row, col) {
   const isMine = Math.random() < mineDensity;
+  let adjacentMines = 0;
+  for (let di = -1; di <= 1; di++) {
+    for (let dj = -1; dj <= 1; dj++) {
+      if (di === 0 && dj === 0) continue;
+      if (
+        board[`${row + di},${col + dj}`] &&
+        board[`${row + di},${col + dj}`].isMine
+      ) {
+        adjacentMines++;
+      }
+    }
+  }
   return {
     isMine: isMine,
     isRevealed: false,
     isFlagged: false,
-    adjacentMines: 0,
+    adjacentMines: adjacentMines,
+    isVisited: false,
   };
 }
 
@@ -125,7 +144,6 @@ function revealCell(row, col, directClick = true) {
   if (gameOver || !board[`${row},${col}`]) return;
   if (board[`${row},${col}`].isRevealed || board[`${row},${col}`].isFlagged)
     return;
-
   const cell = document.getElementById(`cell_${row}_${col}`);
   if (cell) {
     board[`${row},${col}`].isRevealed = true;
@@ -334,9 +352,15 @@ function showToast(message) {
     toast.style.display = "block";
   }
 }
+//hide the toast
+function hideToast() {
+  const toast = document.getElementById("submit-score");
+  toast.style.display = "none";
+}
 
 //restarts game
 function restartGame() {
+  hideToast();
   localStorage.removeItem("minesweeperGameState");
   initializeBoard();
 }
