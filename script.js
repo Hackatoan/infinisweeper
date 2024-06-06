@@ -2,7 +2,7 @@
 let board = {};
 let offsetX = 0;
 let offsetY = 0;
-const cellSize = 100;
+let cellSize = calculateCellSize();
 const mineDensity = 0.2;
 
 //position elements
@@ -23,6 +23,8 @@ document.addEventListener("keydown", handleKeyEvents);
 
 //board creation
 //creates the board
+//creates the board
+// Create the board
 function createBoard() {
   const { rows, cols } = getViewportSize();
   const boardContainer = document.getElementById("board");
@@ -38,6 +40,8 @@ function createBoard() {
 
       cell.classList.add("cell");
       cell.id = `cell_${row}_${col}`;
+      cell.style.width = `${cellSize}px`;
+      cell.style.height = `${cellSize}px`;
       cell.addEventListener("click", () => {
         if (board[`${row},${col}`].adjacentMines === 0) {
           revealAdjacentZeros(row, col);
@@ -71,8 +75,25 @@ function createBoard() {
     }
   }
 }
-//creates the starting board
+
+//calc cell size
+function calculateCellSize() {
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+
+  const maxCols = 20; // Adjust the number of columns
+  const maxRows = 20; // Adjust the number of rows
+
+  const cellSizeWidth = viewportWidth / maxCols;
+  const cellSizeHeight = viewportHeight / maxRows;
+
+  // Use the smaller of the two to ensure the entire board fits
+  return Math.floor(Math.min(cellSizeWidth, cellSizeHeight));
+}
+
+//initializes the board
 function initializeBoard() {
+  cellSize = calculateCellSize();
   board = {};
   score = 0;
   gameOver = false;
@@ -336,18 +357,17 @@ function loadGameState() {
 
 //scoreboard logic
 //sumbits score to leaderboard
+// Replace this function in your JavaScript code
 function submitScore() {
   const username = document.getElementById("username").value.trim();
   if (username === "") {
-    alert("Please enter a username");
+    showNotification("Please enter a username");
     return;
   }
   /* 
-    
-    implement database code here.
-
-    */
-  alert("submitted");
+     Implement database code here.
+  */
+  showNotification("Score submitted successfully!");
 }
 
 //leaderboard button
@@ -364,6 +384,8 @@ function showToast(message) {
   if (gameOver && message.includes("Game Over!")) {
     // Show the submit score popup before showing the actual toast
     document.getElementById("submit-score").style.display = "block";
+    document.getElementById("toast").style.display = "block";
+
     document
       .getElementById("submit-score-button")
       .addEventListener("click", () => {
@@ -377,6 +399,8 @@ function showToast(message) {
 //hide the toast
 function hideToast() {
   const toast = document.getElementById("submit-score");
+  document.getElementById("toast").style.display = "none";
+
   toast.style.display = "none";
 }
 
@@ -472,9 +496,22 @@ function smoothScrollTo(targetX, targetY, duration) {
   requestAnimationFrame(scrollAnimation);
 }
 
-//determines if window sizes changes and updates view
-window.addEventListener("resize", updateBoardView);
+//notifications
+function showNotification(message) {
+  const notification = document.getElementById("notification");
+  notification.textContent = message;
+  notification.classList.add("show");
 
+  setTimeout(() => {
+    notification.classList.remove("show");
+  }, 3000); // Hide after 3 seconds
+}
+
+//determines if window sizes changes and updates view
+window.addEventListener("resize", () => {
+  cellSize = calculateCellSize();
+  updateBoardView();
+});
 //when the page is loaded is loads saved game, then updates view.
 document.addEventListener("DOMContentLoaded", () => {
   const gameLoaded = loadGameState();
