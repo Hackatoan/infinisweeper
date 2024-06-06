@@ -7,7 +7,7 @@ body {
     margin:0;
     position:relative}
 .board {
-    background-color:#333;
+    background-color:#333333;
     background-color:#000;
     display:grid;
     display:grid;
@@ -19,7 +19,7 @@ body {
     align-items:center;
     align-items:center;
     background-color:#fff;
-    background-color:lightgray;
+    background-color:rgb(217, 255, 0);
     cursor:pointer;
     cursor:pointer;
     display:flex;
@@ -30,15 +30,15 @@ body {
     justify-content:center;
     width:30px}
 .cell.revealed {
-    background-color:#ddd;
-    background-color:#fff;
+    background-color:#005f00;
+    background-color:#035811;
     cursor:default}
 .cell.mine {
     background-color:red;
     background-color:red}
 .cell.flagged {
-    background-color:#ff0;
-    background-color:#ff0}
+    background-color:rgb(255, 255, 255);
+    background-color:rgb(255, 255, 255)}
 .score-overlay {
     background-color:#000000b3;
     background-color:#000000b3;
@@ -85,9 +85,14 @@ body {
     top:10px;
     z-index:1000}
 .leaderboard-btn {
+    background-color:#add8e6;
+    cursor:pointer;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
     cursor:pointer;
     font-size:16px;
-    left:120px;
+    left:90px;
     padding:10px;
     position:absolute;
     top:10px}

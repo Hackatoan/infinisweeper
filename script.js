@@ -48,7 +48,7 @@ function createCell(row, col) {
     };
 }
 
-function revealCell(row, col) {
+function revealCell(row, col, directClick = true) {
     if (gameOver || !board[`${row},${col}`]) return;
     if (board[`${row},${col}`].isRevealed || board[`${row},${col}`].isFlagged) return;
 
@@ -61,6 +61,10 @@ function revealCell(row, col) {
             cell.classList.add('mine');
             gameOver = true;
             showToast('Game Over! You hit a mine.');
+            if (directClick) {
+                // If the cell was directly clicked, update leaderboard
+                //submitScore();
+            }
         } else {
             const adjacentMines = calculateAdjacentMines(row, col);
             cell.innerHTML = adjacentMines > 0 ? adjacentMines : '';
@@ -74,10 +78,13 @@ function revealCell(row, col) {
             startingPosition = { row, col };
         }
         lastRevealedPosition = { row, col };
-        incrementScore();
+        if (directClick) {
+            incrementScore();
+        }
         saveGameState();
     }
 }
+
 
 function revealAdjacentZeros(row, col) {
     const queue = [];
@@ -88,7 +95,7 @@ function revealAdjacentZeros(row, col) {
         const { row, col } = queue.shift();
         if (!visited.has(`${row},${col}`)) {
             visited.add(`${row},${col}`);
-            revealCell(row, col);
+            revealCell(row, col, false); // Pass false to indicate it's not a direct click
 
             for (let i = row - 1; i <= row + 1; i++) {
                 for (let j = col - 1; j <= col + 1; j++) {
@@ -96,13 +103,15 @@ function revealAdjacentZeros(row, col) {
                     if (isInBounds(i, j) && calculateAdjacentMines(i, j) === 0) {
                         queue.push({ row: i, col: j });
                     } else if (isInBounds(i, j) && !board[`${i},${j}`].isMine && !board[`${i},${j}`].isRevealed) {
-                        revealCell(i, j);
+                        // Only reveal non-mine cells that are not already revealed
+                        revealCell(i, j, false);
                     }
                 }
             }
         }
     }
 }
+
 
 
 function isInBounds(row, col) {
@@ -205,7 +214,19 @@ function handleKeyEvents(event) {
     } else if (key === 'ArrowRight') {
         offsetX++;
         moved = true;
-    } else if (key === 's' && startingPosition) {
+    } else if (key === 'w') {
+        offsetY--;
+        moved = true;
+    } else if (key === 's') {
+        offsetY++;
+        moved = true;
+    } else if (key === 'a') {
+        offsetX--;
+        moved = true;
+    } else if (key === 'd') {
+        offsetX++;
+        moved = true;
+    } else if (key === 'c' && startingPosition) {
         moveToCenter(startingPosition);
     } else if (key === 'l') {
         moveToCenter(lastRevealedPosition);
@@ -237,9 +258,18 @@ function incrementScore() {
 
 function showToast(message) {
     const toast = document.getElementById('toast');
-    toast.textContent = message;
-    toast.style.display = 'block';
+    if (gameOver && message.includes('Game Over!')) {
+        // Show the submit score popup before showing the actual toast
+        document.getElementById('submit-score').style.display = 'block';
+        document.getElementById('submit-score').addEventListener('click', () => {
+            submitScore();
+        });
+    } else {
+        toast.textContent = message;
+        toast.style.display = 'block';
+    }
 }
+
 
 function restartGame() {
     localStorage.removeItem('minesweeperGameState');
@@ -326,26 +356,12 @@ function submitScore() {
         alert("Please enter a username");
         return;
     }
-  
-    fetch('https://script.google.com/macros/s/AKfycbyxdcUgDpw2rBRHySPGhKUk0L-1RI5r3FMW5W7EdGSZUU2Nlxvk-WHGO77TUd5ACycSow/exec', {
-    method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ username: username, score: score })
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(data => {
-      window.location.href = 'leaderboard.html';
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
+    /* 
+    
+    implement database code here.
+    
+    */
+    alert("submitted");
   }
 
 function restartGame() {
