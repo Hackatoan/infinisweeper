@@ -1,6 +1,5 @@
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/hackatoa)
 
-
 # InfiniSweeper
 
 A limitless Minesweeper experience where score reigns supreme!
@@ -24,7 +23,7 @@ InfiniSweeper takes the classic Minesweeper formula and throws in a dash of infi
 
 ## How to Play
 
-1. Visit the InfiniSweeper webpage ([here](https://hackatoa.com/infinisweeper/)).
+1. Visit the InfiniSweeper webpage ([here](https://infinisweeper.hackatoa.com/)).
 2. Move around the grid using arrow keys or WASD.
 3. Left-click to reveal a cell. Be cautious, as clicking a mine will end your run.
 4. Right-click to mark a cell as suspected to contain a mine.
