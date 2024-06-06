@@ -178,6 +178,7 @@ function revealCell(row, col, directClick = true) {
   if (gameOver || !board[`${row},${col}`]) return;
   if (board[`${row},${col}`].isRevealed || board[`${row},${col}`].isFlagged)
     return;
+
   const cell = document.getElementById(`cell_${row}_${col}`);
   if (cell) {
     board[`${row},${col}`].isRevealed = true;
@@ -189,7 +190,7 @@ function revealCell(row, col, directClick = true) {
       showToast("Game Over! You hit a mine.");
       if (directClick) {
         // If the cell was directly clicked, update leaderboard
-        //submitScore();
+        // submitScore();
       }
     } else {
       const adjacentMines = calculateAdjacentMines(row, col);
@@ -222,19 +223,22 @@ function revealAdjacentZeros(row, col) {
       visited.add(`${row},${col}`);
       revealCell(row, col, false); // Pass false to indicate it's not a direct click
 
-      // Check adjacent cells
-      for (let i = row - 1; i <= row + 1; i++) {
-        for (let j = col - 1; j <= col + 1; j++) {
-          if (i === row && j === col) continue;
-          if (isInBounds(i, j) && calculateAdjacentMines(i, j) === 0) {
-            queue.push({ row: i, col: j });
-          } else if (
-            isInBounds(i, j) &&
-            !board[`${i},${j}`].isMine &&
-            !board[`${i},${j}`].isRevealed
-          ) {
-            // Only reveal non-mine cells that are not already revealed
-            revealCell(i, j, false);
+      // Only reveal adjacent cells if the current cell's adjacent mines count is zero
+      if (calculateAdjacentMines(row, col) === 0) {
+        // Check adjacent cells
+        for (let i = row - 1; i <= row + 1; i++) {
+          for (let j = col - 1; j <= col + 1; j++) {
+            if (i === row && j === col) continue;
+            if (isInBounds(i, j) && calculateAdjacentMines(i, j) === 0) {
+              queue.push({ row: i, col: j });
+            } else if (
+              isInBounds(i, j) &&
+              !board[`${i},${j}`].isMine &&
+              !board[`${i},${j}`].isRevealed
+            ) {
+              // Only reveal non-mine cells that are not already revealed
+              revealCell(i, j, false);
+            }
           }
         }
       }
