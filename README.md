@@ -17,6 +17,7 @@ InfiniSweeper takes the classic Minesweeper formula and throws in a dash of infi
 
 - **Leaderboard System:** Compete against other players and see who can conquer the infinite minefield.
 - **Quick Clear:** Simplify safe areas by automatically revealing cells once enough flags are placed around them.
+- **Peformance:** vastly improve loading times and overall performance.
 
 ## How to Play
 
