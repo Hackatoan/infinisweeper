@@ -26,11 +26,11 @@ body {
   cursor: pointer;
   display: flex;
   display: flex;
-  font-size: 16px;
-  height: 30px;
+  font-size: 50wpx;
+  height: 100px;
   justify-content: center;
   justify-content: center;
-  width: 30px;
+  width: 100px;
 }
 .cell.revealed {
   background-color: #005f00;

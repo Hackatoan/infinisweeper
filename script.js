@@ -2,7 +2,7 @@
 let board = {};
 let offsetX = 0;
 let offsetY = 0;
-const cellSize = 30;
+const cellSize = 100;
 const mineDensity = 0.2;
 
 //position elements
@@ -14,7 +14,7 @@ let score = 0;
 let gameOver = false;
 
 //how many time game attempts to save
-const debouncedSaveGameState = debounce(saveGameState, 300);
+const debouncedSaveGameState = debounce(saveGameState, 600);
 
 //enable key events
 document.addEventListener("keydown", handleKeyEvents);
@@ -179,8 +179,7 @@ function revealCell(row, col, directClick = true) {
 
 //exposes all adjacent zeros.
 function revealAdjacentZeros(row, col) {
-  const queue = [];
-  queue.push({ row, col });
+  const queue = [{ row, col }];
   const visited = new Set();
 
   while (queue.length > 0) {
@@ -189,6 +188,7 @@ function revealAdjacentZeros(row, col) {
       visited.add(`${row},${col}`);
       revealCell(row, col, false); // Pass false to indicate it's not a direct click
 
+      // Check adjacent cells
       for (let i = row - 1; i <= row + 1; i++) {
         for (let j = col - 1; j <= col + 1; j++) {
           if (i === row && j === col) continue;
