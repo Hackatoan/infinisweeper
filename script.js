@@ -76,18 +76,31 @@ function initializeBoard() {
   board = {};
   score = 0;
   gameOver = false;
-  offsetX = 0;
-  offsetY = 0;
   startingPosition = null;
   lastRevealedPosition = { row: 0, col: 0 };
   document.getElementById("score-overlay").textContent = `Score: ${score}`;
   document.getElementById("toast").style.display = "none";
 
   const { rows, cols } = getViewportSize();
-  for (let i = -rows; i <= rows; i++) {
-    for (let j = -cols; j <= cols; j++) {
-      if (!board[`${i},${j}`]) {
-        board[`${i},${j}`] = createCell(i, j);
+
+  // Set offsetX and offsetY to position the middle cell of the viewport
+  offsetX = Math.floor(-cols / 2);
+  offsetY = Math.floor(-rows / 2);
+
+  // Calculate the coordinates of the middle cell
+  const middleCellRow = Math.floor(rows / 2) + offsetY;
+  const middleCellCol = Math.floor(cols / 2) + offsetX;
+
+  // Set startingPosition to the coordinates of the middle cell
+  startingPosition = { row: middleCellRow, col: middleCellCol };
+
+  // Generate the initial board with the calculated offsetX and offsetY
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      const row = offsetY + i;
+      const col = offsetX + j;
+      if (!board[`${row},${col}`]) {
+        board[`${row},${col}`] = createCell(row, col);
       }
     }
   }
@@ -228,6 +241,8 @@ function handleKeyEvents(event) {
 
   const key = event.key;
   let moved = false;
+  let targetX = window.scrollX;
+  let targetY = window.scrollY;
   if (key === "ArrowUp") {
     offsetY--;
     moved = true;
@@ -257,7 +272,9 @@ function handleKeyEvents(event) {
   } else if (key === "l") {
     moveToCenter(lastRevealedPosition);
   }
+
   if (moved) {
+    smoothScrollTo(targetX, targetY, 5000); // Adjust duration as needed
     updateBoardView();
   }
 }
@@ -265,8 +282,13 @@ function handleKeyEvents(event) {
 //moves view to center of board
 function moveToCenter(position) {
   const { rows, cols } = getViewportSize();
-  offsetX = position.col - Math.floor(cols / 2);
-  offsetY = position.row - Math.floor(rows / 2);
+
+  // Check if a starting position has been set
+  if (startingPosition) {
+    offsetX = position.col - Math.floor(cols / 2);
+    offsetY = position.row - Math.floor(rows / 2);
+  }
+
   updateBoardView();
 }
 
@@ -424,6 +446,31 @@ function debounce(func, delay) {
 }
 
 //end of helper functions
+
+//smooth scrolling
+
+function smoothScrollTo(targetX, targetY, duration) {
+  const startX = window.scrollX || window.pageXOffset;
+  const startY = window.scrollY || window.pageYOffset;
+  const distanceX = targetX - startX;
+  const distanceY = targetY - startY;
+  const startTime = performance.now();
+
+  function scrollAnimation(currentTime) {
+    const elapsedTime = currentTime - startTime;
+    const progress = Math.min(elapsedTime / duration, 1);
+    const easeProgress = easeInOut(progress);
+    const scrollX = startX + distanceX * easeProgress;
+    const scrollY = startY + distanceY * easeProgress;
+    window.scrollTo(scrollX, scrollY);
+
+    if (elapsedTime < duration) {
+      requestAnimationFrame(scrollAnimation);
+    }
+  }
+
+  requestAnimationFrame(scrollAnimation);
+}
 
 //determines if window sizes changes and updates view
 window.addEventListener("resize", updateBoardView);
