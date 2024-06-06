@@ -1,3 +1,6 @@
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/hackatoa)
+
+
 # InfiniSweeper
 
 A limitless Minesweeper experience where score reigns supreme!
