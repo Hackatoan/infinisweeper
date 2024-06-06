@@ -287,7 +287,9 @@ function loadGameState() {
     if (gameOver) {
       showToast("Game Over! You hit a mine.");
     }
+    return true; // Return true to indicate that the game state was loaded
   }
+  return false; // Return false if no game state was loaded
 }
 
 //end of save logic
@@ -404,8 +406,8 @@ window.addEventListener("resize", updateBoardView);
 
 //when the page is loaded is loads saved game, then updates view.
 document.addEventListener("DOMContentLoaded", () => {
-  loadGameState();
-  updateBoardView();
+  const gameLoaded = loadGameState();
+  if (!gameLoaded) {
+    initializeBoard();
+  }
 });
-
-initializeBoard();
