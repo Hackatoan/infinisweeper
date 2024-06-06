@@ -1,8 +1,8 @@
 let board = {};
 let offsetX = 0;
 let offsetY = 0;
-const viewPortSize = 20;
-const cellSize = 30;
+const viewPortSize = 40;
+const cellSize = 50;
 const mineDensity = 0.2;
 
 let startingPosition = null;
