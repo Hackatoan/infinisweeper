@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinite Minesweeper</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="board" class="board"></div>
+    <div id="toast" class="toast">Game Over! You hit a mine.</div>
+    <div id="score-overlay" class="score-overlay">Score: 0</div>
+    <button id="restart-btn" class="restart-btn" onclick="restartGame()">Restart</button>
+    <button id="leaderboard-btn" class="leaderboard-btn" onclick="gotoleaderboard()">Leaderboard</button>
+    <div id="submit-score" class="submit-score" style="display: none;">
+        <input type="text" id="username" placeholder="Enter your username">
+        <button onclick="submitScore()">Submit Score</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
