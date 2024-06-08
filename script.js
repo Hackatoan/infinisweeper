@@ -81,8 +81,8 @@ function calculateCellSize() {
   const viewportWidth = window.innerWidth;
   const viewportHeight = window.innerHeight;
 
-  const maxCols = 20; // Adjust the number of columns
-  const maxRows = 20; // Adjust the number of rows
+  const maxCols = 10; // Adjust the number of columns
+  const maxRows = 10; // Adjust the number of rows
 
   const cellSizeWidth = viewportWidth / maxCols;
   const cellSizeHeight = viewportHeight / maxRows;
