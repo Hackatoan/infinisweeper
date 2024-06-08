@@ -211,35 +211,46 @@ function revealCell(row, col, directClick = true) {
 //exposes all adjacent zeros.
 function revealAdjacentZeros(row, col) {
   const queue = [{ row, col }];
-  const visited = new Set();
+  const visited = new Set([`${row},${col}`]);
+  const cellsToUpdate = [];
 
   while (queue.length > 0) {
     const { row, col } = queue.shift();
-    if (!visited.has(`${row},${col}`)) {
-      visited.add(`${row},${col}`);
-      revealCell(row, col, false); // Pass false to indicate it's not a direct click
+    const key = `${row},${col}`;
+    if (board[key].isMine || board[key].isRevealed) continue;
 
-      // Only reveal adjacent cells if the current cell's adjacent mines count is zero
-      if (calculateAdjacentMines(row, col) === 0) {
-        // Check adjacent cells
-        for (let i = row - 1; i <= row + 1; i++) {
-          for (let j = col - 1; j <= col + 1; j++) {
-            if (i === row && j === col) continue;
-            if (isInBounds(i, j) && calculateAdjacentMines(i, j) === 0) {
-              queue.push({ row: i, col: j });
-            } else if (
-              isInBounds(i, j) &&
-              !board[`${i},${j}`].isMine &&
-              !board[`${i},${j}`].isRevealed
-            ) {
-              // Only reveal non-mine cells that are not already revealed
-              revealCell(i, j, false);
-            }
+    board[key].isRevealed = true;
+    cellsToUpdate.push({ row, col });
+
+    if (board[key].adjacentMines === 0) {
+      for (let di = -1; di <= 1; di++) {
+        for (let dj = -1; dj <= 1; dj++) {
+          const newRow = row + di;
+          const newCol = col + dj;
+          const newKey = `${newRow},${newCol}`;
+
+          if (
+            (di !== 0 || dj !== 0) &&
+            isInBounds(newRow, newCol) &&
+            !visited.has(newKey)
+          ) {
+            queue.push({ row: newRow, col: newCol });
+            visited.add(newKey);
           }
         }
       }
     }
   }
+
+  // Batch update the DOM
+  cellsToUpdate.forEach(({ row, col }) => {
+    const cell = document.getElementById(`cell_${row}_${col}`);
+    if (cell) {
+      cell.classList.add("revealed");
+      const adjacentMines = board[`${row},${col}`].adjacentMines;
+      cell.textContent = adjacentMines > 0 ? adjacentMines : "";
+    }
+  });
 }
 
 //allows user to mark a cell as having a flag
