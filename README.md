@@ -16,10 +16,10 @@ InfiniSweeper takes the classic Minesweeper formula and throws in a dash of infi
 - **Basic Mechanics:** Use arrow keys or WASD to move, click to reveal a cell, and right-click to mark a suspected mine.
 - **Quick Navigation:** Jump to the board's center with the "C" key or revisit your last click with "L".
 - **Quick click:** click on blank/zero cells to complete the area surrounding it. usefull for starting conditions.
+- **Leaderboard System:** Compete against other players and see who can conquer the infinite minefield.
 
 ## Upcoming Features
 
-- **Leaderboard System:** Compete against other players and see who can conquer the infinite minefield.
 - **Peformance:** vastly improve loading times and overall performance.
 
 ## How to Play
