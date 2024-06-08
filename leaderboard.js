@@ -30,7 +30,7 @@ function renderLeaderboard(doc, leaderboardElement) {
   let viewBtn = document.createElement("button");
   viewBtn.textContent = "VIEW";
   viewBtn.addEventListener("click", () => {
-    handleViewSaveState(data.Gamestate); // Call a function to handle viewing save state
+    handleViewSaveState(data.gamestate); // Call a function to handle viewing save state
   });
 
   // Append the view button to the list item
