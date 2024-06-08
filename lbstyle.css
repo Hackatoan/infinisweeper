@@ -60,11 +60,28 @@ h2 {
   text-align: center;
   color: rgb(224, 170, 170);
 }
+h1 {
+  text-shadow: -1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000,
+    -1px -1px 0 #000;
+  font-size: 2.5vw;
+}
 body {
-  background-color: rgb(43, 24, 1);
+  background: linear-gradient(
+      45deg,
+      #dca 12%,
+      transparent 0,
+      transparent 88%,
+      #dca 0
+    ),
+    linear-gradient(135deg, transparent 37%, #a85 0, #a85 63%, transparent 0),
+    linear-gradient(45deg, transparent 37%, #dca 0, #dca 63%, transparent 0)
+      #753;
+  background-size: 25px 25px;
 }
 .back-btn {
-  background-color: #add8e6;
+  font-weight: bolder;
+  color: rgb(224, 170, 170);
+  background-color: #4caf50;
   border: none;
   border-radius: 5px;
   cursor: pointer;

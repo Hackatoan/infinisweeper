@@ -45,8 +45,10 @@ function createBoard() {
       cell.addEventListener("click", () => {
         if (board[`${row},${col}`].adjacentMines === 0) {
           revealAdjacentZeros(row, col);
+          updateBoardView();
         } else {
           revealCell(row, col);
+          updateBoardView();
         }
       });
       cell.addEventListener("contextmenu", (e) => {
@@ -126,8 +128,8 @@ function initializeBoard() {
     }
   }
 
-  updateBoardView();
   revealInitialZeros();
+  updateBoardView();
   saveGameState();
 }
 

@@ -23,13 +23,27 @@ html {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgb(190, 83, 164);
+  background-color: rgb(233, 134, 208);
+  background-image: repeating-linear-gradient(
+    36deg,
+    rgba(190, 83, 164, 0.25),
+    rgba(190, 83, 164, 0.25) 1px,
+    transparent 0px,
+    transparent 2px
+  );
   cursor: pointer;
   font-size: 2rem;
 }
 
 .cell.revealed {
-  background-color: #331203;
+  background-color: rgb(80, 26, 2);
+  background-image: repeating-linear-gradient(
+    36deg,
+    rgba(51, 18, 3, 0.25),
+    rgba(51, 18, 3, 0.25) 1px,
+    transparent 0px,
+    transparent 2px
+  );
   cursor: default;
   color: rgb(252, 98, 218);
 }
