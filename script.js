@@ -297,6 +297,7 @@ function handleKeyEvents(event) {
   if (moved) {
     smoothScrollTo(targetX, targetY, 5000); // Adjust duration as needed
     updateBoardView();
+    revealInitialZeros();
   }
 }
 
@@ -575,6 +576,7 @@ function submitScore() {
       gotoLeaderboard(); // Navigate to leaderboard after successful submission
     })
     .catch((error) => {
+      aa;
       console.error("Error adding document: ", error);
       showToast("Failed to submit score.");
       submitButton.disabled = false; // Re-enable the button on error
@@ -586,45 +588,4 @@ function submitScore() {
 function gotoLeaderboard() {
   console.log("Navigating to leaderboard...");
   window.location.href = "leaderboard.html"; // Change this URL to your leaderboard page
-}
-
-function generateDummyScores(numPlayers) {
-  const players = [];
-  const names = [
-    "Alice",
-    "Bob",
-    "Charlie",
-    "David",
-    "Eve",
-    "Frank",
-    "Grace",
-    "Hannah",
-    "Isaac",
-    "Julia",
-  ];
-  const maxScore = 10000; // Maximum score for dummy data
-
-  for (let i = 0; i < numPlayers; i++) {
-    const randomName = names[Math.floor(Math.random() * names.length)];
-    const randomScore = Math.floor(Math.random() * maxScore) + 1; // Generate a random score
-    const randomDate = new Date(
-      new Date() - Math.floor(Math.random() * 10000000000)
-    ); // Generate a random date within the last ~116 days
-    const randomGameState = getSaveGameState(); // Assuming getSaveGameState() returns the game state data
-
-    players.push({
-      name: randomName,
-      score: randomScore,
-      date: firebase.firestore.Timestamp.fromDate(randomDate),
-      gamestate: randomGameState,
-    });
-  }
-
-  // Add dummy players to Firestore
-  players.forEach((player) => {
-    db.collection("leaderboard")
-      .add(player)
-      .then(() => console.log("Dummy score added:", player))
-      .catch((error) => console.error("Error adding dummy score:", error));
-  });
 }

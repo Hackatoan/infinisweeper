@@ -149,62 +149,6 @@ function createCell(row, col) {
   };
 }
 
-//exposes zeros immediately in view so player doesnt have to guess initally.
-function revealInitialZeros() {
-  const { rows, cols } = getViewportSize();
-  for (let i = offsetY; i < offsetY + rows; i++) {
-    for (let j = offsetX; j < offsetX + cols; j++) {
-      if (
-        board[`${i},${j}`] &&
-        !board[`${i},${j}`].isMine &&
-        calculateAdjacentMines(i, j) === 0
-      ) {
-        revealAdjacentZeros(i, j);
-      }
-    }
-  }
-}
-//end board creation
-
-//in game events
-//reveal cell by direct click
-function revealCell(row, col, directClick = true) {
-  if (gameOver || !board[`${row},${col}`]) return;
-  if (board[`${row},${col}`].isRevealed || board[`${row},${col}`].isFlagged)
-    return;
-
-  const cell = document.getElementById(`cell_${row}_${col}`);
-  if (cell) {
-    board[`${row},${col}`].isRevealed = true;
-    cell.classList.add("revealed");
-
-    if (board[`${row},${col}`].isMine) {
-      cell.classList.add("mine");
-      gameOver = true;
-      showToast("Game Over! You hit a mine.");
-    } else {
-      const adjacentMines = calculateAdjacentMines(row, col);
-      cell.innerHTML = adjacentMines > 0 ? adjacentMines : "";
-
-      if (adjacentMines === 0) {
-        revealAdjacentZeros(row, col);
-      }
-    }
-
-    if (!startingPosition) {
-      startingPosition = { row, col };
-    }
-    lastRevealedPosition = { row, col };
-    if (directClick) {
-      incrementScore();
-    }
-  }
-}
-
-//end of game events
-
-//movement
-//key events
 function handleKeyEvents(event) {
   if (gameOver) return;
 
@@ -329,12 +273,6 @@ function calculateAdjacentMines(row, col) {
 function updateBoardView() {
   createBoard();
 }
-
-//end of helper functions
-
-//smooth scrolling
-
-//notifications
 
 //determines if window sizes changes and updates view
 window.addEventListener("resize", () => {
