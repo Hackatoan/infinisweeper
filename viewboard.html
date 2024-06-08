@@ -11,13 +11,8 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div id="notification" class="notification"></div>
     <div id="board" class="board"></div>
-    <div id="toast" class="toast">Game Over! You hit a mine.</div>
     <div id="score-overlay" class="score-overlay">Score: 0</div>
-    <button id="restart-btn" class="restart-btn" onclick="restartGame()">
-      Restart
-    </button>
     <button
       id="leaderboard-btn"
       class="leaderboard-btn"
@@ -25,13 +20,6 @@
     >
       Leaderboard
     </button>
-    <div id="submit-score" class="submit-score" style="display: none">
-      <input type="text" id="username" placeholder="Enter your username" />
-      <button id="submit-score-button">Submit Score</button>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    <script src="script.js"></script>
+    <script src="view.js"></script>
   </body>
 </html>

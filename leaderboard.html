@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="manifest" href="/site.webmanifest" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Infinisweeper Leaderboard</title>
+    <title>Leaderboard</title>
+    <link rel="stylesheet" href="lbstyle.css" />
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="leaderboard.js" defer></script>
   </head>
   <body>
-    <center><h1>Coming Soon!</h1></center>
-    <br />
+    <h1>Leaderboard</h1>
+    <div id="leaderboard-container">
+      <div class="leaderboard-section">
+        <h2 class="leaderboard-title">Leaderboard by Score</h2>
+        <ul id="leaderboard-by-score"></ul>
+      </div>
+      <div class="leaderboard-section">
+        <h2 class="leaderboard-title">Leaderboard by Most Recent</h2>
+        <ul id="leaderboard-by-recent"></ul>
+      </div>
+    </div>
+    <center>
+      <button id="back-btn" class="back-btn" onclick="gotohome()">
+        Return to Game
+      </button>
+    </center>
   </body>
-  <center>
-    <img src="android-chrome-512x512.png" alt="infinisweeper logo" />
-  </center>
-  <br />
-  <center>
-    <button onclick="gotohome()">Back</button>
-  </center>
-  <script>
-    function gotohome() {
-      window.location.href = "index.html";
-    }
-  </script>
 </html>

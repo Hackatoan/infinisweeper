@@ -14,7 +14,6 @@ let score = 0;
 let gameOver = false;
 
 //how many time game attempts to save
-const debouncedSaveGameState = debounce(saveGameState, 600);
 
 //enable key events
 document.addEventListener("keydown", handleKeyEvents);
@@ -48,10 +47,6 @@ function createBoard() {
         } else {
           revealCell(row, col);
         }
-      });
-      cell.addEventListener("contextmenu", (e) => {
-        e.preventDefault();
-        toggleFlag(row, col);
       });
 
       if (board[`${row},${col}`]) {
@@ -128,7 +123,6 @@ function initializeBoard() {
 
   updateBoardView();
   revealInitialZeros();
-  saveGameState();
 }
 
 //handles creation of each cell, mine placment and default rules.
@@ -204,53 +198,7 @@ function revealCell(row, col, directClick = true) {
     if (directClick) {
       incrementScore();
     }
-    saveGameState();
   }
-}
-
-//exposes all adjacent zeros.
-function revealAdjacentZeros(row, col) {
-  const queue = [{ row, col }];
-  const visited = new Set();
-
-  while (queue.length > 0) {
-    const { row, col } = queue.shift();
-    if (!visited.has(`${row},${col}`)) {
-      visited.add(`${row},${col}`);
-      revealCell(row, col, false); // Pass false to indicate it's not a direct click
-
-      // Only reveal adjacent cells if the current cell's adjacent mines count is zero
-      if (calculateAdjacentMines(row, col) === 0) {
-        // Check adjacent cells
-        for (let i = row - 1; i <= row + 1; i++) {
-          for (let j = col - 1; j <= col + 1; j++) {
-            if (i === row && j === col) continue;
-            if (isInBounds(i, j) && calculateAdjacentMines(i, j) === 0) {
-              queue.push({ row: i, col: j });
-            } else if (
-              isInBounds(i, j) &&
-              !board[`${i},${j}`].isMine &&
-              !board[`${i},${j}`].isRevealed
-            ) {
-              // Only reveal non-mine cells that are not already revealed
-              revealCell(i, j, false);
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-//allows user to mark a cell as having a flag
-function toggleFlag(row, col) {
-  if (gameOver || !board[`${row},${col}`]) return;
-  const cell = document.getElementById(`cell_${row}_${col}`);
-  if (cell && !board[`${row},${col}`].isRevealed) {
-    board[`${row},${col}`].isFlagged = !board[`${row},${col}`].isFlagged;
-    cell.innerHTML = board[`${row},${col}`].isFlagged ? "&#9873;" : "";
-  }
-  debouncedSaveGameState();
 }
 
 //end of game events
@@ -295,7 +243,6 @@ function handleKeyEvents(event) {
   }
 
   if (moved) {
-    smoothScrollTo(targetX, targetY, 5000); // Adjust duration as needed
     updateBoardView();
   }
 }
@@ -317,28 +264,9 @@ function moveToCenter(position) {
 
 //save progress logic
 //saves game locally.
-function saveGameState() {
-  const gameState = {
-    board,
-    offsetX,
-    offsetY,
-    startingPosition,
-    lastRevealedPosition,
-    score,
-    gameOver,
-  };
-  localStorage.setItem("minesweeperGameState", JSON.stringify(gameState));
-}
-function getSaveGameState() {
-  if (localStorage.getItem("minesweeperGameState")) {
-    return localStorage.getItem("minesweeperGameState");
-  } else {
-    console.log("error");
-  }
-}
 //loads local save game
 function loadGameState() {
-  const savedState = localStorage.getItem("minesweeperGameState");
+  const savedState = localStorage.getItem("minesweeperViewState");
   if (savedState) {
     const gameState = JSON.parse(savedState);
     board = gameState.board;
@@ -347,7 +275,7 @@ function loadGameState() {
     startingPosition = gameState.startingPosition;
     lastRevealedPosition = gameState.lastRevealedPosition;
     score = gameState.score;
-    gameOver = gameState.gameOver;
+    gameOver = false;
 
     updateBoardView();
     document.getElementById("score-overlay").textContent = `Score: ${score}`;
@@ -364,54 +292,6 @@ function loadGameState() {
 //scoreboard logic
 //sumbits score to leaderboard
 // Replace this function in your JavaScript code
-
-//leaderboard button
-function getScore() {
-  return score;
-}
-function getUsername() {
-  return document.getElementById("username").value.trim();
-}
-//end of leaderboard logic
-
-//game over events
-//shows the game over prompt
-function showToast(message) {
-  const toast = document.getElementById("toast");
-
-  // Function to handle submission after clicking the submit button
-
-  if (gameOver && message.includes("Game Over!")) {
-    // Show the submit score popup before showing the actual toast
-    document.getElementById("submit-score").style.display = "block";
-    document.getElementById("toast").style.display = "block";
-
-    // Add the event listener to the submit button (corrected)
-    document
-      .getElementById("submit-score-button")
-      .addEventListener("click", submitScore);
-  } else {
-    toast.textContent = message;
-    toast.style.display = "block";
-  }
-}
-
-//hide the toast
-function hideToast() {
-  const toast = document.getElementById("submit-score");
-  document.getElementById("toast").style.display = "none";
-
-  toast.style.display = "none";
-}
-
-//restarts game
-function restartGame() {
-  hideToast();
-  localStorage.removeItem("minesweeperGameState");
-  initializeBoard();
-}
-
-//end of endgame events
 
 //helper functions
 //determines viewing dimensions
@@ -450,68 +330,18 @@ function updateBoardView() {
   createBoard();
 }
 
-//increases score.
-function incrementScore() {
-  if (gameOver) return;
-
-  score++;
-  const scoreOverlay = document.getElementById("score-overlay");
-  scoreOverlay.textContent = `Score: ${score}`;
-  debouncedSaveGameState();
-}
-
-//creates delay to improve performance (when saving)
-function debounce(func, delay) {
-  let timeout;
-  return function (...args) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, args), delay);
-  };
-}
-
 //end of helper functions
 
 //smooth scrolling
 
-function smoothScrollTo(targetX, targetY, duration) {
-  const startX = window.scrollX || window.pageXOffset;
-  const startY = window.scrollY || window.pageYOffset;
-  const distanceX = targetX - startX;
-  const distanceY = targetY - startY;
-  const startTime = performance.now();
-
-  function scrollAnimation(currentTime) {
-    const elapsedTime = currentTime - startTime;
-    const progress = Math.min(elapsedTime / duration, 1);
-    const easeProgress = easeInOut(progress);
-    const scrollX = startX + distanceX * easeProgress;
-    const scrollY = startY + distanceY * easeProgress;
-    window.scrollTo(scrollX, scrollY);
-
-    if (elapsedTime < duration) {
-      requestAnimationFrame(scrollAnimation);
-    }
-  }
-
-  requestAnimationFrame(scrollAnimation);
-}
-
 //notifications
-function showNotification(message) {
-  const notification = document.getElementById("notification");
-  notification.textContent = message;
-  notification.classList.add("show");
-
-  setTimeout(() => {
-    notification.classList.remove("show");
-  }, 3000); // Hide after 3 seconds
-}
 
 //determines if window sizes changes and updates view
 window.addEventListener("resize", () => {
   cellSize = calculateCellSize();
   updateBoardView();
 });
+
 //when the page is loaded is loads saved game, then updates view.
 document.addEventListener("DOMContentLoaded", () => {
   const gameLoaded = loadGameState();
@@ -520,111 +350,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// script.js
-
-// Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyDxljmVtRsgUzDxmBUpG2DqKMO_y5ZwPdQ",
-  authDomain: "infinisweeper.firebaseapp.com",
-  projectId: "infinisweeper",
-  storageBucket: "infinisweeper.appspot.com",
-  messagingSenderId: "1032351039520",
-  appId: "1:1032351039520:web:a82823c12bca7a84ba7c45",
-  measurementId: "G-ZW6HN7WDTP",
-};
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-// Function to get the current score
-function getScore() {
-  return score;
-}
-
-// Function to get the current username from the input field
-function getUsername() {
-  return document.getElementById("username").value.trim();
-}
-
-// Exporting the functions for use in other scripts
-
-function gotoLeaderboard() {
-  console.log("Navigating to leaderboard...");
-  window.location.href = "leaderboard.html"; // Change this URL to your leaderboard page
-}
-
-// Flag variable to track if submission is in progress
-let isSubmitting = false;
-
-// Function to submit score
-function submitScore() {
-  const now = new Date();
-  db.collection("leaderboard")
-    .add({
-      name: getUsername(),
-      score: getScore(),
-      date: firebase.firestore.Timestamp.fromDate(now),
-      gamestate: getSaveGameState(),
-    })
-    .then(() => {
-      // Clear form fields after successful submission
-      document.getElementById("username").value = "";
-      showToast("Score submitted successfully!");
-      isSubmitting = false; // Reset the flag after submission is complete
-      gotoLeaderboard(); // Navigate to leaderboard after successful submission
-    })
-    .catch((error) => {
-      console.error("Error adding document: ", error);
-      showToast("Failed to submit score.");
-      submitButton.disabled = false; // Re-enable the button on error
-      isSubmitting = false; // Reset the flag after submission is complete (even if there's an error)
-    });
-}
-
 // Navigation function to go to leaderboard page
 function gotoLeaderboard() {
   console.log("Navigating to leaderboard...");
   window.location.href = "leaderboard.html"; // Change this URL to your leaderboard page
-}
-
-function generateDummyScores(numPlayers) {
-  const players = [];
-  const names = [
-    "Alice",
-    "Bob",
-    "Charlie",
-    "David",
-    "Eve",
-    "Frank",
-    "Grace",
-    "Hannah",
-    "Isaac",
-    "Julia",
-  ];
-  const maxScore = 10000; // Maximum score for dummy data
-
-  for (let i = 0; i < numPlayers; i++) {
-    const randomName = names[Math.floor(Math.random() * names.length)];
-    const randomScore = Math.floor(Math.random() * maxScore) + 1; // Generate a random score
-    const randomDate = new Date(
-      new Date() - Math.floor(Math.random() * 10000000000)
-    ); // Generate a random date within the last ~116 days
-    const randomGameState = getSaveGameState(); // Assuming getSaveGameState() returns the game state data
-
-    players.push({
-      name: randomName,
-      score: randomScore,
-      date: firebase.firestore.Timestamp.fromDate(randomDate),
-      gamestate: randomGameState,
-    });
-  }
-
-  // Add dummy players to Firestore
-  players.forEach((player) => {
-    db.collection("leaderboard")
-      .add(player)
-      .then(() => console.log("Dummy score added:", player))
-      .catch((error) => console.error("Error adding dummy score:", error));
-  });
 }

@@ -1,0 +1,76 @@
+/* Style for the leaderboard container */
+#leaderboard-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* Style for each leaderboard section */
+.leaderboard-section {
+  width: calc(50% - 10px); /* Adjust width and margins as needed */
+  margin-bottom: 10px;
+  background-color: #362105;
+  border-radius: 5px;
+  padding: 10px;
+  color: rgb(224, 170, 170);
+}
+
+/* Style for the leaderboard title */
+.leaderboard-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Style for the leaderboard container */
+#leaderboard-by-score,
+#leaderboard-by-recent {
+  max-height: 300px; /* Adjust the maximum height as needed */
+  overflow-y: auto; /* Enable vertical scrolling if needed */
+}
+
+/* Style for each leaderboard entry */
+#leaderboard-by-score li,
+#leaderboard-by-recent li {
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #503001;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ccc;
+}
+
+/* Style for the "View" button */
+#leaderboard-by-score li button,
+#leaderboard-by-recent li button {
+  padding: 5px 10px;
+  background-color: #4caf50;
+  color: rgb(224, 170, 170);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: bolder;
+}
+h1,
+h2 {
+  text-align: center;
+  color: rgb(224, 170, 170);
+}
+body {
+  background-color: rgb(43, 24, 1);
+}
+.back-btn {
+  background-color: #add8e6;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em; /* Corrected font size */
+  padding: 10px;
+  top: 0px;
+  height: max-content;
+  width: calc(25%);
+}
