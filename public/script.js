@@ -540,7 +540,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: process.env.apiKey,
+  apiKey: "AIzaSyDxljmVtRsgUzDxmBUpG2DqKMO_y5ZwPdQ",
   authDomain: "infinisweeper.firebaseapp.com",
   projectId: "infinisweeper",
   storageBucket: "infinisweeper.appspot.com",
