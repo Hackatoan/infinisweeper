@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 //making the board.
 let board = {};
 let offsetX = 0;
@@ -538,7 +540,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDxljmVtRsgUzDxmBUpG2DqKMO_y5ZwPdQ",
+  apiKey: process.env.apiKey,
   authDomain: "infinisweeper.firebaseapp.com",
   projectId: "infinisweeper",
   storageBucket: "infinisweeper.appspot.com",
