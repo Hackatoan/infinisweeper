@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 //making the board.
 let board = {};
 let offsetX = 0;
