@@ -22,6 +22,7 @@
   font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 /* Style for the leaderboard container */
@@ -29,6 +30,8 @@
 #leaderboard-by-recent {
   max-height: 300px; /* Adjust the maximum height as needed */
   overflow-y: auto; /* Enable vertical scrolling if needed */
+  padding: 40px;
+  padding-top: 0;
 }
 
 /* Style for each leaderboard entry */
@@ -63,7 +66,7 @@ h2 {
 h1 {
   text-shadow: -1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000,
     -1px -1px 0 #000;
-  font-size: 2.5vw;
+  font-size: 5vmax;
 }
 body {
   background: linear-gradient(
@@ -90,4 +93,10 @@ body {
   top: 0px;
   height: max-content;
   width: calc(25%);
+}
+::-webkit-scrollbar {
+  height: 300px;
+  width: 50%;
+  overflow: auto;
+  padding: 0 10px;
 }
