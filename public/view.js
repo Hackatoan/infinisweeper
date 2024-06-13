@@ -1,29 +1,17 @@
-//making the board.
 let board = {};
 let offsetX = 0;
 let offsetY = 0;
 let cellSize = calculateCellSize();
 const mineDensity = 0.2;
 
-//position elements
 let startingPosition = null;
 let lastRevealedPosition = { row: 0, col: 0 };
 
-//game state
 let score = 0;
 let gameOver = false;
 
-//how many time game attempts to save
-
-//enable key events
 document.addEventListener("keydown", handleKeyEvents);
 
-//
-
-//board creation
-//creates the board
-//creates the board
-// Create the board
 function createBoard() {
   const { rows, cols } = getViewportSize();
   const boardContainer = document.getElementById("board");
@@ -71,22 +59,19 @@ function createBoard() {
   }
 }
 
-//calc cell size
 function calculateCellSize() {
   const viewportWidth = window.innerWidth;
   const viewportHeight = window.innerHeight;
 
-  const maxCols = 20; // Adjust the number of columns
-  const maxRows = 20; // Adjust the number of rows
+  const maxCols = 20;
+  const maxRows = 20;
 
   const cellSizeWidth = viewportWidth / maxCols;
   const cellSizeHeight = viewportHeight / maxRows;
 
-  // Use the smaller of the two to ensure the entire board fits
   return Math.floor(Math.min(cellSizeWidth, cellSizeHeight));
 }
 
-//initializes the board
 function initializeBoard() {
   cellSize = calculateCellSize();
   board = {};
@@ -99,18 +84,14 @@ function initializeBoard() {
 
   const { rows, cols } = getViewportSize();
 
-  // Set offsetX and offsetY to position the middle cell of the viewport
   offsetX = Math.floor(-cols / 2);
   offsetY = Math.floor(-rows / 2);
 
-  // Calculate the coordinates of the middle cell
   const middleCellRow = Math.floor(rows / 2) + offsetY;
   const middleCellCol = Math.floor(cols / 2) + offsetX;
 
-  // Set startingPosition to the coordinates of the middle cell
   startingPosition = { row: middleCellRow, col: middleCellCol };
 
-  // Generate the initial board with the calculated offsetX and offsetY
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
       const row = offsetY + i;
@@ -125,7 +106,6 @@ function initializeBoard() {
   revealInitialZeros();
 }
 
-//handles creation of each cell, mine placment and default rules.
 function createCell(row, col) {
   const isMine = Math.random() < mineDensity;
   let adjacentMines = 0;
@@ -191,11 +171,9 @@ function handleKeyEvents(event) {
   }
 }
 
-//moves view to center of board
 function moveToCenter(position) {
   const { rows, cols } = getViewportSize();
 
-  // Check if a starting position has been set
   if (startingPosition) {
     offsetX = position.col - Math.floor(cols / 2);
     offsetY = position.row - Math.floor(rows / 2);
@@ -204,11 +182,6 @@ function moveToCenter(position) {
   updateBoardView();
 }
 
-//end of movment
-
-//save progress logic
-//saves game locally.
-//loads local save game
 function loadGameState() {
   const savedState = localStorage.getItem("minesweeperViewState");
   if (savedState) {
@@ -226,19 +199,11 @@ function loadGameState() {
     if (gameOver) {
       showToast("Game Over! You hit a mine.");
     }
-    return true; // Return true to indicate that the game state was loaded
+    return true;
   }
-  return false; // Return false if no game state was loaded
+  return false;
 }
 
-//end of save logic
-
-//scoreboard logic
-//sumbits score to leaderboard
-// Replace this function in your JavaScript code
-
-//helper functions
-//determines viewing dimensions
 function getViewportSize() {
   const width = window.innerWidth;
   const height = window.innerHeight;
@@ -247,12 +212,10 @@ function getViewportSize() {
   return { rows, cols };
 }
 
-//determines if a cell is in the current view.
 function isInBounds(row, col) {
   return board.hasOwnProperty(`${row},${col}`);
 }
 
-//determines how many mines are around a cell
 function calculateAdjacentMines(row, col) {
   let adjacentMines = 0;
   for (let di = -1; di <= 1; di++) {
@@ -269,18 +232,15 @@ function calculateAdjacentMines(row, col) {
   return adjacentMines;
 }
 
-//refreshes the board when the view port is moved.
 function updateBoardView() {
   createBoard();
 }
 
-//determines if window sizes changes and updates view
 window.addEventListener("resize", () => {
   cellSize = calculateCellSize();
   updateBoardView();
 });
 
-//when the page is loaded is loads saved game, then updates view.
 document.addEventListener("DOMContentLoaded", () => {
   const gameLoaded = loadGameState();
   if (!gameLoaded) {
@@ -288,8 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Navigation function to go to leaderboard page
 function gotoLeaderboard() {
   console.log("Navigating to leaderboard...");
-  window.location.href = "leaderboard.html"; // Change this URL to your leaderboard page
+  window.location.href = "leaderboard.html";
 }
