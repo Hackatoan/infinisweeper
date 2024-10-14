@@ -15,28 +15,52 @@ const debouncedSaveGameState = debounce(saveGameState, 600);
 document.addEventListener("keydown", handleKeyEvents);
 
 function createBoard() {
-  const extraLayers = 2; // Number of extra layers around the visible board
   const { rows, cols } = getViewportSize();
-  const extendedRows = rows + 2 * extraLayers;
-  const extendedCols = cols + 2 * extraLayers;
   const boardContainer = document.getElementById("board");
   boardContainer.innerHTML = "";
-  boardContainer.style.gridTemplateColumns = `repeat(${extendedCols}, ${cellSize}px)`;
-  boardContainer.style.gridTemplateRows = `repeat(${extendedRows}, ${cellSize}px)`;
+  boardContainer.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
+  boardContainer.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
 
-  for (let i = 0; i < extendedRows; i++) {
-    for (let j = 0; j < extendedCols; j++) {
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
       const cell = document.createElement("div");
-      const row = offsetY + i - extraLayers;
-      const col = offsetX + j - extraLayers;
+      const row = offsetY + i;
+      const col = offsetX + j;
 
       cell.classList.add("cell");
       cell.id = `cell_${row}_${col}`;
       cell.style.width = `${cellSize}px`;
       cell.style.height = `${cellSize}px`;
       cell.addEventListener("click", () => {
-        // Handle cell click event
+        if (board[`${row},${col}`].adjacentMines === 0) {
+          revealAdjacentZeros(row, col);
+          updateBoardView();
+        } else {
+          revealCell(row, col);
+          updateBoardView();
+        }
       });
+      cell.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        toggleFlag(row, col);
+      });
+
+      if (board[`${row},${col}`]) {
+        const cellData = board[`${row},${col}`];
+        if (cellData.isRevealed) {
+          cell.classList.add("revealed");
+          if (cellData.isMine) {
+            cell.classList.add("mine");
+          } else {
+            const adjacentMines = calculateAdjacentMines(row, col);
+            cell.innerHTML = adjacentMines > 0 ? adjacentMines : "";
+          }
+        } else if (cellData.isFlagged) {
+          cell.innerHTML = "&#9873;";
+        }
+      } else {
+        board[`${row},${col}`] = createCell(row, col);
+      }
 
       boardContainer.appendChild(cell);
     }
