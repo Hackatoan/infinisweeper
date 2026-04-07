@@ -11,10 +11,10 @@
 .leaderboard-section {
   width: calc(50% - 10px); /* Adjust width and margins as needed */
   margin-bottom: 10px;
-  background-color: #362105;
+  background-color: #4e342e;
   border-radius: 5px;
   padding: 10px;
-  color: rgb(224, 170, 170);
+  color: #fbe9e7;
 }
 
 /* Style for the leaderboard title */
@@ -39,20 +39,21 @@
 #leaderboard-by-recent li {
   margin-bottom: 10px;
   padding: 10px;
-  background-color: #503001;
+  background-color: #5d4037;
   border-radius: 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid #ccc;
+  border: 1px solid #795548;
+  color: #fbe9e7;
 }
 
 /* Style for the "View" button */
 #leaderboard-by-score li button,
 #leaderboard-by-recent li button {
   padding: 5px 10px;
-  background-color: #4caf50;
-  color: rgb(224, 170, 170);
+  background-color: #e28a93;
+  color: #3e2723;
   border: none;
   border-radius: 3px;
   cursor: pointer;
@@ -61,30 +62,30 @@
 h1,
 h2 {
   text-align: center;
-  color: rgb(224, 170, 170);
+  color: #fbe9e7;
 }
 h1 {
-  text-shadow: -1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000,
-    -1px -1px 0 #000;
   font-size: 5vmax;
 }
 body {
   background: linear-gradient(
       45deg,
-      #dca 12%,
+      rgba(0, 0, 0, 0.1) 12%,
       transparent 0,
       transparent 88%,
-      #dca 0
+      rgba(0, 0, 0, 0.1) 0
     ),
-    linear-gradient(135deg, transparent 37%, #a85 0, #a85 63%, transparent 0),
-    linear-gradient(45deg, transparent 37%, #dca 0, #dca 63%, transparent 0)
-      #753;
+    linear-gradient(135deg, transparent 37%, rgba(40, 20, 10, 0.2) 0, rgba(40, 20, 10, 0.2) 63%, transparent 0),
+    linear-gradient(45deg, transparent 37%, rgba(0, 0, 0, 0.1) 0, rgba(0, 0, 0, 0.1) 63%, transparent 0)
+    #3e2723;
   background-size: 25px 25px;
+  font-family: Arial, sans-serif;
+  color: #fbe9e7;
 }
 .back-btn {
   font-weight: bolder;
-  color: rgb(224, 170, 170);
-  background-color: #4caf50;
+  color: #3e2723;
+  background-color: #e28a93;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -117,7 +118,7 @@ body {
   color: white;
 }
 .footer-links a {
-  color: #add8e6;
+  color: #e28a93;
   text-decoration: none;
   margin: 0 5px;
 }
