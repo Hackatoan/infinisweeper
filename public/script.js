@@ -2,6 +2,7 @@
 const MINE_DENSITY = 0.2;
 const DEBOUNCE_DELAY = 600;
 const CELL_FLAG = "&#9873;";
+const CELL_MINE = "💣";
 const MAX_COLS = 10;
 const MAX_ROWS = 10;
 const EXTRA_CELLS = 2; // Number of extra cells around the visible area
@@ -147,6 +148,7 @@ function revealCell(row, col, directClick = true) {
 
     if (board[`${row},${col}`].isMine) {
       cell.classList.add("mine");
+      cell.innerHTML = CELL_MINE;
       gameOver = true;
       showToast("Game Over! You hit a mine.");
     } else {
@@ -211,6 +213,11 @@ function toggleFlag(row, col) {
   if (cell && !board[`${row},${col}`].isRevealed) {
     board[`${row},${col}`].isFlagged = !board[`${row},${col}`].isFlagged;
     cell.innerHTML = board[`${row},${col}`].isFlagged ? CELL_FLAG : "";
+    if (board[`${row},${col}`].isFlagged) {
+      cell.classList.add("flagged");
+    } else {
+      cell.classList.remove("flagged");
+    }
   }
   debouncedSaveGameState();
 }
@@ -355,6 +362,92 @@ function hideToast() {
   document.getElementById("submit-score").style.display = "none";
 }
 
+async function exportMapPNG() {
+  let minRow = Infinity, maxRow = -Infinity, minCol = Infinity, maxCol = -Infinity;
+  const padding = 3;
+
+  for (const key in board) {
+    if (board[key].isRevealed || board[key].isFlagged) {
+      const [r, c] = key.split(',').map(Number);
+      if (r < minRow) minRow = r;
+      if (r > maxRow) maxRow = r;
+      if (c < minCol) minCol = c;
+      if (c > maxCol) maxCol = c;
+    }
+  }
+
+  if (minRow === Infinity) return; // Nothing played yet
+
+  minRow -= padding;
+  maxRow += padding;
+  minCol -= padding;
+  maxCol += padding;
+
+  const rows = maxRow - minRow + 1;
+  const cols = maxCol - minCol + 1;
+
+  // Create a temporary off-screen container
+  const tempContainer = document.createElement("div");
+  tempContainer.style.position = "absolute";
+  tempContainer.style.top = "-9999px";
+  tempContainer.style.left = "-9999px";
+  tempContainer.style.width = `${cols * (cellSize + 1)}px`;
+  tempContainer.style.height = `${rows * (cellSize + 1)}px`;
+  tempContainer.style.backgroundColor = "#3e2723";
+  document.body.appendChild(tempContainer);
+
+  for (let r = minRow; r <= maxRow; r++) {
+    for (let c = minCol; c <= maxCol; c++) {
+      let cellData = board[`${r},${c}`];
+      if (!cellData) {
+        cellData = createCell(r, c);
+      }
+
+      const cell = document.createElement("div");
+      cell.classList.add("cell");
+      cell.style.top = `${(r - minRow) * (cellSize + 1)}px`;
+      cell.style.left = `${(c - minCol) * (cellSize + 1)}px`;
+      cell.style.width = `${cellSize}px`;
+      cell.style.height = `${cellSize}px`;
+      cell.style.position = "absolute";
+      tempContainer.appendChild(cell);
+
+      if (cellData.isRevealed) {
+        cell.classList.add("revealed");
+        if (cellData.isMine) {
+          cell.classList.add("mine");
+          cell.innerHTML = CELL_MINE;
+        } else {
+          const adjacentMines = calculateAdjacentMines(r, c);
+          cell.innerHTML = adjacentMines > 0 ? adjacentMines : "";
+        }
+      } else if (cellData.isFlagged) {
+        cell.classList.add("flagged");
+        cell.innerHTML = CELL_FLAG;
+      }
+    }
+  }
+
+  try {
+    const canvas = await html2canvas(tempContainer, {
+      width: cols * (cellSize + 1),
+      height: rows * (cellSize + 1)
+    });
+
+    const image = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = image;
+    link.download = `minesweeper-map-score-${score}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error("Error exporting map:", error);
+  } finally {
+    document.body.removeChild(tempContainer);
+  }
+}
+
 function restartGame() {
   hideToast();
   localStorage.removeItem("minesweeperGameState");
@@ -407,11 +500,13 @@ function createCellElement(row, col) {
       cell.classList.add("revealed");
       if (cellData.isMine) {
         cell.classList.add("mine");
+        cell.innerHTML = CELL_MINE;
       } else {
         const adjacentMines = calculateAdjacentMines(row, col);
         cell.innerHTML = adjacentMines > 0 ? adjacentMines : "";
       }
     } else if (cellData.isFlagged) {
+      cell.classList.add("flagged");
       cell.innerHTML = CELL_FLAG;
     }
   } else {
@@ -488,7 +583,6 @@ function onDOMContentLoaded() {
   const boardContainer = document.getElementById("board");
   boardContainer.addEventListener("click", (e) => {
     if (hasDragged) {
-      hasDragged = false;
       return;
     }
     const cell = e.target.closest(".cell");
@@ -498,10 +592,17 @@ function onDOMContentLoaded() {
   });
   boardContainer.addEventListener("contextmenu", (e) => {
     e.preventDefault(); // Prevent default immediately
-    if (hasDragged) return; // Ignore right-click action if it was a drag
-    const cell = e.target.closest(".cell");
-    if (cell) {
-      handleCellRightClick(e, parseInt(cell.dataset.row), parseInt(cell.dataset.col));
+  });
+
+  boardContainer.addEventListener("mouseup", (e) => {
+    if (e.button === 2) { // Right click
+      if (hasDragged) {
+        return; // Ignore right-click action if it was a drag
+      }
+      const cell = e.target.closest(".cell");
+      if (cell) {
+        handleCellRightClick(e, parseInt(cell.dataset.row), parseInt(cell.dataset.col));
+      }
     }
   });
 
@@ -515,10 +616,68 @@ function onDOMContentLoaded() {
     }
   });
 
-  document.addEventListener("mousemove", (e) => {
+  let initialTouchX = 0;
+  let initialTouchY = 0;
+
+  boardContainer.addEventListener("touchstart", (e) => {
+    if (e.touches.length === 1) {
+      isDragging = true;
+      hasDragged = false;
+      startDragX = e.touches[0].clientX;
+      startDragY = e.touches[0].clientY;
+      initialTouchX = startDragX;
+      initialTouchY = startDragY;
+
+      // Setup long-press for flagging
+      const cell = e.target.closest(".cell");
+      if (cell) {
+        cell.longPressTimer = setTimeout(() => {
+          hasDragged = true; // Prevent regular click
+          toggleFlag(parseInt(cell.dataset.row), parseInt(cell.dataset.col));
+          navigator.vibrate && navigator.vibrate(50); // Haptic feedback if supported
+        }, 500); // 500ms long press
+      }
+    }
+  }, { passive: false });
+
+  document.addEventListener("mousemove", handleMove);
+  document.addEventListener("touchmove", handleMove, { passive: false });
+
+  function handleMove(e) {
     if (!isDragging) return;
-    const dx = e.clientX - startDragX;
-    const dy = e.clientY - startDragY;
+
+    // Prevent default scrolling on mobile when dragging board
+    if (e.type === "touchmove") e.preventDefault();
+
+    let clientX, clientY;
+    if (e.type === "touchmove") {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+
+      // Clear long press if they moved too much from initial touch
+      const totalDx = clientX - initialTouchX;
+      const totalDy = clientY - initialTouchY;
+      if (Math.abs(totalDx) > 5 || Math.abs(totalDy) > 5) {
+        // e.target might not be the element being touched during a move,
+        // so we retrieve the cell from document.elementFromPoint of the initial touch
+        // or clear any stored timer. A safer approach is to just clear the timer
+        // if we stored it globally, but we stored it on the cell.
+        // Let's clear all active longPressTimers just in case, or store the active cell.
+        const allCells = document.querySelectorAll('.cell');
+        allCells.forEach(c => {
+          if (c.longPressTimer) {
+            clearTimeout(c.longPressTimer);
+            c.longPressTimer = null;
+          }
+        });
+      }
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+
+    const dx = clientX - startDragX;
+    const dy = clientY - startDragY;
 
     if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
       hasDragged = true;
@@ -527,8 +686,8 @@ function onDOMContentLoaded() {
     panX += dx;
     panY += dy;
 
-    startDragX = e.clientX;
-    startDragY = e.clientY;
+    startDragX = clientX;
+    startDragY = clientY;
 
     let moved = false;
     const effectiveCellSize = cellSize + 1; // 1px gap
@@ -551,11 +710,27 @@ function onDOMContentLoaded() {
     } else {
       document.getElementById("board").style.transform = `translate(${panX}px, ${panY}px)`;
     }
-  });
+  }
 
   document.addEventListener("mouseup", (e) => {
     if (e.button === 0 || e.button === 2) {
       isDragging = false;
+      if (hasDragged) {
+        // Small timeout to clear drag state after mouseup to prevent click/flag triggers
+        setTimeout(() => hasDragged = false, 50);
+      }
     }
+  });
+
+  document.addEventListener("touchend", (e) => {
+    isDragging = false;
+    // Clear all long press timers to be safe
+    const allCells = document.querySelectorAll('.cell');
+    allCells.forEach(c => {
+      if (c.longPressTimer) {
+        clearTimeout(c.longPressTimer);
+        c.longPressTimer = null;
+      }
+    });
   });
 }

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6042152415983682" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
@@ -12,6 +12,9 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Play Infinite Minesweeper, an endless and infinitely expanding game of minesweeper! Reveal safe cells, flag mines, and climb the leaderboard." />
     <meta name="keywords" content="Minesweeper, infinite minesweeper, endless game, browser game, logic puzzle, hackatoa" />
@@ -46,6 +49,7 @@
     <div id="submit-score" class="submit-score" style="display: none">
       <input type="text" id="username" placeholder="Enter your username" />
       <button id="submit-score-button">Submit Score</button>
+      <button id="export-png-btn-gameover" class="export-png-btn" onclick="exportMapPNG()">Export PNG</button>
     </div>
     <div class="info-area">
       <div class="info-icon">i</div>
@@ -55,7 +59,8 @@
         C: Jump to Center<br>
         L: Jump to Last Click<br>
         Left-Click: Reveal cell<br>
-        Right-Click: Toggle Flag
+        Right-Click: Toggle Flag<br><br>
+        <button id="export-png-btn-info" class="export-png-btn" onclick="exportMapPNG()">Export PNG Map</button>
       </div>
     </div>
     <a href="https://hackatoa.com/" class="hackatoa-banner" target="_blank">Hackatoa.com</a>
