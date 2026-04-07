@@ -61,7 +61,9 @@ function createBoard() {
   const boardContainer = document.getElementById("board");
   boardContainer.innerHTML = "";
   boardContainer.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
-  boardContainer.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
+    boardContainer.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
+  boardContainer.style.top = `-${EXTRA_CELLS * (cellSize + 1)}px`;
+  boardContainer.style.left = `-${EXTRA_CELLS * (cellSize + 1)}px`;
 
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
@@ -275,7 +277,9 @@ function updateBoardView() {
   const boardContainer = document.getElementById("board");
   boardContainer.innerHTML = "";
   boardContainer.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
-  boardContainer.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
+    boardContainer.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
+  boardContainer.style.top = `-${EXTRA_CELLS * (cellSize + 1)}px`;
+  boardContainer.style.left = `-${EXTRA_CELLS * (cellSize + 1)}px`;
   boardContainer.style.transform = `translate(${panX}px, ${panY}px)`;
 
   for (let i = 0; i < rows; i++) {
@@ -483,6 +487,10 @@ function onDOMContentLoaded() {
 
   const boardContainer = document.getElementById("board");
   boardContainer.addEventListener("click", (e) => {
+    if (hasDragged) {
+      hasDragged = false;
+      return;
+    }
     const cell = e.target.closest(".cell");
     if (cell) {
       handleCellClick(parseInt(cell.dataset.row), parseInt(cell.dataset.col));
@@ -499,7 +507,7 @@ function onDOMContentLoaded() {
 
   // Drag logic
   boardContainer.addEventListener("mousedown", (e) => {
-    if (e.button === 2) { // Right click
+    if (e.button === 0 || e.button === 2) { // Left or Right click
       isDragging = true;
       hasDragged = false;
       startDragX = e.clientX;
@@ -523,16 +531,17 @@ function onDOMContentLoaded() {
     startDragY = e.clientY;
 
     let moved = false;
-    if (Math.abs(panX) >= cellSize) {
-      const shiftCols = Math.trunc(panX / cellSize);
+    const effectiveCellSize = cellSize + 1; // 1px gap
+    if (Math.abs(panX) >= effectiveCellSize) {
+      const shiftCols = Math.trunc(panX / effectiveCellSize);
       offsetX -= shiftCols;
-      panX -= shiftCols * cellSize;
+      panX -= shiftCols * effectiveCellSize;
       moved = true;
     }
-    if (Math.abs(panY) >= cellSize) {
-      const shiftRows = Math.trunc(panY / cellSize);
+    if (Math.abs(panY) >= effectiveCellSize) {
+      const shiftRows = Math.trunc(panY / effectiveCellSize);
       offsetY -= shiftRows;
-      panY -= shiftRows * cellSize;
+      panY -= shiftRows * effectiveCellSize;
       moved = true;
     }
 
@@ -545,7 +554,7 @@ function onDOMContentLoaded() {
   });
 
   document.addEventListener("mouseup", (e) => {
-    if (e.button === 2) {
+    if (e.button === 0 || e.button === 2) {
       isDragging = false;
     }
   });
