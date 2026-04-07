@@ -4,99 +4,27 @@ const DEBOUNCE_DELAY = 600;
 const CELL_FLAG = "&#9873;";
 const MAX_COLS = 10;
 const MAX_ROWS = 10;
-const EXTRA_CELLS = 8; // Number of extra cells around the visible area
-const CAMERA_SPEED = 10;
+const EXTRA_CELLS = 2; // Number of extra cells around the visible area
 
 // Game State
 let board = {};
 let offsetX = 0;
 let offsetY = 0;
-let cameraX = 0;
-let cameraY = 0;
 let cellSize = calculateCellSize();
 let startingPosition = null;
 let lastRevealedPosition = { row: 0, col: 0 };
 let score = 0;
 let gameOver = false;
 let isSubmitting = false; // Track submission state
-let keysPressed = {};
-let isDragging = false;
-let startDragX = 0;
-let startDragY = 0;
-let animationFrameId = null;
+let gameSeed = Math.random() * 10000;
 
 // Debounced Functions
 const debouncedSaveGameState = debounce(saveGameState, DEBOUNCE_DELAY);
 
 // Event Listeners
-document.addEventListener("keydown", (e) => keysPressed[e.key] = true);
-document.addEventListener("keyup", (e) => keysPressed[e.key] = false);
+document.addEventListener("keydown", handleKeyEvents);
 window.addEventListener("resize", onResize);
 document.addEventListener("DOMContentLoaded", onDOMContentLoaded);
-
-document.addEventListener('mousedown', (e) => {
-  if (e.target.closest('#board')) {
-    isDragging = true;
-    startDragX = e.clientX;
-    startDragY = e.clientY;
-  }
-});
-
-document.addEventListener('mousemove', (e) => {
-  if (isDragging) {
-    const dx = e.clientX - startDragX;
-    const dy = e.clientY - startDragY;
-    cameraX += dx;
-    cameraY += dy;
-    startDragX = e.clientX;
-    startDragY = e.clientY;
-    updateCamera();
-  }
-});
-
-document.addEventListener('mouseup', () => {
-  isDragging = false;
-});
-
-document.addEventListener('mouseleave', () => {
-  isDragging = false;
-});
-
-function gameLoop() {
-  if (!gameOver) {
-    let moved = false;
-    if (keysPressed["ArrowUp"] || keysPressed["w"]) {
-      cameraY -= CAMERA_SPEED;
-      moved = true;
-    }
-    if (keysPressed["ArrowDown"] || keysPressed["s"]) {
-      cameraY += CAMERA_SPEED;
-      moved = true;
-    }
-    if (keysPressed["ArrowLeft"] || keysPressed["a"]) {
-      cameraX -= CAMERA_SPEED;
-      moved = true;
-    }
-    if (keysPressed["ArrowRight"] || keysPressed["d"]) {
-      cameraX += CAMERA_SPEED;
-      moved = true;
-    }
-    if (keysPressed["c"]) {
-      if (startingPosition) {
-        moveToCenter(startingPosition);
-        keysPressed["c"] = false;
-      }
-    }
-    if (keysPressed["l"]) {
-      moveToCenter(lastRevealedPosition);
-      keysPressed["l"] = false;
-    }
-    if (moved) {
-      updateCamera();
-    }
-  }
-  animationFrameId = requestAnimationFrame(gameLoop);
-}
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -137,32 +65,13 @@ function createBoard() {
       boardContainer.appendChild(cell);
     }
   }
-  boardContainer.style.transform = `translate(${-cameraX}px, ${-cameraY}px)`;
-}
-
-function updateCamera() {
-  const newOffsetX = Math.floor(cameraX / cellSize);
-  const newOffsetY = Math.floor(cameraY / cellSize);
-  const boardContainer = document.getElementById("board");
-
-  if (newOffsetX !== offsetX || newOffsetY !== offsetY) {
-    offsetX = newOffsetX;
-    offsetY = newOffsetY;
-    updateBoardView();
-    revealInitialZeros();
-  }
-
-  boardContainer.style.transform = `translate(${-(cameraX - offsetX * cellSize)}px, ${-(cameraY - offsetY * cellSize)}px)`;
 }
 
 function initializeBoard() {
   resetGameState();
   const { rows, cols } = getViewportSize();
-  cameraX = -Math.floor((cols * cellSize) / 2) + (window.innerWidth / 2);
-  cameraY = -Math.floor((rows * cellSize) / 2) + (window.innerHeight / 2);
-  offsetX = Math.floor(cameraX / cellSize);
-  offsetY = Math.floor(cameraY / cellSize);
-
+  offsetX = Math.floor(-cols / 2);
+  offsetY = Math.floor(-rows / 2);
   startingPosition = { row: Math.floor(rows / 2) + offsetY, col: Math.floor(cols / 2) + offsetX };
 
   for (let i = 0; i < rows; i++) {
@@ -183,21 +92,24 @@ function initializeBoard() {
 function resetGameState() {
   cellSize = calculateCellSize();
   board = {};
+  gameSeed = Math.random() * 10000;
   score = 0;
   gameOver = false;
   startingPosition = null;
   lastRevealedPosition = { row: 0, col: 0 };
   document.getElementById("score-overlay").textContent = `Score: ${score}`;
   document.getElementById("toast").style.display = "none";
-  if (animationFrameId === null) {
-    animationFrameId = requestAnimationFrame(gameLoop);
-  }
+}
+
+function pseudoRandom(x, y) {
+  // A simple deterministic hash function
+  let n = Math.sin(x * 12.9898 + y * 78.233 + gameSeed) * 43758.5453;
+  return n - Math.floor(n);
 }
 
 function createCell(row, col) {
-  const isMine = Math.random() < MINE_DENSITY;
-  const adjacentMines = calculateAdjacentMines(row, col);
-  return { isMine, isRevealed: false, isFlagged: false, adjacentMines, isVisited: false };
+  const isMine = pseudoRandom(row, col) < MINE_DENSITY;
+  return { isMine, isRevealed: false, isFlagged: false, isVisited: false };
 }
 
 function revealInitialZeros() {
@@ -249,7 +161,8 @@ function revealAdjacentZeros(row, col) {
     board[key].isRevealed = true;
     cellsToUpdate.push({ row, col });
 
-    if (board[key].adjacentMines === 0) {
+    const adjacentMines = calculateAdjacentMines(row, col);
+    if (adjacentMines === 0) {
       for (let di = -1; di <= 1; di++) {
         for (let dj = -1; dj <= 1; dj++) {
           const newRow = row + di;
@@ -269,7 +182,7 @@ function revealAdjacentZeros(row, col) {
     const cell = document.getElementById(`cell_${row}_${col}`);
     if (cell) {
       cell.classList.add("revealed");
-      const adjacentMines = board[`${row},${col}`].adjacentMines;
+      const adjacentMines = calculateAdjacentMines(row, col);
       cell.textContent = adjacentMines > 0 ? adjacentMines : "";
     }
   });
@@ -285,14 +198,61 @@ function toggleFlag(row, col) {
   debouncedSaveGameState();
 }
 
-// handleKeyEvents is replaced by gameLoop and keydown/keyup listeners
+function handleKeyEvents(event) {
+  if (gameOver) return;
+
+  const key = event.key;
+  let moved = false;
+
+  switch (key) {
+    case "ArrowUp":
+    case "w":
+      offsetY--;
+      moved = true;
+      break;
+    case "ArrowDown":
+    case "s":
+      offsetY++;
+      moved = true;
+      break;
+    case "ArrowLeft":
+    case "a":
+      offsetX--;
+      moved = true;
+      break;
+    case "ArrowRight":
+    case "d":
+      offsetX++;
+      moved = true;
+      break;
+    case "c":
+      if (startingPosition) moveToCenter(startingPosition);
+      break;
+    case "l":
+      moveToCenter(lastRevealedPosition);
+      break;
+  }
+
+  if (moved) {
+    updateBoardView();
+    revealInitialZeros();
+  }
+}
 
 function moveToCenter(position) {
+  const { rows, cols } = getViewportSize();
   if (position) {
-    cameraX = position.col * cellSize - window.innerWidth / 2 + cellSize / 2;
-    cameraY = position.row * cellSize - window.innerHeight / 2 + cellSize / 2;
+    offsetX = position.col - Math.floor(cols / 2) + EXTRA_CELLS;
+    offsetY = position.row - Math.floor(rows / 2) + EXTRA_CELLS;
   }
-  updateCamera();
+  updateBoardView();
+}
+
+function incrementScore() {
+  if (gameOver) return;
+  score++;
+  document.getElementById("score-overlay").textContent = `Score: ${score}`;
+  debouncedSaveGameState();
 }
 
 function updateBoardView() {
@@ -310,18 +270,18 @@ function updateBoardView() {
       boardContainer.appendChild(cell);
     }
   }
-  boardContainer.style.transform = `translate(${-(cameraX - offsetX * cellSize)}px, ${-(cameraY - offsetY * cellSize)}px)`;
 }
 
 function saveGameState() {
   const gameState = {
     board,
-    cameraX,
-    cameraY,
+    offsetX,
+    offsetY,
     startingPosition,
     lastRevealedPosition,
     score,
     gameOver,
+    gameSeed,
   };
   localStorage.setItem("minesweeperGameState", JSON.stringify(gameState));
 }
@@ -331,22 +291,17 @@ function loadGameState() {
   if (savedState) {
     const gameState = JSON.parse(savedState);
     board = gameState.board;
-    cameraX = gameState.cameraX || gameState.offsetX * cellSize || 0;
-    cameraY = gameState.cameraY || gameState.offsetY * cellSize || 0;
-    offsetX = Math.floor(cameraX / cellSize);
-    offsetY = Math.floor(cameraY / cellSize);
+    offsetX = gameState.offsetX;
+    offsetY = gameState.offsetY;
     startingPosition = gameState.startingPosition;
     lastRevealedPosition = gameState.lastRevealedPosition;
     score = gameState.score;
     gameOver = gameState.gameOver;
+    gameSeed = gameState.gameSeed || Math.random() * 10000;
 
     updateBoardView();
-    updateCamera();
     document.getElementById("score-overlay").textContent = `Score: ${score}`;
     if (gameOver) showToast("Game Over! You hit a mine.");
-    if (animationFrameId === null) {
-      animationFrameId = requestAnimationFrame(gameLoop);
-    }
     return true;
   }
   return false;
@@ -403,7 +358,13 @@ function calculateAdjacentMines(row, col) {
   for (let di = -1; di <= 1; di++) {
     for (let dj = -1; dj <= 1; dj++) {
       if (di === 0 && dj === 0) continue;
-      if (board[`${row + di},${col + dj}`] && board[`${row + di},${col + dj}`].isMine) {
+      const neighborRow = row + di;
+      const neighborCol = col + dj;
+      const neighborKey = `${neighborRow},${neighborCol}`;
+      if (!board[neighborKey]) {
+        board[neighborKey] = createCell(neighborRow, neighborCol);
+      }
+      if (board[neighborKey].isMine) {
         adjacentMines++;
       }
     }
@@ -415,10 +376,10 @@ function createCellElement(row, col) {
   const cell = document.createElement("div");
   cell.classList.add("cell");
   cell.id = `cell_${row}_${col}`;
+  cell.dataset.row = row;
+  cell.dataset.col = col;
   cell.style.width = `${cellSize}px`;
   cell.style.height = `${cellSize}px`;
-  cell.addEventListener("click", () => handleCellClick(row, col));
-  cell.addEventListener("contextmenu", (e) => handleCellRightClick(e, row, col));
 
   if (board[`${row},${col}`]) {
     const cellData = board[`${row},${col}`];
@@ -441,7 +402,7 @@ function createCellElement(row, col) {
 }
 
 function handleCellClick(row, col) {
-  if (board[`${row},${col}`].adjacentMines === 0) {
+  if (calculateAdjacentMines(row, col) === 0) {
     revealAdjacentZeros(row, col);
   } else {
     revealCell(row, col);
@@ -503,4 +464,18 @@ function onResize() {
 function onDOMContentLoaded() {
   const gameLoaded = loadGameState();
   if (!gameLoaded) initializeBoard();
+
+  const boardContainer = document.getElementById("board");
+  boardContainer.addEventListener("click", (e) => {
+    const cell = e.target.closest(".cell");
+    if (cell) {
+      handleCellClick(parseInt(cell.dataset.row), parseInt(cell.dataset.col));
+    }
+  });
+  boardContainer.addEventListener("contextmenu", (e) => {
+    const cell = e.target.closest(".cell");
+    if (cell) {
+      handleCellRightClick(e, parseInt(cell.dataset.row), parseInt(cell.dataset.col));
+    }
+  });
 }
