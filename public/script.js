@@ -583,8 +583,6 @@ function onDOMContentLoaded() {
   const boardContainer = document.getElementById("board");
   boardContainer.addEventListener("click", (e) => {
     if (hasDragged) {
-      // Small timeout to prevent immediate click after drag release
-      setTimeout(() => hasDragged = false, 50);
       return;
     }
     const cell = e.target.closest(".cell");
@@ -594,10 +592,17 @@ function onDOMContentLoaded() {
   });
   boardContainer.addEventListener("contextmenu", (e) => {
     e.preventDefault(); // Prevent default immediately
-    if (hasDragged) return; // Ignore right-click action if it was a drag
-    const cell = e.target.closest(".cell");
-    if (cell) {
-      handleCellRightClick(e, parseInt(cell.dataset.row), parseInt(cell.dataset.col));
+  });
+
+  boardContainer.addEventListener("mouseup", (e) => {
+    if (e.button === 2) { // Right click
+      if (hasDragged) {
+        return; // Ignore right-click action if it was a drag
+      }
+      const cell = e.target.closest(".cell");
+      if (cell) {
+        handleCellRightClick(e, parseInt(cell.dataset.row), parseInt(cell.dataset.col));
+      }
     }
   });
 
@@ -653,11 +658,18 @@ function onDOMContentLoaded() {
       const totalDx = clientX - initialTouchX;
       const totalDy = clientY - initialTouchY;
       if (Math.abs(totalDx) > 5 || Math.abs(totalDy) > 5) {
-        const cell = e.target.closest(".cell");
-        if (cell && cell.longPressTimer) {
-          clearTimeout(cell.longPressTimer);
-          cell.longPressTimer = null;
-        }
+        // e.target might not be the element being touched during a move,
+        // so we retrieve the cell from document.elementFromPoint of the initial touch
+        // or clear any stored timer. A safer approach is to just clear the timer
+        // if we stored it globally, but we stored it on the cell.
+        // Let's clear all active longPressTimers just in case, or store the active cell.
+        const allCells = document.querySelectorAll('.cell');
+        allCells.forEach(c => {
+          if (c.longPressTimer) {
+            clearTimeout(c.longPressTimer);
+            c.longPressTimer = null;
+          }
+        });
       }
     } else {
       clientX = e.clientX;
@@ -703,19 +715,22 @@ function onDOMContentLoaded() {
   document.addEventListener("mouseup", (e) => {
     if (e.button === 0 || e.button === 2) {
       isDragging = false;
+      if (hasDragged) {
+        // Small timeout to clear drag state after mouseup to prevent click/flag triggers
+        setTimeout(() => hasDragged = false, 50);
+      }
     }
   });
 
   document.addEventListener("touchend", (e) => {
     isDragging = false;
-    // Clear long press
-    if (e.changedTouches.length > 0) {
-      const el = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-      const cell = el ? el.closest(".cell") : null;
-      if (cell && cell.longPressTimer) {
-        clearTimeout(cell.longPressTimer);
-        cell.longPressTimer = null;
+    // Clear all long press timers to be safe
+    const allCells = document.querySelectorAll('.cell');
+    allCells.forEach(c => {
+      if (c.longPressTimer) {
+        clearTimeout(c.longPressTimer);
+        c.longPressTimer = null;
       }
-    }
+    });
   });
 }
