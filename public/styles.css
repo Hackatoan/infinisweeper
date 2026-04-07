@@ -171,3 +171,14 @@ html {
 .notification.show {
   display: block;
 }
+
+.ad-container {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 900;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
