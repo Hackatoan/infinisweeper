@@ -4,26 +4,99 @@ const DEBOUNCE_DELAY = 600;
 const CELL_FLAG = "&#9873;";
 const MAX_COLS = 10;
 const MAX_ROWS = 10;
-const EXTRA_CELLS = 2; // Number of extra cells around the visible area
+const EXTRA_CELLS = 8; // Number of extra cells around the visible area
+const CAMERA_SPEED = 10;
 
 // Game State
 let board = {};
 let offsetX = 0;
 let offsetY = 0;
+let cameraX = 0;
+let cameraY = 0;
 let cellSize = calculateCellSize();
 let startingPosition = null;
 let lastRevealedPosition = { row: 0, col: 0 };
 let score = 0;
 let gameOver = false;
 let isSubmitting = false; // Track submission state
+let keysPressed = {};
+let isDragging = false;
+let startDragX = 0;
+let startDragY = 0;
+let animationFrameId = null;
 
 // Debounced Functions
 const debouncedSaveGameState = debounce(saveGameState, DEBOUNCE_DELAY);
 
 // Event Listeners
-document.addEventListener("keydown", handleKeyEvents);
+document.addEventListener("keydown", (e) => keysPressed[e.key] = true);
+document.addEventListener("keyup", (e) => keysPressed[e.key] = false);
 window.addEventListener("resize", onResize);
 document.addEventListener("DOMContentLoaded", onDOMContentLoaded);
+
+document.addEventListener('mousedown', (e) => {
+  if (e.target.closest('#board')) {
+    isDragging = true;
+    startDragX = e.clientX;
+    startDragY = e.clientY;
+  }
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (isDragging) {
+    const dx = e.clientX - startDragX;
+    const dy = e.clientY - startDragY;
+    cameraX += dx;
+    cameraY += dy;
+    startDragX = e.clientX;
+    startDragY = e.clientY;
+    updateCamera();
+  }
+});
+
+document.addEventListener('mouseup', () => {
+  isDragging = false;
+});
+
+document.addEventListener('mouseleave', () => {
+  isDragging = false;
+});
+
+function gameLoop() {
+  if (!gameOver) {
+    let moved = false;
+    if (keysPressed["ArrowUp"] || keysPressed["w"]) {
+      cameraY -= CAMERA_SPEED;
+      moved = true;
+    }
+    if (keysPressed["ArrowDown"] || keysPressed["s"]) {
+      cameraY += CAMERA_SPEED;
+      moved = true;
+    }
+    if (keysPressed["ArrowLeft"] || keysPressed["a"]) {
+      cameraX -= CAMERA_SPEED;
+      moved = true;
+    }
+    if (keysPressed["ArrowRight"] || keysPressed["d"]) {
+      cameraX += CAMERA_SPEED;
+      moved = true;
+    }
+    if (keysPressed["c"]) {
+      if (startingPosition) {
+        moveToCenter(startingPosition);
+        keysPressed["c"] = false;
+      }
+    }
+    if (keysPressed["l"]) {
+      moveToCenter(lastRevealedPosition);
+      keysPressed["l"] = false;
+    }
+    if (moved) {
+      updateCamera();
+    }
+  }
+  animationFrameId = requestAnimationFrame(gameLoop);
+}
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -64,13 +137,32 @@ function createBoard() {
       boardContainer.appendChild(cell);
     }
   }
+  boardContainer.style.transform = `translate(${-cameraX}px, ${-cameraY}px)`;
+}
+
+function updateCamera() {
+  const newOffsetX = Math.floor(cameraX / cellSize);
+  const newOffsetY = Math.floor(cameraY / cellSize);
+  const boardContainer = document.getElementById("board");
+
+  if (newOffsetX !== offsetX || newOffsetY !== offsetY) {
+    offsetX = newOffsetX;
+    offsetY = newOffsetY;
+    updateBoardView();
+    revealInitialZeros();
+  }
+
+  boardContainer.style.transform = `translate(${-(cameraX - offsetX * cellSize)}px, ${-(cameraY - offsetY * cellSize)}px)`;
 }
 
 function initializeBoard() {
   resetGameState();
   const { rows, cols } = getViewportSize();
-  offsetX = Math.floor(-cols / 2);
-  offsetY = Math.floor(-rows / 2);
+  cameraX = -Math.floor((cols * cellSize) / 2) + (window.innerWidth / 2);
+  cameraY = -Math.floor((rows * cellSize) / 2) + (window.innerHeight / 2);
+  offsetX = Math.floor(cameraX / cellSize);
+  offsetY = Math.floor(cameraY / cellSize);
+
   startingPosition = { row: Math.floor(rows / 2) + offsetY, col: Math.floor(cols / 2) + offsetX };
 
   for (let i = 0; i < rows; i++) {
@@ -97,6 +189,9 @@ function resetGameState() {
   lastRevealedPosition = { row: 0, col: 0 };
   document.getElementById("score-overlay").textContent = `Score: ${score}`;
   document.getElementById("toast").style.display = "none";
+  if (animationFrameId === null) {
+    animationFrameId = requestAnimationFrame(gameLoop);
+  }
 }
 
 function createCell(row, col) {
@@ -190,54 +285,14 @@ function toggleFlag(row, col) {
   debouncedSaveGameState();
 }
 
-function handleKeyEvents(event) {
-  if (gameOver) return;
-
-  const key = event.key;
-  let moved = false;
-
-  switch (key) {
-    case "ArrowUp":
-    case "w":
-      offsetY--;
-      moved = true;
-      break;
-    case "ArrowDown":
-    case "s":
-      offsetY++;
-      moved = true;
-      break;
-    case "ArrowLeft":
-    case "a":
-      offsetX--;
-      moved = true;
-      break;
-    case "ArrowRight":
-    case "d":
-      offsetX++;
-      moved = true;
-      break;
-    case "c":
-      if (startingPosition) moveToCenter(startingPosition);
-      break;
-    case "l":
-      moveToCenter(lastRevealedPosition);
-      break;
-  }
-
-  if (moved) {
-    updateBoardView();
-    revealInitialZeros();
-  }
-}
+// handleKeyEvents is replaced by gameLoop and keydown/keyup listeners
 
 function moveToCenter(position) {
-  const { rows, cols } = getViewportSize();
   if (position) {
-    offsetX = position.col - Math.floor(cols / 2) + EXTRA_CELLS;
-    offsetY = position.row - Math.floor(rows / 2) + EXTRA_CELLS;
+    cameraX = position.col * cellSize - window.innerWidth / 2 + cellSize / 2;
+    cameraY = position.row * cellSize - window.innerHeight / 2 + cellSize / 2;
   }
-  updateBoardView();
+  updateCamera();
 }
 
 function updateBoardView() {
@@ -255,13 +310,14 @@ function updateBoardView() {
       boardContainer.appendChild(cell);
     }
   }
+  boardContainer.style.transform = `translate(${-(cameraX - offsetX * cellSize)}px, ${-(cameraY - offsetY * cellSize)}px)`;
 }
 
 function saveGameState() {
   const gameState = {
     board,
-    offsetX,
-    offsetY,
+    cameraX,
+    cameraY,
     startingPosition,
     lastRevealedPosition,
     score,
@@ -275,16 +331,22 @@ function loadGameState() {
   if (savedState) {
     const gameState = JSON.parse(savedState);
     board = gameState.board;
-    offsetX = gameState.offsetX;
-    offsetY = gameState.offsetY;
+    cameraX = gameState.cameraX || gameState.offsetX * cellSize || 0;
+    cameraY = gameState.cameraY || gameState.offsetY * cellSize || 0;
+    offsetX = Math.floor(cameraX / cellSize);
+    offsetY = Math.floor(cameraY / cellSize);
     startingPosition = gameState.startingPosition;
     lastRevealedPosition = gameState.lastRevealedPosition;
     score = gameState.score;
     gameOver = gameState.gameOver;
 
     updateBoardView();
+    updateCamera();
     document.getElementById("score-overlay").textContent = `Score: ${score}`;
     if (gameOver) showToast("Game Over! You hit a mine.");
+    if (animationFrameId === null) {
+      animationFrameId = requestAnimationFrame(gameLoop);
+    }
     return true;
   }
   return false;

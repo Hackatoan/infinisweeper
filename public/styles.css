@@ -15,8 +15,12 @@ html {
   display: grid;
   gap: 1px;
   background-color: #3b3853;
-  width: 100%; /* Set width to 100% */
-  height: 100vh;
+  width: max-content;
+  height: max-content;
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
 }
 
 .cell {
