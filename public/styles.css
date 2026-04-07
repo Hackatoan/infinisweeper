@@ -10,6 +10,10 @@ html {
   align-items: center;
   background-color: #3e2723;
   font-family: Arial, sans-serif;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
 }
 
 .board {
@@ -56,11 +60,13 @@ html {
 
 .cell.mine {
   background-color: #f44336;
+  font-size: 16px;
 }
 
 .cell.flagged {
   background-color: #d88c9a;
   color: #f44336;
+  font-size: 16px;
 }
 
 .score-overlay {
@@ -156,10 +162,19 @@ html {
   padding: 5px;
 }
 
-.submit-score button {
+.submit-score button, .export-png-btn {
   cursor: pointer;
   font-size: 16px;
   padding: 10px;
+  margin-top: 5px;
+  background-color: #5d4037;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+}
+
+.submit-score button:hover, .export-png-btn:hover {
+  background-color: #4e342e;
 }
 
 .notification {

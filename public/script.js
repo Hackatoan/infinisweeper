@@ -1,7 +1,8 @@
 // Constants
 const MINE_DENSITY = 0.2;
 const DEBOUNCE_DELAY = 600;
-const CELL_FLAG = "&#9873;";
+const CELL_FLAG = "🚩";
+const CELL_MINE = "💣";
 const MAX_COLS = 10;
 const MAX_ROWS = 10;
 const EXTRA_CELLS = 2; // Number of extra cells around the visible area
@@ -147,6 +148,7 @@ function revealCell(row, col, directClick = true) {
 
     if (board[`${row},${col}`].isMine) {
       cell.classList.add("mine");
+      cell.innerHTML = CELL_MINE;
       gameOver = true;
       showToast("Game Over! You hit a mine.");
     } else {
@@ -211,6 +213,11 @@ function toggleFlag(row, col) {
   if (cell && !board[`${row},${col}`].isRevealed) {
     board[`${row},${col}`].isFlagged = !board[`${row},${col}`].isFlagged;
     cell.innerHTML = board[`${row},${col}`].isFlagged ? CELL_FLAG : "";
+    if (board[`${row},${col}`].isFlagged) {
+      cell.classList.add("flagged");
+    } else {
+      cell.classList.remove("flagged");
+    }
   }
   debouncedSaveGameState();
 }
@@ -355,6 +362,92 @@ function hideToast() {
   document.getElementById("submit-score").style.display = "none";
 }
 
+async function exportMapPNG() {
+  let minRow = Infinity, maxRow = -Infinity, minCol = Infinity, maxCol = -Infinity;
+  const padding = 3;
+
+  for (const key in board) {
+    if (board[key].isRevealed || board[key].isFlagged) {
+      const [r, c] = key.split(',').map(Number);
+      if (r < minRow) minRow = r;
+      if (r > maxRow) maxRow = r;
+      if (c < minCol) minCol = c;
+      if (c > maxCol) maxCol = c;
+    }
+  }
+
+  if (minRow === Infinity) return; // Nothing played yet
+
+  minRow -= padding;
+  maxRow += padding;
+  minCol -= padding;
+  maxCol += padding;
+
+  const rows = maxRow - minRow + 1;
+  const cols = maxCol - minCol + 1;
+
+  // Create a temporary off-screen container
+  const tempContainer = document.createElement("div");
+  tempContainer.style.position = "absolute";
+  tempContainer.style.top = "-9999px";
+  tempContainer.style.left = "-9999px";
+  tempContainer.style.width = `${cols * (cellSize + 1)}px`;
+  tempContainer.style.height = `${rows * (cellSize + 1)}px`;
+  tempContainer.style.backgroundColor = "#3e2723";
+  document.body.appendChild(tempContainer);
+
+  for (let r = minRow; r <= maxRow; r++) {
+    for (let c = minCol; c <= maxCol; c++) {
+      let cellData = board[`${r},${c}`];
+      if (!cellData) {
+        cellData = createCell(r, c);
+      }
+
+      const cell = document.createElement("div");
+      cell.classList.add("cell");
+      cell.style.top = `${(r - minRow) * (cellSize + 1)}px`;
+      cell.style.left = `${(c - minCol) * (cellSize + 1)}px`;
+      cell.style.width = `${cellSize}px`;
+      cell.style.height = `${cellSize}px`;
+      cell.style.position = "absolute";
+      tempContainer.appendChild(cell);
+
+      if (cellData.isRevealed) {
+        cell.classList.add("revealed");
+        if (cellData.isMine) {
+          cell.classList.add("mine");
+          cell.innerHTML = CELL_MINE;
+        } else {
+          const adjacentMines = calculateAdjacentMines(r, c);
+          cell.innerHTML = adjacentMines > 0 ? adjacentMines : "";
+        }
+      } else if (cellData.isFlagged) {
+        cell.classList.add("flagged");
+        cell.innerHTML = CELL_FLAG;
+      }
+    }
+  }
+
+  try {
+    const canvas = await html2canvas(tempContainer, {
+      width: cols * (cellSize + 1),
+      height: rows * (cellSize + 1)
+    });
+
+    const image = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = image;
+    link.download = `minesweeper-map-score-${score}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error("Error exporting map:", error);
+  } finally {
+    document.body.removeChild(tempContainer);
+  }
+}
+
 function restartGame() {
   hideToast();
   localStorage.removeItem("minesweeperGameState");
@@ -407,11 +500,13 @@ function createCellElement(row, col) {
       cell.classList.add("revealed");
       if (cellData.isMine) {
         cell.classList.add("mine");
+        cell.innerHTML = CELL_MINE;
       } else {
         const adjacentMines = calculateAdjacentMines(row, col);
         cell.innerHTML = adjacentMines > 0 ? adjacentMines : "";
       }
     } else if (cellData.isFlagged) {
+      cell.classList.add("flagged");
       cell.innerHTML = CELL_FLAG;
     }
   } else {
