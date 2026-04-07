@@ -15,6 +15,12 @@ let startingPosition = null;
 let lastRevealedPosition = { row: 0, col: 0 };
 let score = 0;
 let gameOver = false;
+let isDragging = false;
+let startDragX = 0;
+let startDragY = 0;
+let panX = 0;
+let panY = 0;
+let hasDragged = false;
 let isSubmitting = false; // Track submission state
 let gameSeed = Math.random() * 10000;
 
@@ -114,10 +120,16 @@ function createCell(row, col) {
 
 function revealInitialZeros() {
   const { rows, cols } = getViewportSize();
-  for (let i = offsetY; i < offsetY + rows; i++) {
-    for (let j = offsetX; j < offsetX + cols; j++) {
-      if (board[`${i},${j}`] && !board[`${i},${j}`].isMine && calculateAdjacentMines(i, j) === 0) {
-        revealAdjacentZeros(i, j);
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      const row = offsetY + i - EXTRA_CELLS;
+      const col = offsetX + j - EXTRA_CELLS;
+      const key = `${row},${col}`;
+      if (!board[key]) {
+        board[key] = createCell(row, col);
+      }
+      if (!board[key].isMine && !board[key].isRevealed && calculateAdjacentMines(row, col) === 0) {
+        revealAdjacentZeros(row, col);
       }
     }
   }
@@ -264,6 +276,7 @@ function updateBoardView() {
   boardContainer.innerHTML = "";
   boardContainer.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
   boardContainer.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
+  boardContainer.style.transform = `translate(${panX}px, ${panY}px)`;
 
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
@@ -476,9 +489,64 @@ function onDOMContentLoaded() {
     }
   });
   boardContainer.addEventListener("contextmenu", (e) => {
+    e.preventDefault(); // Prevent default immediately
+    if (hasDragged) return; // Ignore right-click action if it was a drag
     const cell = e.target.closest(".cell");
     if (cell) {
       handleCellRightClick(e, parseInt(cell.dataset.row), parseInt(cell.dataset.col));
+    }
+  });
+
+  // Drag logic
+  boardContainer.addEventListener("mousedown", (e) => {
+    if (e.button === 2) { // Right click
+      isDragging = true;
+      hasDragged = false;
+      startDragX = e.clientX;
+      startDragY = e.clientY;
+    }
+  });
+
+  document.addEventListener("mousemove", (e) => {
+    if (!isDragging) return;
+    const dx = e.clientX - startDragX;
+    const dy = e.clientY - startDragY;
+
+    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+      hasDragged = true;
+    }
+
+    panX += dx;
+    panY += dy;
+
+    startDragX = e.clientX;
+    startDragY = e.clientY;
+
+    let moved = false;
+    if (Math.abs(panX) >= cellSize) {
+      const shiftCols = Math.trunc(panX / cellSize);
+      offsetX -= shiftCols;
+      panX -= shiftCols * cellSize;
+      moved = true;
+    }
+    if (Math.abs(panY) >= cellSize) {
+      const shiftRows = Math.trunc(panY / cellSize);
+      offsetY -= shiftRows;
+      panY -= shiftRows * cellSize;
+      moved = true;
+    }
+
+    if (moved) {
+      revealInitialZeros();
+      updateBoardView();
+    } else {
+      document.getElementById("board").style.transform = `translate(${panX}px, ${panY}px)`;
+    }
+  });
+
+  document.addEventListener("mouseup", (e) => {
+    if (e.button === 2) {
+      isDragging = false;
     }
   });
 }
