@@ -111,3 +111,16 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+.footer-links {
+  margin-top: 20px;
+  color: white;
+}
+.footer-links a {
+  color: #add8e6;
+  text-decoration: none;
+  margin: 0 5px;
+}
+.footer-links a:hover {
+  text-decoration: underline;
+}

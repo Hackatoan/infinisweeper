@@ -1,8 +1,8 @@
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/hackatoa)
 e
 
-# DISCLAIMER
-this project is extremely flawed as of right now and i dont really have the will to continue working on this project. Its better to start from scratch if you want to attempt to make a working version of this.
+# Status
+This game has been updated to include some branding and keybinds, though the core remains an infinite minesweeper experience.
 
 # InfiniSweeper
 ![image](https://github.com/Hackatoan/infinisweeper/assets/62629253/977ca1e1-3015-4368-bd44-5a5fbc6ff29f)
