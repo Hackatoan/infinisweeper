@@ -60,13 +60,13 @@ html {
 
 .cell.mine {
   background-color: #f44336;
-  font-size: 16px;
+  font-size: 2.2rem;
 }
 
 .cell.flagged {
   background-color: #d88c9a;
-  color: #f44336;
-  font-size: 16px;
+  color: #3e2723;
+  font-size: 2.2rem;
 }
 
 .score-overlay {

@@ -1,7 +1,7 @@
 // Constants
 const MINE_DENSITY = 0.2;
 const DEBOUNCE_DELAY = 600;
-const CELL_FLAG = "🚩";
+const CELL_FLAG = "&#9873;";
 const CELL_MINE = "💣";
 const MAX_COLS = 10;
 const MAX_ROWS = 10;
