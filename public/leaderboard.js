@@ -40,12 +40,12 @@ function handleViewSaveState(saveState) {
 
 function gotoview() {
   console.log("Navigating to leaderboard...");
-  window.location.href = "viewboard.html";
+  window.location.href = "/viewboard";
 }
 
 function gotohome() {
   console.log("Navigating to leaderboard...");
-  window.location.href = "index.html";
+  window.location.href = "/";
 }
 
 const entriesPerLoad = 10;
