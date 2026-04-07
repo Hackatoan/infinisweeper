@@ -583,7 +583,8 @@ function onDOMContentLoaded() {
   const boardContainer = document.getElementById("board");
   boardContainer.addEventListener("click", (e) => {
     if (hasDragged) {
-      hasDragged = false;
+      // Small timeout to prevent immediate click after drag release
+      setTimeout(() => hasDragged = false, 50);
       return;
     }
     const cell = e.target.closest(".cell");
@@ -610,10 +611,61 @@ function onDOMContentLoaded() {
     }
   });
 
-  document.addEventListener("mousemove", (e) => {
+  let initialTouchX = 0;
+  let initialTouchY = 0;
+
+  boardContainer.addEventListener("touchstart", (e) => {
+    if (e.touches.length === 1) {
+      isDragging = true;
+      hasDragged = false;
+      startDragX = e.touches[0].clientX;
+      startDragY = e.touches[0].clientY;
+      initialTouchX = startDragX;
+      initialTouchY = startDragY;
+
+      // Setup long-press for flagging
+      const cell = e.target.closest(".cell");
+      if (cell) {
+        cell.longPressTimer = setTimeout(() => {
+          hasDragged = true; // Prevent regular click
+          toggleFlag(parseInt(cell.dataset.row), parseInt(cell.dataset.col));
+          navigator.vibrate && navigator.vibrate(50); // Haptic feedback if supported
+        }, 500); // 500ms long press
+      }
+    }
+  }, { passive: false });
+
+  document.addEventListener("mousemove", handleMove);
+  document.addEventListener("touchmove", handleMove, { passive: false });
+
+  function handleMove(e) {
     if (!isDragging) return;
-    const dx = e.clientX - startDragX;
-    const dy = e.clientY - startDragY;
+
+    // Prevent default scrolling on mobile when dragging board
+    if (e.type === "touchmove") e.preventDefault();
+
+    let clientX, clientY;
+    if (e.type === "touchmove") {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+
+      // Clear long press if they moved too much from initial touch
+      const totalDx = clientX - initialTouchX;
+      const totalDy = clientY - initialTouchY;
+      if (Math.abs(totalDx) > 5 || Math.abs(totalDy) > 5) {
+        const cell = e.target.closest(".cell");
+        if (cell && cell.longPressTimer) {
+          clearTimeout(cell.longPressTimer);
+          cell.longPressTimer = null;
+        }
+      }
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+
+    const dx = clientX - startDragX;
+    const dy = clientY - startDragY;
 
     if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
       hasDragged = true;
@@ -622,8 +674,8 @@ function onDOMContentLoaded() {
     panX += dx;
     panY += dy;
 
-    startDragX = e.clientX;
-    startDragY = e.clientY;
+    startDragX = clientX;
+    startDragY = clientY;
 
     let moved = false;
     const effectiveCellSize = cellSize + 1; // 1px gap
@@ -646,11 +698,24 @@ function onDOMContentLoaded() {
     } else {
       document.getElementById("board").style.transform = `translate(${panX}px, ${panY}px)`;
     }
-  });
+  }
 
   document.addEventListener("mouseup", (e) => {
     if (e.button === 0 || e.button === 2) {
       isDragging = false;
+    }
+  });
+
+  document.addEventListener("touchend", (e) => {
+    isDragging = false;
+    // Clear long press
+    if (e.changedTouches.length > 0) {
+      const el = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+      const cell = el ? el.closest(".cell") : null;
+      if (cell && cell.longPressTimer) {
+        clearTimeout(cell.longPressTimer);
+        cell.longPressTimer = null;
+      }
     }
   });
 }

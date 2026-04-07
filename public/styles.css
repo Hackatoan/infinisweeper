@@ -10,10 +10,7 @@ html {
   align-items: center;
   background-color: #3e2723;
   font-family: Arial, sans-serif;
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE10+/Edge */
-  user-select: none; /* Standard */
+  touch-action: none; /* Prevent browser handling of gestures like pinch zoom on the body */
 }
 
 .board {
@@ -26,6 +23,10 @@ html {
   top: 0;
   left: 0;
   will-change: transform;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
 }
 
 .cell {
