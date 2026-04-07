@@ -557,7 +557,7 @@ function submitScore() {
 }
 
 function gotoLeaderboard() {
-  window.location.href = "leaderboard.html";
+  window.location.href = "/leaderboard";
 }
 
 // Debounce function
