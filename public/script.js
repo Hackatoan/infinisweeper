@@ -156,6 +156,9 @@ function revealAdjacentZeros(row, col) {
   while (queue.length > 0) {
     const { row, col } = queue.shift();
     const key = `${row},${col}`;
+    if (!board[key]) {
+      board[key] = createCell(row, col);
+    }
     if (board[key].isMine || board[key].isRevealed) continue;
 
     board[key].isRevealed = true;
@@ -169,7 +172,7 @@ function revealAdjacentZeros(row, col) {
           const newCol = col + dj;
           const newKey = `${newRow},${newCol}`;
 
-          if ((di !== 0 || dj !== 0) && isInBounds(newRow, newCol) && !visited.has(newKey)) {
+          if ((di !== 0 || dj !== 0) && !visited.has(newKey)) {
             queue.push({ row: newRow, col: newCol });
             visited.add(newKey);
           }
@@ -234,8 +237,8 @@ function handleKeyEvents(event) {
   }
 
   if (moved) {
-    updateBoardView();
     revealInitialZeros();
+    updateBoardView();
   }
 }
 
