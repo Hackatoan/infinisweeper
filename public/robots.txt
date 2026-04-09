@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://infinisweeper.hackatoa.com/sitemap.xml
