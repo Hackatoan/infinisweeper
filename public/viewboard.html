@@ -8,6 +8,7 @@
     <link rel="manifest" href="/site.webmanifest" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#3e2723" />
     <meta name="description" content="View a saved game board from Infinite Minesweeper. See the final state and score of a past run!" />
     <meta name="keywords" content="Minesweeper replay, view board, infinite minesweeper game, browser game replay" />
     <meta name="author" content="Hackatoa" />
@@ -25,8 +26,24 @@
     <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png" />
     <link rel="manifest" href="./site.webmanifest" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "View Board - Infinite Minesweeper",
+      "url": "https://infinisweeper.hackatoa.com/viewboard",
+      "description": "View a saved game board from Infinite Minesweeper. See the final state and score of a past run!",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Infinite Minesweeper",
+        "url": "https://infinisweeper.hackatoa.com/"
+      }
+    }
+    </script>
   </head>
   <body>
+    <h1 class="sr-only">Infinite Minesweeper Game Replay</h1>
     <div id="ad-container" class="ad-container"></div>
     <div id="board" class="board"></div>
     <div id="score-overlay" class="score-overlay">Score: 0</div>

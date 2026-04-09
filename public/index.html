@@ -12,10 +12,10 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#3e2723" />
     <meta name="description" content="Play Infinite Minesweeper, an endless and infinitely expanding game of minesweeper! Reveal safe cells, flag mines, and climb the leaderboard." />
     <meta name="keywords" content="Minesweeper, infinite minesweeper, endless game, browser game, logic puzzle, hackatoa" />
     <meta name="author" content="Hackatoa" />
@@ -29,8 +29,27 @@
     <link rel="canonical" href="https://infinisweeper.hackatoa.com/" />
     <title>Infinite Minesweeper</title>
     <link rel="stylesheet" href="styles.css" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "VideoGame",
+      "name": "Infinite Minesweeper",
+      "url": "https://infinisweeper.hackatoa.com/",
+      "description": "An endless game of minesweeper! How far can you go?",
+      "genre": "Puzzle",
+      "playMode": "SinglePlayer",
+      "applicationCategory": "Game",
+      "author": {
+        "@type": "Person",
+        "name": "Hackatoa",
+        "url": "https://hackatoa.com/"
+      }
+    }
+    </script>
   </head>
   <body>
+    <h1 class="sr-only">Infinite Minesweeper</h1>
     <div id="ad-container" class="ad-container"></div>
     <div id="notification" class="notification"></div>
     <div id="board" class="board"></div>
