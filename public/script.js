@@ -19,13 +19,7 @@ let lastRevealedPosition = { row: 0, col: 0 };
 let score = 0;
 let gameSeed = Math.random() * 10000;
 
-// --- Region Scoring Globals ---
 const REGION_SIZE = 10;
-const REGION_DIFFICULTY_MULTIPLIER = 2; // Assuming hard is standard or 1
-let regions = {};
-let activeRegionKey = null;
-let currentStreak = 0;
-// ------------------------------
 
 let gameOver = false;
 let isDragging = false;
@@ -154,203 +148,13 @@ function revealInitialZeros() {
         !board[key].isRevealed &&
         calculateAdjacentMines(row, col) === 0
       ) {
-        revealAdjacentZeros(row, col, true);
+        revealAdjacentZeros(row, col);
       }
     }
   }
 }
 
-function getRegionKey(row, col) {
-  return `${Math.floor(row / REGION_SIZE)},${Math.floor(col / REGION_SIZE)}`;
-}
 
-function initRegion(key) {
-  if (!regions[key]) {
-    regions[key] = {
-      revealedSafeCount: 0,
-      totalSafeCount: 0,
-      moves: {
-        forced: 0,
-        deduced: 0,
-        probabilistic: 0,
-      },
-      multiplier: 1.0,
-      isCompleted: false,
-      initialized: false,
-    };
-  }
-}
-
-function ensureRegionInitialized(rRow, rCol, key) {
-  if (regions[key] && regions[key].initialized) return;
-  initRegion(key);
-  let totalSafe = 0;
-  for (let i = 0; i < REGION_SIZE; i++) {
-    for (let j = 0; j < REGION_SIZE; j++) {
-      const row = rRow * REGION_SIZE + i;
-      const col = rCol * REGION_SIZE + j;
-      const cellKey = `${row},${col}`;
-      if (!board[cellKey]) {
-        board[cellKey] = createCell(row, col);
-      }
-      if (!board[cellKey].isMine) {
-        totalSafe++;
-        if (board[cellKey].isRevealed) {
-          regions[key].revealedSafeCount++;
-        }
-      }
-    }
-  }
-  regions[key].totalSafeCount = totalSafe;
-  regions[key].initialized = true;
-
-  if (regions[key].revealedSafeCount >= regions[key].totalSafeCount) {
-    regions[key].isCompleted = true;
-  }
-}
-
-function checkAbandonPenalty(newRegionKey) {
-  if (activeRegionKey && activeRegionKey !== newRegionKey) {
-    const activeRegion = regions[activeRegionKey];
-    if (activeRegion && !activeRegion.isCompleted) {
-      // >20% unrevealed = revealed < 80%
-      if (activeRegion.revealedSafeCount < activeRegion.totalSafeCount * 0.8) {
-        activeRegion.multiplier = 0.5;
-        currentStreak = 0; // Reset streak on abandon
-      }
-    }
-  }
-}
-
-function checkRegionComplete(key, isAutoDiscover = false) {
-  const region = regions[key];
-  if (
-    region &&
-    !region.isCompleted &&
-    region.revealedSafeCount >= region.totalSafeCount
-  ) {
-    region.isCompleted = true;
-
-    if (!isAutoDiscover) {
-      const moves = region.moves;
-      const totalMoves = moves.forced + moves.deduced + moves.probabilistic;
-      const qualityScore = totalMoves > 0 ? (moves.forced * 0 + moves.deduced * 1 + moves.probabilistic * 3) / totalMoves : 0;
-      const baseScore = region.totalSafeCount;
-      const streakBonus = currentStreak * 0.1;
-
-      const regionScore = Math.floor(baseScore * (0.5 + qualityScore) * region.multiplier * (1 + streakBonus));
-      score += regionScore;
-      document.getElementById("score-overlay").textContent = `Score: ${score}`;
-
-      currentStreak++; // Increment streak
-    }
-  }
-}
-
-function getNeighbors(row, col) {
-  let neighbors = [];
-  for (let dr = -1; dr <= 1; dr++) {
-    for (let dc = -1; dc <= 1; dc++) {
-      if (dr === 0 && dc === 0) continue;
-      neighbors.push({ r: row + dr, c: col + dc });
-    }
-  }
-  return neighbors;
-}
-
-function classifyMove(row, col) {
-  // Find numbered revealed neighbors
-  const neighbors = getNeighbors(row, col);
-  let numberedNeighbors = [];
-  for (const n of neighbors) {
-    const key = `${n.r},${n.c}`;
-    if (board[key] && board[key].isRevealed && !board[key].isMine) {
-      const mines = calculateAdjacentMines(n.r, n.c);
-      if (mines > 0) {
-        numberedNeighbors.push({ r: n.r, c: n.c, mines });
-      }
-    }
-  }
-
-  // Check Forced Move (safe reveal)
-  // A move is forced safe if there's a numbered neighbor whose remaining unflagged mines equals 0
-  for (const nn of numberedNeighbors) {
-    const nnNeighbors = getNeighbors(nn.r, nn.c);
-    let flagged = 0;
-    for (const nnn of nnNeighbors) {
-      const nnnKey = `${nnn.r},${nnn.c}`;
-      if (board[nnnKey] && board[nnnKey].isFlagged) {
-        flagged++;
-      }
-    }
-    if (nn.mines === flagged) {
-      return "forced";
-    }
-  }
-
-  // Check Deduced Move
-  // (Simple 2-tile constraint check)
-  if (numberedNeighbors.length >= 2) {
-    for (let i = 0; i < numberedNeighbors.length; i++) {
-      for (let j = i + 1; j < numberedNeighbors.length; j++) {
-        const A = numberedNeighbors[i];
-        const B = numberedNeighbors[j];
-
-        const getUnrevealedNeighbors = (tr, tc) => {
-          let unrevealed = [];
-          let flags = 0;
-          for (const n of getNeighbors(tr, tc)) {
-            const k = `${n.r},${n.c}`;
-            if (board[k]) {
-              if (board[k].isFlagged) flags++;
-              else if (!board[k].isRevealed) unrevealed.push(k);
-            } else {
-              unrevealed.push(k);
-            }
-          }
-          return {
-            unrevealed,
-            remainingMines: calculateAdjacentMines(tr, tc) - flags,
-          };
-        };
-
-        const infoA = getUnrevealedNeighbors(A.r, A.c);
-        const infoB = getUnrevealedNeighbors(B.r, B.c);
-
-        // If B's unrevealed are a superset of A's, and remainingMines are equal, then elements in B but not A are safe.
-        const isSuperset = (sub, sup) => sub.every((v) => sup.includes(v));
-
-        if (infoA.remainingMines === infoB.remainingMines) {
-          if (
-            infoA.unrevealed.length < infoB.unrevealed.length &&
-            isSuperset(infoA.unrevealed, infoB.unrevealed)
-          ) {
-            if (
-              infoB.unrevealed.includes(`${row},${col}`) &&
-              !infoA.unrevealed.includes(`${row},${col}`)
-            ) {
-              return "deduced";
-            }
-          }
-          if (
-            infoB.unrevealed.length < infoA.unrevealed.length &&
-            isSuperset(infoB.unrevealed, infoA.unrevealed)
-          ) {
-            if (
-              infoA.unrevealed.includes(`${row},${col}`) &&
-              !infoB.unrevealed.includes(`${row},${col}`)
-            ) {
-              return "deduced";
-            }
-          }
-        }
-      }
-    }
-  }
-
-  // Not forced, not deduced -> probabilistic
-  return "probabilistic";
-}
 
 function revealCell(row, col, directClick = true) {
   if (
@@ -361,34 +165,17 @@ function revealCell(row, col, directClick = true) {
   )
     return;
 
-  const regionKey = getRegionKey(row, col);
-  const rRow = Math.floor(row / REGION_SIZE);
-  const rCol = Math.floor(col / REGION_SIZE);
-  ensureRegionInitialized(rRow, rCol, regionKey);
-
-  if (directClick) {
-    checkAbandonPenalty(regionKey);
-    activeRegionKey = regionKey;
-  }
-
-  const moveClass = classifyMove(row, col);
-
   const cell = document.getElementById(`cell_${row}_${col}`);
   if (cell) {
     board[`${row},${col}`].isRevealed = true;
     cell.classList.add("revealed");
 
     if (!board[`${row},${col}`].isMine) {
-      regions[regionKey].revealedSafeCount++;
-      if (moveClass === "forced") {
-        regions[regionKey].moves.forced++;
-      } else if (moveClass === "deduced") {
-        regions[regionKey].moves.deduced++;
-      } else {
-        regions[regionKey].moves.probabilistic++;
-      }
+      score += 1; // +1 point for every safely revealed space
 
-      checkRegionComplete(regionKey);
+      if (directClick) {
+        document.getElementById("score-overlay").textContent = `Score: ${score}`;
+      }
     }
 
     if (board[`${row},${col}`].isMine) {
@@ -399,7 +186,7 @@ function revealCell(row, col, directClick = true) {
     } else {
       const adjacentMines = calculateAdjacentMines(row, col);
       cell.innerHTML = adjacentMines > 0 ? adjacentMines : "";
-      if (adjacentMines === 0) revealAdjacentZeros(row, col, false);
+      if (adjacentMines === 0) revealAdjacentZeros(row, col);
     }
 
     if (!startingPosition) startingPosition = { row, col };
@@ -409,7 +196,7 @@ function revealCell(row, col, directClick = true) {
   }
 }
 
-function revealAdjacentZeros(row, col, isAutoDiscover = false) {
+function revealAdjacentZeros(row, col) {
   const queue = [{ row, col }];
   const visited = new Set([`${row},${col}`]);
   const cellsToUpdate = [];
@@ -422,17 +209,8 @@ function revealAdjacentZeros(row, col, isAutoDiscover = false) {
     }
     if (board[key].isMine || board[key].isRevealed) continue;
 
-    const rKey = getRegionKey(row, col);
-    const rRow = Math.floor(row / REGION_SIZE);
-    const rCol = Math.floor(col / REGION_SIZE);
-    ensureRegionInitialized(rRow, rCol, rKey);
-
     board[key].isRevealed = true;
-
-    // Cascades are forced moves
-    regions[rKey].revealedSafeCount++;
-    regions[rKey].moves.forced++;
-    checkRegionComplete(rKey, isAutoDiscover);
+    score += 1;
 
     cellsToUpdate.push({ row, col });
 
@@ -461,6 +239,8 @@ function revealAdjacentZeros(row, col, isAutoDiscover = false) {
       cell.textContent = adjacentMines > 0 ? adjacentMines : "";
     }
   });
+
+  document.getElementById("score-overlay").textContent = `Score: ${score}`;
 }
 
 function toggleFlag(row, col) {
@@ -578,9 +358,6 @@ function saveGameState() {
     lastRevealedPosition,
     score,
     gameOver,
-    regions,
-    activeRegionKey,
-    currentStreak,
     gameSeed,
   };
   localStorage.setItem("minesweeperGameState", JSON.stringify(gameState));
@@ -596,9 +373,6 @@ function loadGameState() {
     startingPosition = gameState.startingPosition;
     lastRevealedPosition = gameState.lastRevealedPosition;
     score = gameState.score;
-    regions = gameState.regions || {};
-    activeRegionKey = gameState.activeRegionKey || null;
-    currentStreak = gameState.currentStreak || 0;
     gameOver = gameState.gameOver;
     gameSeed = gameState.gameSeed || Math.random() * 10000;
 
