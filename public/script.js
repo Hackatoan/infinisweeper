@@ -230,7 +230,20 @@ function checkRegionComplete(key, isAutoDiscover = false) {
     region.revealedSafeCount >= region.totalSafeCount
   ) {
     region.isCompleted = true;
-    currentStreak++; // Increment streak
+
+    if (!isAutoDiscover) {
+      const moves = region.moves;
+      const totalMoves = moves.forced + moves.deduced + moves.probabilistic;
+      const qualityScore = totalMoves > 0 ? (moves.forced * 0 + moves.deduced * 1 + moves.probabilistic * 3) / totalMoves : 0;
+      const baseScore = region.totalSafeCount;
+      const streakBonus = currentStreak * 0.1;
+
+      const regionScore = Math.floor(baseScore * (0.5 + qualityScore) * region.multiplier * (1 + streakBonus));
+      score += regionScore;
+      document.getElementById("score-overlay").textContent = `Score: ${score}`;
+
+      currentStreak++; // Increment streak
+    }
   }
 }
 
@@ -369,17 +382,10 @@ function revealCell(row, col, directClick = true) {
       regions[regionKey].revealedSafeCount++;
       if (moveClass === "forced") {
         regions[regionKey].moves.forced++;
-        score += 1;
       } else if (moveClass === "deduced") {
         regions[regionKey].moves.deduced++;
-        score += 2;
       } else {
         regions[regionKey].moves.probabilistic++;
-        score += 1;
-      }
-
-      if (directClick) {
-        document.getElementById("score-overlay").textContent = `Score: ${score}`;
       }
 
       checkRegionComplete(regionKey);
