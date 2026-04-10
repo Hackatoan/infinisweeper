@@ -426,7 +426,6 @@ function revealAdjacentZeros(row, col) {
     // Cascades are forced moves
     regions[rKey].revealedSafeCount++;
     regions[rKey].moves.forced++;
-    score += 1;
     checkRegionComplete(rKey);
 
     cellsToUpdate.push({ row, col });
@@ -456,8 +455,6 @@ function revealAdjacentZeros(row, col) {
       cell.textContent = adjacentMines > 0 ? adjacentMines : "";
     }
   });
-
-  document.getElementById("score-overlay").textContent = `Score: ${score}`;
 }
 
 function toggleFlag(row, col) {
