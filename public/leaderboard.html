@@ -45,23 +45,7 @@
     <div id="ad-container" class="ad-container"></div>
     <h1>Leaderboard</h1>
 
-    <div id="rules-container" style="max-width: 800px; margin: 20px auto; padding: 20px; background-color: #261410; color: #fbe9e7; border-radius: 8px;">
-      <h2>Scoring Rules</h2>
-      <p>Points are only awarded when a region (10x10 tile block) is fully cleared (all non-mine tiles revealed). No points are given for partial progress.</p>
-      <ul>
-        <li><strong>Base region score</strong> = number of safe tiles in region &times; difficulty multiplier (2) &times; 100</li>
-        <li><strong>Move Quality Modifier</strong>:
-          <ul>
-            <li><strong>Forced Move (0 quality points):</strong> The tile had only one possible state given its neighbors.</li>
-            <li><strong>Deduced Move (1 quality point):</strong> Required combining information from 2+ numbered tiles.</li>
-            <li><strong>Probabilistic Move (3 quality points):</strong> No guaranteed solution existed; player made a calculated guess.</li>
-          </ul>
-          <em>Quality score = (deduced + probabilistic moves) / total moves. Final region score is multiplied by (0.5 + quality_score).</em>
-        </li>
-        <li><strong>Abandon Penalty:</strong> If you leave a region with more than 20% of safe tiles unrevealed to work on a different region, the first region's potential multiplier is permanently halved.</li>
-        <li><strong>Streak Bonus:</strong> Fully clearing regions consecutively without abandoning any builds a streak. Each consecutive clear adds +10% to the region's payout, up to +50%.</li>
-      </ul>
-    </div>
+
 
     <div id="leaderboard-container">
       <div class="leaderboard-section">
@@ -83,5 +67,14 @@
         <a href="https://buymeacoffee.com/hackatoa" target="_blank">Buy me a coffee</a>
       </div>
     </center>
+    <div id="rules-container" style="max-width: 800px; margin: 20px auto; padding: 20px; background-color: #261410; color: #fbe9e7; border-radius: 8px;">
+      <h2>Scoring Rules</h2>
+      <p>Points are awarded immediately upon revealing a safe tile:</p>
+      <ul>
+        <li><strong>Deduced Move (2 points):</strong> Required combining information from 2+ numbered tiles.</li>
+        <li><strong>Forced Move (1 point):</strong> The tile had only one possible state given its neighbors (e.g. cascades).</li>
+        <li><strong>Probabilistic Move (1 point):</strong> No guaranteed solution existed; player made a calculated guess.</li>
+      </ul>
+    </div>
   </body>
 </html>
