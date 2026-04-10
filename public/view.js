@@ -351,13 +351,13 @@ function onDOMContentLoaded() {
   boardContainer.addEventListener("click", (e) => {
     const cell = e.target.closest(".cell");
     if (cell) {
-      handleCellClick(parseInt(cell.dataset.row), parseInt(cell.dataset.col));
+      // handleCellClick(parseInt(cell.dataset.row), parseInt(cell.dataset.col));
     }
   });
   boardContainer.addEventListener("contextmenu", (e) => {
     const cell = e.target.closest(".cell");
     if (cell) {
-      handleCellRightClick(e, parseInt(cell.dataset.row), parseInt(cell.dataset.col));
+      // handleCellRightClick(e, parseInt(cell.dataset.row), parseInt(cell.dataset.col));
     }
   });
 }
