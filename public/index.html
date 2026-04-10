@@ -12,7 +12,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="theme-color" content="#3e2723" />
@@ -70,6 +70,16 @@
       <button id="submit-score-button">Submit Score</button>
       <button id="export-png-btn-gameover" class="export-png-btn" onclick="exportMapPNG()">Export PNG</button>
     </div>
+
+    <div id="zoom-controls" class="zoom-controls">
+      <button onclick="zoomIn()">+</button>
+      <button onclick="zoomOut()">-</button>
+    </div>
+    <div id="mobile-mode-toggle" class="mobile-mode-toggle">
+      <button id="mode-mine-btn" class="active" onclick="setMode('mine')">💣</button>
+      <button id="mode-flag-btn" onclick="setMode('flag')">🚩</button>
+    </div>
+
     <div class="info-area">
       <div class="info-icon">i</div>
       <div class="keybinds-tooltip">

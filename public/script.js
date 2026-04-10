@@ -11,6 +11,7 @@ const EXTRA_CELLS = 2; // Number of extra cells around the visible area
 let board = {};
 let offsetX = 0;
 let offsetY = 0;
+let currentZoom = 1;
 let cellSize = calculateCellSize();
 let startingPosition = null;
 let lastRevealedPosition = { row: 0, col: 0 };
@@ -22,7 +23,8 @@ let startDragY = 0;
 let panX = 0;
 let panY = 0;
 let hasDragged = false;
-let isSubmitting = false; // Track submission state
+let isSubmitting = false;
+let inputMode = "mine"; // "mine" or "flag" // Track submission state
 let gameSeed = Math.random() * 10000;
 
 // Debounced Functions
@@ -53,7 +55,7 @@ firebase.auth().signInAnonymously().catch(console.error);
 function calculateCellSize() {
   const width = window.innerWidth;
   const height = window.innerHeight;
-  return Math.min(width / MAX_COLS, height / MAX_ROWS);
+  return Math.max(20, Math.min(width / MAX_COLS, height / MAX_ROWS) * currentZoom);
 }
 
 // Main Functions
@@ -282,19 +284,33 @@ function incrementScore() {
 function updateBoardView() {
   const { rows, cols } = getViewportSize();
   const boardContainer = document.getElementById("board");
-  boardContainer.innerHTML = "";
-  boardContainer.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
+
+  const expectedChildrenCount = rows * cols;
+  const canReuse = boardContainer.children.length === expectedChildrenCount;
+
+  if (!canReuse) {
+    boardContainer.innerHTML = "";
+    boardContainer.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
     boardContainer.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
-  boardContainer.style.top = `-${EXTRA_CELLS * (cellSize + 1)}px`;
-  boardContainer.style.left = `-${EXTRA_CELLS * (cellSize + 1)}px`;
+    boardContainer.style.top = `-${EXTRA_CELLS * (cellSize + 1)}px`;
+    boardContainer.style.left = `-${EXTRA_CELLS * (cellSize + 1)}px`;
+  }
+
   boardContainer.style.transform = `translate(${panX}px, ${panY}px)`;
 
+  let childIndex = 0;
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
       const row = offsetY + i - EXTRA_CELLS;
       const col = offsetX + j - EXTRA_CELLS;
-      const cell = createCellElement(row, col);
-      boardContainer.appendChild(cell);
+
+      if (canReuse) {
+        const cell = boardContainer.children[childIndex++];
+        updateCellElement(cell, row, col);
+      } else {
+        const cell = createCellElement(row, col);
+        boardContainer.appendChild(cell);
+      }
     }
   }
 }
@@ -485,9 +501,8 @@ function calculateAdjacentMines(row, col) {
   return adjacentMines;
 }
 
-function createCellElement(row, col) {
-  const cell = document.createElement("div");
-  cell.classList.add("cell");
+function updateCellElement(cell, row, col) {
+  cell.className = "cell";
   cell.id = `cell_${row}_${col}`;
   cell.dataset.row = row;
   cell.dataset.col = col;
@@ -508,11 +523,18 @@ function createCellElement(row, col) {
     } else if (cellData.isFlagged) {
       cell.classList.add("flagged");
       cell.innerHTML = CELL_FLAG;
+    } else {
+      cell.innerHTML = "";
     }
   } else {
     board[`${row},${col}`] = createCell(row, col);
+    cell.innerHTML = "";
   }
+}
 
+function createCellElement(row, col) {
+  const cell = document.createElement("div");
+  updateCellElement(cell, row, col);
   return cell;
 }
 
@@ -587,7 +609,22 @@ function onDOMContentLoaded() {
     }
     const cell = e.target.closest(".cell");
     if (cell) {
-      handleCellClick(parseInt(cell.dataset.row), parseInt(cell.dataset.col));
+      const row = parseInt(cell.dataset.row);
+      const col = parseInt(cell.dataset.col);
+
+      if (inputMode === "flag") {
+        toggleFlag(row, col);
+      } else {
+        if (!startingPosition) {
+          startingPosition = { row, col };
+        }
+        if (!board[`${row},${col}`]) {
+          board[`${row},${col}`] = createCell(row, col);
+        }
+        if (!board[`${row},${col}`].isFlagged) {
+          revealCell(row, col);
+        }
+      }
     }
   });
   boardContainer.addEventListener("contextmenu", (e) => {
@@ -631,11 +668,9 @@ function onDOMContentLoaded() {
       // Setup long-press for flagging
       const cell = e.target.closest(".cell");
       if (cell) {
-        cell.longPressTimer = setTimeout(() => {
-          hasDragged = true; // Prevent regular click
-          toggleFlag(parseInt(cell.dataset.row), parseInt(cell.dataset.col));
-          navigator.vibrate && navigator.vibrate(50); // Haptic feedback if supported
-        }, 500); // 500ms long press
+        const targetRow = parseInt(cell.dataset.row);
+        const targetCol = parseInt(cell.dataset.col);
+        // Long press removed in favor of mode toggle
       }
     }
   }, { passive: false });
@@ -733,4 +768,31 @@ function onDOMContentLoaded() {
       }
     });
   });
+
+  document.addEventListener("touchcancel", (e) => {
+    isDragging = false;
+    const allCells = document.querySelectorAll('.cell');
+    allCells.forEach(c => {
+      if (c.longPressTimer) {
+        clearTimeout(c.longPressTimer);
+        c.longPressTimer = null;
+      }
+    });
+  });
+}
+
+function zoomIn() {
+  currentZoom *= 1.2;
+  onResize();
+}
+
+function zoomOut() {
+  currentZoom /= 1.2;
+  onResize();
+}
+
+function setMode(mode) {
+  inputMode = mode;
+  document.getElementById("mode-mine-btn").classList.toggle("active", mode === "mine");
+  document.getElementById("mode-flag-btn").classList.toggle("active", mode === "flag");
 }
