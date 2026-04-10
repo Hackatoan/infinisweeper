@@ -340,3 +340,16 @@ html {
   font-size: 0.8em;
   opacity: 0.8;
 }
+
+.region-border-right {
+  border-right: 2px solid #ffeb3b !important;
+}
+.region-border-bottom {
+  border-bottom: 2px solid #ffeb3b !important;
+}
+.region-border-left {
+  border-left: 2px solid #ffeb3b !important;
+}
+.region-border-top {
+  border-top: 2px solid #ffeb3b !important;
+}
