@@ -154,7 +154,7 @@ function revealInitialZeros() {
         !board[key].isRevealed &&
         calculateAdjacentMines(row, col) === 0
       ) {
-        revealAdjacentZeros(row, col);
+        revealAdjacentZeros(row, col, true);
       }
     }
   }
@@ -222,7 +222,7 @@ function checkAbandonPenalty(newRegionKey) {
   }
 }
 
-function checkRegionComplete(key) {
+function checkRegionComplete(key, isAutoDiscover = false) {
   const region = regions[key];
   if (
     region &&
@@ -230,6 +230,8 @@ function checkRegionComplete(key) {
     region.revealedSafeCount >= region.totalSafeCount
   ) {
     region.isCompleted = true;
+
+    if (isAutoDiscover) return; // Do not add score for auto-discovered areas
 
     const baseScore =
       region.totalSafeCount * REGION_DIFFICULTY_MULTIPLIER * 100;
@@ -393,8 +395,7 @@ function revealCell(row, col, directClick = true) {
       if (moveClass === "forced") regions[regionKey].moves.forced++;
       else if (moveClass === "deduced") regions[regionKey].moves.deduced++;
       else regions[regionKey].moves.probabilistic++;
-
-      checkRegionComplete(regionKey);
+      checkRegionComplete(regionKey, !directClick);
     }
 
     if (board[`${row},${col}`].isMine) {
@@ -405,7 +406,7 @@ function revealCell(row, col, directClick = true) {
     } else {
       const adjacentMines = calculateAdjacentMines(row, col);
       cell.innerHTML = adjacentMines > 0 ? adjacentMines : "";
-      if (adjacentMines === 0) revealAdjacentZeros(row, col);
+      if (adjacentMines === 0) revealAdjacentZeros(row, col, false);
     }
 
     if (!startingPosition) startingPosition = { row, col };
@@ -415,7 +416,7 @@ function revealCell(row, col, directClick = true) {
   }
 }
 
-function revealAdjacentZeros(row, col) {
+function revealAdjacentZeros(row, col, isAutoDiscover = false) {
   const queue = [{ row, col }];
   const visited = new Set([`${row},${col}`]);
   const cellsToUpdate = [];
@@ -438,7 +439,7 @@ function revealAdjacentZeros(row, col) {
     // Cascades are forced moves
     regions[rKey].revealedSafeCount++;
     regions[rKey].moves.forced++;
-    checkRegionComplete(rKey);
+    checkRegionComplete(rKey, isAutoDiscover);
 
     cellsToUpdate.push({ row, col });
 
