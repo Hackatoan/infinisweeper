@@ -791,8 +791,41 @@ function zoomOut() {
   onResize();
 }
 
-function setMode(mode) {
-  inputMode = mode;
-  document.getElementById("mode-mine-btn").classList.toggle("active", mode === "mine");
-  document.getElementById("mode-flag-btn").classList.toggle("active", mode === "flag");
+function toggleMode() {
+  if (inputMode === "mine") {
+    inputMode = "flag";
+    document.getElementById("mode-toggle-btn").innerHTML = "🚩";
+  } else {
+    inputMode = "mine";
+    document.getElementById("mode-toggle-btn").innerHTML = '<span class="flag-x">🚩</span>';
+  }
+}
+
+
+async function promptSubmitScore() {
+  const username = prompt("Enter your username to submit your score:");
+  if (username) {
+    const finalScore = score;
+    const finalState = getSaveGameState();
+
+    try {
+      const response = await fetch("/api/leaderboard", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username,
+          score: finalScore,
+          gamestate: finalState
+        })
+      });
+      if (response.ok) {
+        alert("Score submitted successfully!");
+      } else {
+        alert("Failed to submit score.");
+      }
+    } catch (error) {
+      console.error("Error submitting score:", error);
+      alert("Error submitting score.");
+    }
+  }
 }
