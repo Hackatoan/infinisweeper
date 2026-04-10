@@ -17,9 +17,7 @@ let startingPosition = null;
 let lastRevealedPosition = { row: 0, col: 0 };
 
 let score = 0;
-regions = {};
-activeRegionKey = null;
-currentStreak = 0;
+let gameSeed = Math.random() * 10000;
 
 // --- Region Scoring Globals ---
 const REGION_SIZE = 10;
@@ -38,7 +36,6 @@ let panY = 0;
 let hasDragged = false;
 let isSubmitting = false;
 let inputMode = "mine"; // "mine" or "flag" // Track submission state
-let gameSeed = Math.random() * 10000;
 
 // Debounced Functions
 const debouncedSaveGameState = debounce(saveGameState, DEBOUNCE_DELAY);
