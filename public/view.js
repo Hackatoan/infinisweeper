@@ -17,6 +17,12 @@ let score = 0;
 let gameOver = false;
 let isSubmitting = false; // Track submission state
 let gameSeed = Math.random() * 10000;
+let isDragging = false;
+let startDragX = 0;
+let startDragY = 0;
+let panX = 0;
+let panY = 0;
+let hasDragged = false;
 
 // Debounced Functions
 const debouncedSaveGameState = debounce(saveGameState, DEBOUNCE_DELAY);
@@ -37,17 +43,60 @@ function calculateCellSize() {
 function createBoard() {
   const { rows, cols } = getViewportSize();
   const boardContainer = document.getElementById("board");
-  boardContainer.innerHTML = "";
-  boardContainer.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
-  boardContainer.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
 
+  const expectedChildrenCount = rows * cols;
+  const canReuse = boardContainer.children.length === expectedChildrenCount;
+
+  if (!canReuse) {
+    boardContainer.innerHTML = "";
+    boardContainer.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
+    boardContainer.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
+    boardContainer.style.top = `-${EXTRA_CELLS * (cellSize + 1)}px`;
+    boardContainer.style.left = `-${EXTRA_CELLS * (cellSize + 1)}px`;
+  }
+
+  boardContainer.style.transform = `translate(${panX}px, ${panY}px)`;
+
+  let childIndex = 0;
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
       const row = offsetY + i - EXTRA_CELLS;
       const col = offsetX + j - EXTRA_CELLS;
-      const cell = createCellElement(row, col);
-      boardContainer.appendChild(cell);
+
+      if (canReuse) {
+        const cell = boardContainer.children[childIndex++];
+        updateCellElement(cell, row, col);
+      } else {
+        const cell = createCellElement(row, col);
+        boardContainer.appendChild(cell);
+      }
     }
+  }
+}
+
+function updateCellElement(cell, row, col) {
+  cell.id = `cell_${row}_${col}`;
+  cell.dataset.row = row;
+  cell.dataset.col = col;
+
+  cell.className = "cell";
+  cell.innerHTML = "";
+
+  if (board[`${row},${col}`]) {
+    const cellData = board[`${row},${col}`];
+    if (cellData.isRevealed) {
+      cell.classList.add("revealed");
+      if (cellData.isMine) {
+        cell.classList.add("mine");
+      } else {
+        const adjacentMines = calculateAdjacentMines(row, col);
+        cell.innerHTML = adjacentMines > 0 ? adjacentMines : "";
+      }
+    } else if (cellData.isFlagged) {
+      cell.innerHTML = CELL_FLAG;
+    }
+  } else {
+    board[`${row},${col}`] = createCell(row, col);
   }
 }
 
@@ -364,6 +413,104 @@ function onDOMContentLoaded() {
       // handleCellRightClick(e, parseInt(cell.dataset.row), parseInt(cell.dataset.col));
     }
   });
+  // Drag logic
+  boardContainer.addEventListener("mousedown", (e) => {
+    if (e.button === 0 || e.button === 2) {
+      isDragging = true;
+      hasDragged = false;
+      startDragX = e.clientX;
+      startDragY = e.clientY;
+    }
+  });
+
+  let initialTouchX = 0;
+  let initialTouchY = 0;
+
+  boardContainer.addEventListener(
+    "touchstart",
+    (e) => {
+      if (e.touches.length === 1) {
+        isDragging = true;
+        hasDragged = false;
+        startDragX = e.touches[0].clientX;
+        startDragY = e.touches[0].clientY;
+        initialTouchX = startDragX;
+        initialTouchY = startDragY;
+      }
+    },
+    { passive: false }
+  );
+
+  document.addEventListener("mousemove", handleMove);
+  document.addEventListener("touchmove", handleMove, { passive: false });
+
+  function handleMove(e) {
+    if (!isDragging) return;
+
+    if (e.type === "touchmove") e.preventDefault();
+
+    let clientX, clientY;
+    if (e.type === "touchmove") {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+
+    const dx = clientX - startDragX;
+    const dy = clientY - startDragY;
+
+    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+      hasDragged = true;
+    }
+
+    panX += dx;
+    panY += dy;
+
+    startDragX = clientX;
+    startDragY = clientY;
+
+    let moved = false;
+    const effectiveCellSize = cellSize + 1;
+    if (Math.abs(panX) >= effectiveCellSize) {
+      const shiftCols = Math.trunc(panX / effectiveCellSize);
+      offsetX -= shiftCols;
+      panX -= shiftCols * effectiveCellSize;
+      moved = true;
+    }
+    if (Math.abs(panY) >= effectiveCellSize) {
+      const shiftRows = Math.trunc(panY / effectiveCellSize);
+      offsetY -= shiftRows;
+      panY -= shiftRows * effectiveCellSize;
+      moved = true;
+    }
+
+    if (moved) {
+      revealInitialZeros();
+      updateBoardView();
+    } else {
+      document.getElementById("board").style.transform = `translate(${panX}px, ${panY}px)`;
+    }
+  }
+
+  document.addEventListener("mouseup", (e) => {
+    if (e.button === 0 || e.button === 2) {
+      isDragging = false;
+      if (hasDragged) {
+        setTimeout(() => (hasDragged = false), 50);
+      }
+    }
+  });
+
+  document.addEventListener("touchend", (e) => {
+    isDragging = false;
+  });
+
+  document.addEventListener("touchcancel", (e) => {
+    isDragging = false;
+  });
+
 }
 
 function createCellElement(row, col) {
