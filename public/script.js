@@ -148,7 +148,7 @@ function revealInitialZeros() {
         !board[key].isRevealed &&
         calculateAdjacentMines(row, col) === 0
       ) {
-        revealAdjacentZeros(row, col);
+        revealAdjacentZeros(row, col, true);
       }
     }
   }
@@ -171,9 +171,9 @@ function revealCell(row, col, directClick = true) {
     cell.classList.add("revealed");
 
     if (!board[`${row},${col}`].isMine) {
-      score += 1; // +1 point for every safely revealed space
-
       if (directClick) {
+        score += 1; // +1 point for every safely revealed space
+
         document.getElementById("score-overlay").textContent = `Score: ${score}`;
       }
     }
@@ -186,7 +186,7 @@ function revealCell(row, col, directClick = true) {
     } else {
       const adjacentMines = calculateAdjacentMines(row, col);
       cell.innerHTML = adjacentMines > 0 ? adjacentMines : "";
-      if (adjacentMines === 0) revealAdjacentZeros(row, col);
+      if (adjacentMines === 0) revealAdjacentZeros(row, col, false);
     }
 
     if (!startingPosition) startingPosition = { row, col };
@@ -196,7 +196,7 @@ function revealCell(row, col, directClick = true) {
   }
 }
 
-function revealAdjacentZeros(row, col) {
+function revealAdjacentZeros(row, col, isAutoDiscover = false) {
   const queue = [{ row, col }];
   const visited = new Set([`${row},${col}`]);
   const cellsToUpdate = [];
@@ -210,7 +210,7 @@ function revealAdjacentZeros(row, col) {
     if (board[key].isMine || board[key].isRevealed) continue;
 
     board[key].isRevealed = true;
-    score += 1;
+    if (!isAutoDiscover) { score += 1; }
 
     cellsToUpdate.push({ row, col });
 
@@ -589,7 +589,7 @@ function createCellElement(row, col) {
 
 function handleCellClick(row, col) {
   if (calculateAdjacentMines(row, col) === 0) {
-    revealAdjacentZeros(row, col);
+    revealAdjacentZeros(row, col, false);
   } else {
     revealCell(row, col);
   }
