@@ -338,16 +338,6 @@ function debounce(func, delay) {
   };
 }
 
-function showNotification(message) {
-  const notification = document.getElementById("notification");
-  notification.textContent = message;
-  notification.classList.add("show");
-
-  setTimeout(() => {
-    notification.classList.remove("show");
-  }, 3000);
-}
-
 function onResize() {
   cellSize = calculateCellSize();
   updateBoardView();
