@@ -246,7 +246,7 @@ function saveGameState() {
 }
 
 function loadGameState() {
-  const savedState = localStorage.getItem("minesweeperGameState");
+  const savedState = localStorage.getItem("minesweeperViewState") || localStorage.getItem("minesweeperGameState");
   if (savedState) {
     const gameState = JSON.parse(savedState);
     board = gameState.board;
@@ -258,7 +258,11 @@ function loadGameState() {
     gameOver = gameState.gameOver;
     gameSeed = gameState.gameSeed || Math.random() * 10000;
 
-    updateBoardView();
+    if (lastRevealedPosition) {
+      moveToCenter(lastRevealedPosition);
+    } else {
+      updateBoardView();
+    }
     document.getElementById("score-overlay").textContent = `Score: ${score}`;
     return true;
   }

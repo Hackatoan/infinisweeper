@@ -588,6 +588,8 @@ function createCellElement(row, col) {
 }
 
 function handleCellClick(row, col) {
+  lastRevealedPosition = { row, col };
+  saveGameState();
   if (calculateAdjacentMines(row, col) === 0) {
     revealAdjacentZeros(row, col, false);
   } else {
