@@ -76,8 +76,8 @@
       <button onclick="zoomOut()">-</button>
     </div>
     <div id="mobile-mode-toggle" class="mobile-mode-toggle">
-      <button id="mode-mine-btn" class="active" onclick="setMode('mine')">💣</button>
-      <button id="mode-flag-btn" onclick="setMode('flag')">🚩</button>
+      <button id="mode-toggle-btn" class="active" onclick="toggleMode()"><span class="flag-x">🚩</span></button>
+
     </div>
 
     <div class="info-area">
@@ -90,6 +90,8 @@
         Left-Click: Reveal cell<br>
         Right-Click: Toggle Flag<br><br>
         <button id="export-png-btn-info" class="export-png-btn" onclick="exportMapPNG()">Export PNG Map</button>
+        <br>
+        <button id="info-submit-score-btn" class="export-png-btn" onclick="promptSubmitScore()">Submit Score</button>
       </div>
     </div>
     <a href="https://hackatoa.com/" class="hackatoa-banner" target="_blank">Hackatoa.com</a>
