@@ -231,29 +231,12 @@ function checkRegionComplete(key) {
   ) {
     region.isCompleted = true;
 
-    const baseScore =
-      region.totalSafeCount * REGION_DIFFICULTY_MULTIPLIER * 100;
-    const totalMoves =
-      region.moves.forced + region.moves.deduced + region.moves.probabilistic;
-    let qualityScore = 0;
-    if (totalMoves > 0) {
-      qualityScore =
-        (region.moves.deduced + region.moves.probabilistic * 3) / totalMoves; // Probabilistic moves are worth 3 quality points according to the prompt
-      // Wait, prompt says: "quality score = (deduced + probabilistic moves) / total moves." Wait, earlier "Probabilistic move ... Worth 3 quality points." "Deduced ... Worth 1 quality point". Let's use points.
-      // Let's re-read the prompt exactly in another step. For now, we will implement the points logic accurately.
-    }
-
-    // Streak bonus: +10% per consecutive clean clear, up to 50%
-    const streakBonus = Math.min(currentStreak * 0.1, 0.5);
-    const finalScore = Math.floor(
-      baseScore * (0.5 + qualityScore) * region.multiplier * (1 + streakBonus),
-    );
+    const finalScore = region.moves.deduced;
 
     score += finalScore;
     document.getElementById("score-overlay").textContent = `Score: ${score}`;
 
     currentStreak++; // Increment streak
-    showToast(`Region Cleared! +${finalScore} points`);
   }
 }
 
