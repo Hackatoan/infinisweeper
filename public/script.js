@@ -230,12 +230,6 @@ function checkRegionComplete(key) {
     region.revealedSafeCount >= region.totalSafeCount
   ) {
     region.isCompleted = true;
-
-    const finalScore = region.moves.deduced;
-
-    score += finalScore;
-    document.getElementById("score-overlay").textContent = `Score: ${score}`;
-
     currentStreak++; // Increment streak
   }
 }
@@ -373,9 +367,20 @@ function revealCell(row, col, directClick = true) {
 
     if (!board[`${row},${col}`].isMine) {
       regions[regionKey].revealedSafeCount++;
-      if (moveClass === "forced") regions[regionKey].moves.forced++;
-      else if (moveClass === "deduced") regions[regionKey].moves.deduced++;
-      else regions[regionKey].moves.probabilistic++;
+      if (moveClass === "forced") {
+        regions[regionKey].moves.forced++;
+        score += 1;
+      } else if (moveClass === "deduced") {
+        regions[regionKey].moves.deduced++;
+        score += 2;
+      } else {
+        regions[regionKey].moves.probabilistic++;
+        score += 1;
+      }
+
+      if (directClick) {
+        document.getElementById("score-overlay").textContent = `Score: ${score}`;
+      }
 
       checkRegionComplete(regionKey);
     }
@@ -421,6 +426,7 @@ function revealAdjacentZeros(row, col) {
     // Cascades are forced moves
     regions[rKey].revealedSafeCount++;
     regions[rKey].moves.forced++;
+    score += 1;
     checkRegionComplete(rKey);
 
     cellsToUpdate.push({ row, col });
@@ -450,6 +456,8 @@ function revealAdjacentZeros(row, col) {
       cell.textContent = adjacentMines > 0 ? adjacentMines : "";
     }
   });
+
+  document.getElementById("score-overlay").textContent = `Score: ${score}`;
 }
 
 function toggleFlag(row, col) {
