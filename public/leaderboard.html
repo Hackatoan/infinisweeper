@@ -47,13 +47,17 @@
 
 
 
+    <div class="tabs">
+      <button id="tab-score" class="tab-btn active" onclick="switchTab('score')">Top Scores</button>
+      <button id="tab-recent" class="tab-btn" onclick="switchTab('recent')">Recent</button>
+    </div>
     <div id="leaderboard-container">
-      <div class="leaderboard-section">
-        <h2 class="leaderboard-title">Leaderboard by Score</h2>
+      <div id="section-score" class="leaderboard-section active-tab">
+        <h2 class="leaderboard-title" style="display:none">Leaderboard by Score</h2>
         <ul id="leaderboard-by-score"></ul>
       </div>
-      <div class="leaderboard-section">
-        <h2 class="leaderboard-title">Leaderboard by Most Recent</h2>
+      <div id="section-recent" class="leaderboard-section">
+        <h2 class="leaderboard-title" style="display:none">Leaderboard by Most Recent</h2>
         <ul id="leaderboard-by-recent"></ul>
       </div>
     </div>

@@ -18,9 +18,13 @@ function renderLeaderboard(doc, leaderboardElement) {
   let li = document.createElement("li");
   let data = doc.data();
   let date = data.date
-    ? data.date.toDate().toLocaleString()
+    ? data.date.toDate().toLocaleDateString()
     : "No date available";
-  li.textContent = `${data.name}: ${data.score} (on ${date})`;
+
+  let textSpan = document.createElement("span");
+  textSpan.className = "leaderboard-entry-text";
+  textSpan.textContent = `${data.name}: ${data.score} (${date})`;
+  li.appendChild(textSpan);
 
   let viewBtn = document.createElement("button");
   viewBtn.textContent = "VIEW";
@@ -32,6 +36,20 @@ function renderLeaderboard(doc, leaderboardElement) {
 
   leaderboardElement.appendChild(li);
 }
+
+window.switchTab = function(tab) {
+  if (tab === "score") {
+    document.getElementById("section-score").classList.add("active-tab");
+    document.getElementById("section-recent").classList.remove("active-tab");
+    document.getElementById("tab-score").classList.add("active");
+    document.getElementById("tab-recent").classList.remove("active");
+  } else {
+    document.getElementById("section-recent").classList.add("active-tab");
+    document.getElementById("section-score").classList.remove("active-tab");
+    document.getElementById("tab-recent").classList.add("active");
+    document.getElementById("tab-score").classList.remove("active");
+  }
+};
 
 function handleViewSaveState(saveState) {
   localStorage.setItem("minesweeperViewState", saveState);

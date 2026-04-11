@@ -403,15 +403,30 @@ function showToast(message) {
 
   if (gameOver && message.includes("Game Over!")) {
     document.getElementById("submit-score").style.display = "block";
-    document
-      .getElementById("submit-score-button")
-      .addEventListener("click", submitScore);
+    const usernameInput = document.getElementById("username");
+    if (usernameInput) {
+      const savedUsername = localStorage.getItem("minesweeperUsername");
+      if (savedUsername) {
+        usernameInput.value = savedUsername;
+      }
+    }
+    const submitBtn = document.getElementById("submit-score-button");
+    if (submitBtn) {
+      submitBtn.addEventListener("click", submitScore);
+    }
   }
 }
 
 function hideToast() {
   document.getElementById("toast").style.display = "none";
   document.getElementById("submit-score").style.display = "none";
+
+  // reset submit-score div content in case it was changed by submitScore
+  document.getElementById("submit-score").innerHTML = `
+      <input type="text" id="username" placeholder="Enter your username" />
+      <button id="submit-score-button">Submit Score</button>
+      <button id="export-png-btn-gameover" class="export-png-btn" onclick="exportMapPNG()">Export PNG</button>
+  `;
 }
 
 async function exportMapPNG() {
@@ -607,20 +622,25 @@ function submitScore() {
   if (isSubmitting) return;
   isSubmitting = true;
 
+  const username = getUsername();
+  if (username) {
+    localStorage.setItem("minesweeperUsername", username);
+  }
+
   const now = new Date();
   db.collection("leaderboard")
     .add({
       uid: firebase.auth().currentUser.uid,
-      name: getUsername(),
+      name: username,
       score: getScore(),
       date: firebase.firestore.Timestamp.fromDate(now),
       gamestate: getSaveGameState(),
     })
     .then(() => {
-      document.getElementById("username").value = "";
-      showToast("Score submitted successfully!");
       isSubmitting = false;
-      gotoLeaderboard();
+      document.getElementById("submit-score").innerHTML = `<p style="margin-bottom:10px; font-weight:bold;">Score submitted successfully!</p>
+        <button onclick="restartGame()">Restart</button>
+        <button onclick="gotoLeaderboard()">View Leaderboard</button>`;
     })
     .catch((error) => {
       console.error("Error adding document: ", error);
