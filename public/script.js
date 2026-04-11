@@ -61,8 +61,7 @@ function calculateCellSize() {
   const height = window.innerHeight;
   return Math.max(
     20,
-    Math.min(width / MAX_COLS, height / MAX_ROWS) * currentZoom,
-  );
+    Math.min(width / MAX_COLS, height / MAX_ROWS) * currentZoom);
 }
 
 // Main Functions
@@ -482,10 +481,10 @@ async function exportMapPNG() {
       cell.style.height = `${cellSize}px`;
 
       // UI border for region
-      if (col % REGION_SIZE === REGION_SIZE - 1 || col % REGION_SIZE === -1) {
+      if (c % REGION_SIZE === REGION_SIZE - 1 || c % REGION_SIZE === -1) {
         cell.classList.add("region-border-right");
       }
-      if (row % REGION_SIZE === REGION_SIZE - 1 || row % REGION_SIZE === -1) {
+      if (r % REGION_SIZE === REGION_SIZE - 1 || r % REGION_SIZE === -1) {
         cell.classList.add("region-border-bottom");
       }
 
@@ -713,8 +712,7 @@ function onDOMContentLoaded() {
         handleCellRightClick(
           e,
           parseInt(cell.dataset.row),
-          parseInt(cell.dataset.col),
-        );
+          parseInt(cell.dataset.col));
       }
     }
   });
@@ -753,8 +751,7 @@ function onDOMContentLoaded() {
         }
       }
     },
-    { passive: false },
-  );
+    { passive: false });
 
   document.addEventListener("mousemove", handleMove);
   document.addEventListener("touchmove", handleMove, { passive: false });
