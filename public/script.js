@@ -544,7 +544,7 @@ function getViewportSize() {
 }
 
 function isInBounds(row, col) {
-  return board.hasOwnProperty(`${row},${col}`);
+  return board[`${row},${col}`] !== undefined;
 }
 
 function calculateAdjacentMines(row, col) {
