@@ -557,6 +557,7 @@ function handleCellRightClick(event, row, col) {
   toggleFlag(row, col);
 }
 
+const db = firebase.firestore();
 function submitScore() {
   if (isSubmitting) return;
   isSubmitting = true;
