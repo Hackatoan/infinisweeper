@@ -873,13 +873,17 @@ function zoomOut() {
 }
 
 function toggleMode() {
+  const btn = document.getElementById("mode-toggle-btn");
+  btn.textContent = "";
   if (inputMode === "mine") {
     inputMode = "flag";
-    document.getElementById("mode-toggle-btn").innerHTML = "🚩";
+    btn.textContent = "🚩";
   } else {
     inputMode = "mine";
-    document.getElementById("mode-toggle-btn").innerHTML =
-      '<span class="flag-x">🚩</span>';
+    const span = document.createElement("span");
+    span.className = "flag-x";
+    span.textContent = "🚩";
+    btn.appendChild(span);
   }
 }
 
