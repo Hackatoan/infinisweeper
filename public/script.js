@@ -155,8 +155,6 @@ function revealInitialZeros() {
   }
 }
 
-
-
 function revealCell(row, col, directClick = true) {
   if (
     gameOver ||
@@ -192,7 +190,7 @@ function revealCell(row, col, directClick = true) {
 
     if (!startingPosition) startingPosition = { row, col };
     lastRevealedPosition = { row, col };
-    // if (directClick) incrementScore(); // Replaced with region logic
+
     saveGameState();
   }
 }
