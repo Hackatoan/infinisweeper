@@ -135,9 +135,10 @@ function resetGameState() {
 }
 
 function pseudoRandom(x, y) {
-  // A simple deterministic hash function
-  let n = Math.sin(x * 12.9898 + y * 78.233 + gameSeed) * 43758.5453;
-  return n - Math.floor(n);
+  // Optimized pseudo-random hash using integer arithmetic
+  let h = Math.imul(x, 374761393) ^ Math.imul(y, 668265263) ^ Math.floor(gameSeed * 1000000);
+  h = Math.imul(h ^ (h >>> 13), 1274126177);
+  return (h >>> 0) / 4294967296.0;
 }
 
 function createCell(row, col) {
