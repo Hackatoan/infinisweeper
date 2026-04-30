@@ -47,12 +47,12 @@ function handleViewSaveState(saveState) {
 }
 
 function gotoview() {
-  console.log("Navigating to leaderboard...");
+  console.log("Navigating to viewboard...");
   window.location.href = "/viewboard";
 }
 
 function gotohome() {
-  console.log("Navigating to leaderboard...");
+  console.log("Navigating to home...");
   window.location.href = "/";
 }
 
