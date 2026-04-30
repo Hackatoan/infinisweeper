@@ -30,6 +30,7 @@ let panY = 0;
 let hasDragged = false;
 let isSubmitting = false;
 let inputMode = "mine"; // "mine" or "flag" // Track submission state
+let activeTouchCell = null;
 
 // Debounced Functions
 const debouncedSaveGameState = debounce(saveGameState, DEBOUNCE_DELAY);
@@ -736,6 +737,7 @@ function onDOMContentLoaded() {
         // Setup long-press for flagging
         const cell = e.target.closest(".cell");
         if (cell) {
+          activeTouchCell = cell;
           const targetRow = parseInt(cell.dataset.row);
           const targetCol = parseInt(cell.dataset.col);
           // Long press removed in favor of mode toggle
@@ -767,14 +769,11 @@ function onDOMContentLoaded() {
         // so we retrieve the cell from document.elementFromPoint of the initial touch
         // or clear any stored timer. A safer approach is to just clear the timer
         // if we stored it globally, but we stored it on the cell.
-        // Let's clear all active longPressTimers just in case, or store the active cell.
-        const allCells = document.querySelectorAll(".cell");
-        allCells.forEach((c) => {
-          if (c.longPressTimer) {
-            clearTimeout(c.longPressTimer);
-            c.longPressTimer = null;
-          }
-        });
+        // Let's clear the active longPressTimer if it exists.
+        if (activeTouchCell && activeTouchCell.longPressTimer) {
+          clearTimeout(activeTouchCell.longPressTimer);
+          activeTouchCell.longPressTimer = null;
+        }
       }
     } else {
       clientX = e.clientX;
@@ -830,25 +829,21 @@ function onDOMContentLoaded() {
 
   document.addEventListener("touchend", (e) => {
     isDragging = false;
-    // Clear all long press timers to be safe
-    const allCells = document.querySelectorAll(".cell");
-    allCells.forEach((c) => {
-      if (c.longPressTimer) {
-        clearTimeout(c.longPressTimer);
-        c.longPressTimer = null;
-      }
-    });
+    // Clear the active long press timer if it exists
+    if (activeTouchCell && activeTouchCell.longPressTimer) {
+      clearTimeout(activeTouchCell.longPressTimer);
+      activeTouchCell.longPressTimer = null;
+    }
+    activeTouchCell = null;
   });
 
   document.addEventListener("touchcancel", (e) => {
     isDragging = false;
-    const allCells = document.querySelectorAll(".cell");
-    allCells.forEach((c) => {
-      if (c.longPressTimer) {
-        clearTimeout(c.longPressTimer);
-        c.longPressTimer = null;
-      }
-    });
+    if (activeTouchCell && activeTouchCell.longPressTimer) {
+      clearTimeout(activeTouchCell.longPressTimer);
+      activeTouchCell.longPressTimer = null;
+    }
+    activeTouchCell = null;
   });
 }
 
