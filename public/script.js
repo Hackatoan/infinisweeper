@@ -608,23 +608,79 @@ function handleCellRightClick(event, row, col) {
   toggleFlag(row, col);
 }
 
-function submitScore() {
+const _BAD_WORDS = ["nigger","nigga","faggot","chink","spic","kike","tranny","retard","cunt","fuck","shit","ass","bitch","bastard","whore","slut","dick","cock","pussy","twat","piss","crap","damn","hell","sexy","porn","nude","naked","sex","rape","kill","murder","nazi","hitler"];
+
+function _cleanName(name) {
+  if (!name) return "";
+  // Trim, collapse whitespace, limit length
+  let cleaned = name.trim().replace(/\s+/g, " ").slice(0, 24);
+  // Strip non-printable characters
+  cleaned = cleaned.replace(/[^\x20-\x7E]/g, "");
+  return cleaned;
+}
+
+function _isBadName(name) {
+  const lower = name.toLowerCase().replace(/[^a-z0-9]/g, "");
+  return _BAD_WORDS.some(w => lower.includes(w));
+}
+
+async function submitScore() {
   if (isSubmitting) return;
   isSubmitting = true;
 
-  const username = getUsername();
-  if (username) {
-    localStorage.setItem("minesweeperUsername", username);
+  const rawName = getUsername();
+  const username = _cleanName(rawName);
+
+  if (!username) {
+    document.getElementById("submit-score").innerHTML = `<p style="color:#e57373;font-weight:bold;">Please enter a username.</p>
+      <input type="text" id="username" placeholder="Enter your username" />
+      <button id="submit-score-button" onclick="submitScore()">Submit Score</button>`;
+    isSubmitting = false;
+    return;
+  }
+
+  if (_isBadName(username)) {
+    document.getElementById("submit-score").innerHTML = `<p style="color:#e57373;font-weight:bold;">That name isn't allowed. Please choose another.</p>
+      <input type="text" id="username" placeholder="Enter your username" />
+      <button id="submit-score-button" onclick="submitScore()">Submit Score</button>`;
+    isSubmitting = false;
+    return;
+  }
+
+  localStorage.setItem("minesweeperUsername", username);
+
+  const uid = firebase.auth().currentUser.uid;
+  const gamestate = getSaveGameState();
+
+  // Check for duplicate: same user submitting the exact same game
+  let alreadyExists = false;
+  try {
+    const existing = await db.collection("leaderboard")
+      .where("uid", "==", uid)
+      .where("gamestate", "==", gamestate)
+      .limit(1)
+      .get();
+    alreadyExists = !existing.empty;
+  } catch (e) {
+    console.warn("Duplicate check failed, proceeding:", e);
+  }
+
+  if (alreadyExists) {
+    isSubmitting = false;
+    document.getElementById("submit-score").innerHTML = `<p style="margin-bottom:10px;font-weight:bold;">This game was already submitted!</p>
+      <button onclick="restartGame()">Restart</button>
+      <button onclick="gotoLeaderboard()">View Leaderboard</button>`;
+    return;
   }
 
   const now = new Date();
   db.collection("leaderboard")
     .add({
-      uid: firebase.auth().currentUser.uid,
+      uid,
       name: username,
       score: getScore(),
       date: firebase.firestore.Timestamp.fromDate(now),
-      gamestate: getSaveGameState(),
+      gamestate,
     })
     .then(() => {
       isSubmitting = false;
