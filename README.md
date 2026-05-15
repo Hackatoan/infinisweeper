@@ -1,51 +1,42 @@
-[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/hackatoa)
-e
+[![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/hackatoa)
 
-# Status
-This game has been updated to include some branding and keybinds, though the core remains an infinite minesweeper experience.
+# Infinisweeper
 
-# InfiniSweeper
-![image](https://github.com/Hackatoan/infinisweeper/assets/62629253/977ca1e1-3015-4368-bd44-5a5fbc6ff29f)
+An infinite Minesweeper experience — the board expands endlessly in all directions. Forget clearing the board; aim for the highest score.
 
-A limitless Minesweeper experience where score reigns supreme!
-
-## Description
-
-InfiniSweeper takes the classic Minesweeper formula and throws in a dash of infinity. The board expands endlessly in all directions, offering an unending challenge. Forget clearing the board - aim for the highest score by strategically revealing safe cells as you navigate the ever-growing minefield.
+**Live:** [infinisweeper.hackatoa.com](https://infinisweeper.hackatoa.com)
 
 ## Features
 
-- **Infinite Board:** Explore a boundless grid of hidden squares, filled with both safe spaces and deadly mines.
-- **Score-Based Gameplay:** Rack up points by revealing safe cells. Every click counts!
-- **Basic Mechanics:** Use arrow keys or WASD to move, click to reveal a cell, and right-click to mark a suspected mine.
-- **Quick Navigation:** Jump to the board's center with the "C" key or revisit your last click with "L".
-- **Quick click:** click on blank/zero cells to complete the area surrounding it. usefull for starting conditions.
-- **Leaderboard System:** Compete against other players and see who can conquer the infinite minefield.
-
-## Upcoming Features
-
-- **Peformance:** vastly improve loading times and overall performance.
-
-## How to Play
-
-1. Visit the InfiniSweeper webpage ([here](https://infinisweeper.hackatoa.com/)).
-2. Move around the grid using arrow keys or WASD.
-3. Left-click to reveal a cell. Be cautious, as clicking a mine will end your run.
-4. Right-click to mark a cell as suspected to contain a mine.
-5. Strategically explore the infinite board, balancing risk and reward to maximize your score.
+- **Infinite board** — the grid expands endlessly in all directions
+- **Score-based gameplay** — every revealed safe cell adds to your score
+- **Leaderboard** — compete globally for the highest score
+- **Quick navigation** — jump to board center (`C`) or last click (`L`)
+- **Quick reveal** — click blank/zero cells to auto-clear surrounding safe area
 
 ## Controls
 
-- **Arrow Keys/WASD:** Move viewport
-- **Left-Click:** Reveal cell
-- **Right-Click:** Mark suspected mine
-- **C:** Jump to board center
-- **L:** Jump to last clicked cell
+| Input | Action |
+|---|---|
+| Arrow Keys / WASD | Move viewport |
+| Left-click | Reveal cell |
+| Right-click | Flag suspected mine |
+| `C` | Jump to board center |
+| `L` | Jump to last clicked cell |
 
-## Contributing
+## Running locally
 
-We welcome contributions to improve InfiniSweeper! Stay tuned for details on how you can participate.
+```bash
+git clone https://github.com/Hackatoan/infinisweeper
+cd infinisweeper
+npm install
+npm start
+```
 
 ## License
 
-This project is licensed under the MIT License.
+MIT
+
+---
+
+[hackatoa.com](https://hackatoa.com) · [GitHub](https://github.com/Hackatoan) · [Buy Me A Coffee](https://buymeacoffee.com/hackatoa)
