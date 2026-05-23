@@ -1,42 +1,31 @@
-[![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/hackatoa)
-
 # Infinisweeper
 
-An infinite Minesweeper experience — the board expands endlessly in all directions. Forget clearing the board; aim for the highest score.
+![Infinisweeper](https://infinisweeper.hackatoa.com/og.svg)
 
-**Live:** [infinisweeper.hackatoa.com](https://infinisweeper.hackatoa.com)
+An infinite minesweeper grid that never ends. Reveal as much of the board as you dare — the world expands in every direction.
+
+**▶ Play at [infinisweeper.hackatoa.com](https://infinisweeper.hackatoa.com)**
 
 ## Features
 
-- **Infinite board** — the grid expands endlessly in all directions
-- **Score-based gameplay** — every revealed safe cell adds to your score
-- **Leaderboard** — compete globally for the highest score
-- **Quick navigation** — jump to board center (`C`) or last click (`L`)
-- **Quick reveal** — click blank/zero cells to auto-clear surrounding safe area
+- Infinitely expanding grid — no edge, no limit
+- Real-time score and global **leaderboard**
+- Flood-fill reveal on zero-adjacent cells
+- Flag mode (right-click or toggle)
+- Firebase Firestore for leaderboard persistence
+- No account or download required
 
-## Controls
+## Scoring
 
-| Input | Action |
-|---|---|
-| Arrow Keys / WASD | Move viewport |
-| Left-click | Reveal cell |
-| Right-click | Flag suspected mine |
-| `C` | Jump to board center |
-| `L` | Jump to last clicked cell |
+- +1 point per safe cell revealed
+- Hitting a mine ends the game and submits your score
 
-## Running locally
+## Tech stack
 
-```bash
-git clone https://github.com/Hackatoan/infinisweeper
-cd infinisweeper
-npm install
-npm start
-```
-
-## License
-
-MIT
+- Vanilla HTML/CSS/JS
+- Firebase (Firestore for leaderboard)
+- Static hosting
 
 ---
 
-[hackatoa.com](https://hackatoa.com) · [GitHub](https://github.com/Hackatoan) · [Buy Me A Coffee](https://buymeacoffee.com/hackatoa)
+Part of [Hackatoa Games](https://games.hackatoa.com) · [Buy me a coffee](https://buymeacoffee.com/hackatoa)
