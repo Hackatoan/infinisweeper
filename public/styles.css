@@ -229,14 +229,13 @@ html {
 .keybinds-tooltip {
   display: none;
   position: absolute;
-  bottom: 40px;
+  bottom: 30px;
   left: 0;
   background-color: rgba(62, 39, 35, 0.8);
   color: #fbe9e7;
   padding: 10px;
   border-radius: 5px;
   width: 250px;
-  pointer-events: none;
 }
 
 .info-area:hover .keybinds-tooltip {
@@ -372,3 +371,4 @@ html {
 .region-border-top {
   border-top: 2px solid #ffeb3b !important;
 }
+
