@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3e2e28"/>
+      <stop offset="100%" style="stop-color:#1a0e0b"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="7" fill="url(#bg)"/>
+  <!-- Grid cells -->
+  <rect x="6" y="6" width="8" height="8" rx="1.5" fill="#2a1a14" stroke="#846358" stroke-width="0.8"/>
+  <rect x="15" y="6" width="8" height="8" rx="1.5" fill="#2a1a14" stroke="#846358" stroke-width="0.8"/>
+  <rect x="6" y="15" width="8" height="8" rx="1.5" fill="#2a1a14" stroke="#846358" stroke-width="0.8"/>
+  <rect x="15" y="15" width="8" height="8" rx="1.5" fill="#4a1a1a" stroke="#846358" stroke-width="0.8"/>
+  <!-- Number 2 in top-left cell -->
+  <text x="10" y="13" text-anchor="middle" font-family="monospace" font-size="6" font-weight="bold" fill="#3b82f6">2</text>
+  <!-- Number 3 in top-right cell -->
+  <text x="19" y="13" text-anchor="middle" font-family="monospace" font-size="6" font-weight="bold" fill="#f43f5e">3</text>
+  <!-- Flag in bottom-left -->
+  <line x1="9" y1="23" x2="9" y2="17.5" stroke="#f43f5e" stroke-width="1.2" stroke-linecap="round"/>
+  <polygon points="9,17.5 13,19.5 9,21.5" fill="#f43f5e"/>
+  <!-- Mine in bottom-right (exploded) -->
+  <circle cx="19" cy="19" r="3" fill="#c0392b"/>
+  <line x1="19" y1="15" x2="19" y2="16.5" stroke="#c0392b" stroke-width="1.2"/>
+  <line x1="19" y1="21.5" x2="19" y2="23" stroke="#c0392b" stroke-width="1.2"/>
+  <line x1="15" y1="19" x2="16.5" y2="19" stroke="#c0392b" stroke-width="1.2"/>
+  <line x1="21.5" y1="19" x2="23" y2="19" stroke="#c0392b" stroke-width="1.2"/>
+  <!-- Expanding ghost cells -->
+  <rect x="24" y="6" width="2.5" height="8" rx="1" fill="#2a1a14" stroke="#846358" stroke-width="0.5" opacity="0.5"/>
+  <rect x="6" y="24" width="8" height="2.5" rx="1" fill="#2a1a14" stroke="#846358" stroke-width="0.5" opacity="0.5"/>
+</svg>
