@@ -210,7 +210,7 @@ html {
   position: fixed;
   bottom: 10px;
   left: 10px;
-  z-index: 1001;
+  z-index: 9998;
 }
 
 .info-icon {
@@ -228,9 +228,10 @@ html {
 
 .keybinds-tooltip {
   display: none;
-  position: absolute;
-  bottom: 30px;
-  left: 0;
+  position: fixed;
+  bottom: 50px;
+  left: 10px;
+  z-index: 9999;
   background-color: rgba(62, 39, 35, 0.8);
   color: #fbe9e7;
   padding: 10px;
