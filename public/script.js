@@ -28,6 +28,7 @@ let startDragY = 0;
 let panX = 0;
 let panY = 0;
 let hasDragged = false;
+let rafPending = false;
 let isSubmitting = false;
 let inputMode = "mine"; // "mine" or "flag" // Track submission state
 let activeTouchCell = null;
@@ -821,11 +822,6 @@ function onDOMContentLoaded() {
       const totalDx = clientX - initialTouchX;
       const totalDy = clientY - initialTouchY;
       if (Math.abs(totalDx) > 5 || Math.abs(totalDy) > 5) {
-        // e.target might not be the element being touched during a move,
-        // so we retrieve the cell from document.elementFromPoint of the initial touch
-        // or clear any stored timer. A safer approach is to just clear the timer
-        // if we stored it globally, but we stored it on the cell.
-        // Let's clear the active longPressTimer if it exists.
         if (activeTouchCell && activeTouchCell.longPressTimer) {
           clearTimeout(activeTouchCell.longPressTimer);
           activeTouchCell.longPressTimer = null;
@@ -849,8 +845,9 @@ function onDOMContentLoaded() {
     startDragX = clientX;
     startDragY = clientY;
 
-    let moved = false;
     const effectiveCellSize = cellSize + 1; // 1px gap
+    let moved = false;
+
     if (Math.abs(panX) >= effectiveCellSize) {
       const shiftCols = Math.trunc(panX / effectiveCellSize);
       offsetX -= shiftCols;
@@ -864,12 +861,18 @@ function onDOMContentLoaded() {
       moved = true;
     }
 
-    if (moved) {
-      revealInitialZeros();
-      updateBoardView();
-    } else {
-      document.getElementById("board").style.transform =
-        `translate(${panX}px, ${panY}px)`;
+    // Always apply the sub-cell transform immediately for smooth visual feedback
+    document.getElementById("board").style.transform =
+      `translate(${panX}px, ${panY}px)`;
+
+    // Batch the expensive DOM rebuild into a single rAF per frame
+    if (moved && !rafPending) {
+      rafPending = true;
+      requestAnimationFrame(() => {
+        rafPending = false;
+        revealInitialZeros();
+        updateBoardView();
+      });
     }
   }
 
