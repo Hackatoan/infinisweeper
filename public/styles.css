@@ -23,6 +23,7 @@ html {
   top: 0;
   left: 0;
   will-change: transform;
+  touch-action: none; /* Prevent browser from intercepting touch for scroll/zoom */
   -webkit-user-select: none; /* Safari */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+/Edge */
@@ -317,7 +318,7 @@ html {
   transform: translateX(-50%);
   display: flex;
   gap: 10px;
-  z-index: 10;
+  z-index: 1001; /* Must be above .board (will-change: transform creates stacking context) */
   background-color: rgba(62, 39, 35, 0.8);
   padding: 5px;
   border-radius: 20px;
