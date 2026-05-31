@@ -783,6 +783,13 @@ function onDOMContentLoaded() {
   boardContainer.addEventListener(
     "touchstart",
     (e) => {
+      // preventDefault() here is critical for Firefox and Samsung Internet:
+      // Without it, Firefox decides at touchstart whether to allow scroll/pan,
+      // and even a subsequent e.preventDefault() in touchmove may be ignored.
+      // It also means synthetic click events won't fire — tap logic is handled
+      // in the touchend listener below instead.
+      e.preventDefault();
+
       if (e.touches.length === 1) {
         isDragging = true;
         hasDragged = false;
@@ -791,13 +798,10 @@ function onDOMContentLoaded() {
         initialTouchX = startDragX;
         initialTouchY = startDragY;
 
-        // Setup long-press for flagging
         const cell = e.target.closest(".cell");
         if (cell) {
           activeTouchCell = cell;
-          const targetRow = parseInt(cell.dataset.row);
-          const targetCol = parseInt(cell.dataset.col);
-          // Long press removed in favor of mode toggle
+          // Long press removed in favour of mode toggle
         }
       }
     },
@@ -888,16 +892,40 @@ function onDOMContentLoaded() {
 
   document.addEventListener("touchend", (e) => {
     isDragging = false;
-    // Clear the active long press timer if it exists
     if (activeTouchCell && activeTouchCell.longPressTimer) {
       clearTimeout(activeTouchCell.longPressTimer);
       activeTouchCell.longPressTimer = null;
     }
+
+    // Because touchstart calls e.preventDefault(), the browser never fires a
+    // synthetic click event for taps on the board.  We replicate the click
+    // handler logic here so taps still reveal / flag cells on all browsers.
+    if (!hasDragged && activeTouchCell) {
+      const cell = activeTouchCell;
+      const row = parseInt(cell.dataset.row);
+      const col = parseInt(cell.dataset.col);
+      if (inputMode === "flag") {
+        toggleFlag(row, col);
+      } else {
+        if (!startingPosition) startingPosition = { row, col };
+        if (!board[`${row},${col}`]) board[`${row},${col}`] = createCell(row, col);
+        if (!board[`${row},${col}`].isFlagged) revealCell(row, col);
+      }
+    }
+
     activeTouchCell = null;
+    // Mirror the mouse behaviour: keep hasDragged true briefly so a stray
+    // touchend can't re-trigger a click, then clear it.
+    if (hasDragged) {
+      setTimeout(() => (hasDragged = false), 50);
+    } else {
+      hasDragged = false;
+    }
   });
 
   document.addEventListener("touchcancel", (e) => {
     isDragging = false;
+    hasDragged = false;
     if (activeTouchCell && activeTouchCell.longPressTimer) {
       clearTimeout(activeTouchCell.longPressTimer);
       activeTouchCell.longPressTimer = null;
