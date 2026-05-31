@@ -22,8 +22,11 @@ html {
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 0; /* Explicit z-index so stacking order is unambiguous in Firefox */
   will-change: transform;
+  -ms-touch-action: none; /* Samsung Internet / legacy Edge */
   touch-action: none; /* Prevent browser from intercepting touch for scroll/zoom */
+  -webkit-touch-callout: none; /* Prevent callout on long-press (iOS/Samsung) */
   -webkit-user-select: none; /* Safari */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+/Edge */
@@ -318,10 +321,17 @@ html {
   transform: translateX(-50%);
   display: flex;
   gap: 10px;
-  z-index: 1001; /* Must be above .board (will-change: transform creates stacking context) */
+  /* z-index 9999: ensures toggle paints and receives touch above .board's
+     will-change:transform stacking context in Firefox and Samsung Internet */
+  z-index: 9999;
+  isolation: isolate; /* Force own stacking context so nothing bleeds through */
   background-color: rgba(62, 39, 35, 0.8);
   padding: 5px;
   border-radius: 20px;
+  /* Ensure the toggle container itself doesn't swallow touch events that should
+     reach the board if the touch misses a button */
+  touch-action: auto;
+  pointer-events: auto;
 }
 
 .mobile-mode-toggle button {
@@ -334,6 +344,7 @@ html {
   color: white;
   cursor: pointer;
   transition: all 0.2s;
+  pointer-events: auto; /* Explicit — overrides any inherited suppression */
 }
 
 .mobile-mode-toggle button.active {
