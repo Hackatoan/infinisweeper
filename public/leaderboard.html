@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <script>
+    (function(){
+      if (location.hostname !== 'infinisweeper.hackatoa.com' && /\.(web\.app|firebaseapp\.com)$/.test(location.hostname)) {
+        location.replace('https://infinisweeper.hackatoa.com' + location.pathname + location.search);
+      }
+    })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#3e2723" />
@@ -11,12 +18,12 @@
   <meta property="og:description" content="Global leaderboard for Infinisweeper. See the top scores from players around the world on the infinite minesweeper challenge." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://infinisweeper.hackatoa.com/leaderboard.html" />
-  <meta property="og:image" content="https://hackatoa.com/assets/me.png" />
+  <meta property="og:image" content="https://infinisweeper.hackatoa.com/og.png" />
   <meta property="og:site_name" content="Hackatoa" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Leaderboard — Infinisweeper" />
   <meta name="twitter:description" content="Global leaderboard for Infinisweeper. See the top scores from players around the world on the infinite minesweeper challenge." />
-  <meta name="twitter:image" content="https://hackatoa.com/assets/me.png" />
+  <meta name="twitter:image" content="https://infinisweeper.hackatoa.com/og.png" />
   <meta name="twitter:site" content="@jhackatoa" />
   <link rel="canonical" href="https://infinisweeper.hackatoa.com/leaderboard.html" />    <title>Leaderboard — Infinisweeper | Hackatoa</title>
     <link rel="stylesheet" href="lbstyle.css" />

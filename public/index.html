@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <script>
+    /* Consolidate ranking/traffic signals onto the canonical custom domain — Firebase
+       also serves this exact content, unredirected, on *.web.app / *.firebaseapp.com,
+       which Google was independently indexing (confirmed via Search Console). */
+    (function(){
+      if (location.hostname !== 'infinisweeper.hackatoa.com' && /\.(web\.app|firebaseapp\.com)$/.test(location.hostname)) {
+        location.replace('https://infinisweeper.hackatoa.com' + location.pathname + location.search);
+      }
+    })();
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
@@ -24,12 +34,15 @@
   <meta property="og:description" content="Play Infinisweeper — an endless, infinite-canvas take on classic Minesweeper. Explore as far as you dare, with a live global leaderboard. Free in-browser game." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://infinisweeper.hackatoa.com/" />
-  <meta property="og:image" content="https://hackatoa.com/assets/me.png" />
+  <meta property="og:image" content="https://infinisweeper.hackatoa.com/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Infinisweeper — infinite minesweeper browser game" />
   <meta property="og:site_name" content="Hackatoa" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Infinisweeper — Infinite Minesweeper" />
   <meta name="twitter:description" content="Play Infinisweeper — an endless, infinite-canvas take on classic Minesweeper. Explore as far as you dare, with a live global leaderboard. Free in-browser game." />
-  <meta name="twitter:image" content="https://hackatoa.com/assets/me.png" />
+  <meta name="twitter:image" content="https://infinisweeper.hackatoa.com/og.png" />
   <meta name="twitter:site" content="@jhackatoa" />
   <link rel="canonical" href="https://infinisweeper.hackatoa.com/" />    <meta name="robots" content="index, follow" />    <title>Infinisweeper — Infinite Minesweeper Browser Game | Hackatoa</title>
     <link rel="stylesheet" href="styles.css" />
@@ -53,6 +66,10 @@
   </head>
   <body>
     <h1 class="sr-only">Infinite Minesweeper</h1>
+    <div class="sr-only">
+      <h2>Endless Minesweeper, no borders</h2>
+      <p>Infinisweeper is a free browser minesweeper with no fixed board size — the grid keeps expanding in every direction as you explore. Reveal safe tiles, flag mines, and pan or zoom as far as you like. One wrong click ends the run, so submit your score and climb the <a href="/leaderboard">global leaderboard</a>. No download, no account, unlimited minesweeper straight from the browser.</p>
+    </div>
     <div id="ad-container" class="ad-container"></div>
     <div id="notification" class="notification"></div>
     <div id="board" class="board"></div>
