@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
   <head>
     <script>
     /* Consolidate ranking/traffic signals onto the canonical custom domain — Firebase
@@ -16,7 +16,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <script src="/__/firebase/init.js"></script>
-    <script src="script.js"></script>
+    <script src="/script.js"></script>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -27,25 +27,25 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="theme-color" content="#3e2723" />
-    <meta name="description" content="Play Infinisweeper — an endless, infinite-canvas take on classic Minesweeper. Explore as far as you dare, with a live global leaderboard. Free in-browser game." />
+    <meta name="description" content="Chơi Infinisweeper — một biến thể dò mìn cổ điển trên không gian vô tận, bất tận. Khám phá xa nhất có thể, với bảng xếp hạng toàn cầu trực tiếp. Trò chơi miễn phí trên trình duyệt." />
   <meta name="author" content="Preston Harris" />
-  <meta name="keywords" content="infinisweeper, infinite minesweeper, endless minesweeper, browser game, minesweeper leaderboard, Hackatoa" />
-  <meta property="og:title" content="Infinisweeper — Infinite Minesweeper" />
-  <meta property="og:description" content="Play Infinisweeper — an endless, infinite-canvas take on classic Minesweeper. Explore as far as you dare, with a live global leaderboard. Free in-browser game." />
+  <meta name="keywords" content="infinisweeper, dò mìn vô cực, dò mìn bất tận, trò chơi trình duyệt, bảng xếp hạng dò mìn, Hackatoa" />
+  <meta property="og:title" content="Infinisweeper — Dò Mìn Vô cực" />
+  <meta property="og:description" content="Chơi Infinisweeper — một biến thể dò mìn cổ điển trên không gian vô tận, bất tận. Khám phá xa nhất có thể, với bảng xếp hạng toàn cầu trực tiếp. Trò chơi miễn phí trên trình duyệt." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://infinisweeper.hackatoa.com/" />
+  <meta property="og:url" content="https://infinisweeper.hackatoa.com/vi/" />
   <meta property="og:image" content="https://infinisweeper.hackatoa.com/og.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="Infinisweeper — infinite minesweeper browser game" />
   <meta property="og:site_name" content="Hackatoa" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Infinisweeper — Infinite Minesweeper" />
-  <meta name="twitter:description" content="Play Infinisweeper — an endless, infinite-canvas take on classic Minesweeper. Explore as far as you dare, with a live global leaderboard. Free in-browser game." />
+  <meta name="twitter:title" content="Infinisweeper — Dò Mìn Vô cực" />
+  <meta name="twitter:description" content="Chơi Infinisweeper — một biến thể dò mìn cổ điển trên không gian vô tận, bất tận. Khám phá xa nhất có thể, với bảng xếp hạng toàn cầu trực tiếp. Trò chơi miễn phí trên trình duyệt." />
   <meta name="twitter:image" content="https://infinisweeper.hackatoa.com/og.png" />
   <meta name="twitter:site" content="@jhackatoa" />
-  <link rel="canonical" href="https://infinisweeper.hackatoa.com/" />    <meta name="robots" content="index, follow" />    <title>Infinisweeper — Infinite Minesweeper Browser Game | Hackatoa</title>
-    <link rel="stylesheet" href="styles.css" />
+  <link rel="canonical" href="https://infinisweeper.hackatoa.com/vi/" />    <meta name="robots" content="index, follow" />    <title>Infinisweeper — Trò chơi Dò Mìn Trình duyệt Vô cực | Hackatoa</title>
+    <link rel="stylesheet" href="/styles.css" />
 
     <script type="application/ld+json">
     {
@@ -78,68 +78,68 @@
   <body>
 <!-- i18n:switcher:start -->
 <nav aria-label="Language" style="position:fixed;top:8px;right:10px;z-index:99999;font-size:12px;font-family:system-ui,-apple-system,sans-serif;background:rgba(6,10,6,.92);border:1px solid #1a3d1a;border-radius:999px;padding:5px 12px;display:flex;gap:9px;box-shadow:0 2px 10px rgba(0,0,0,.5);">
-  <a href="/" hreflang="en" aria-current="true" style="color:#fff;font-weight:700;text-decoration:none;">EN</a>
+  <a href="/" hreflang="en" style="color:#8a8;text-decoration:none;">EN</a>
   <a href="/es/" hreflang="es" style="color:#8a8;text-decoration:none;">ES</a>
   <a href="/pt-br/" hreflang="pt-BR" style="color:#8a8;text-decoration:none;">PT</a>
   <a href="/fr/" hreflang="fr" style="color:#8a8;text-decoration:none;">FR</a>
   <a href="/de/" hreflang="de" style="color:#8a8;text-decoration:none;">DE</a>
-  <a href="/vi/" hreflang="vi" style="color:#8a8;text-decoration:none;">VI</a>
+  <a href="/vi/" hreflang="vi" aria-current="true" style="color:#fff;font-weight:700;text-decoration:none;">VI</a>
   <a href="/th/" hreflang="th" style="color:#8a8;text-decoration:none;">TH</a>
 </nav>
 <!-- i18n:switcher:end -->
-    <h1 class="sr-only">Infinite Minesweeper</h1>
+    <h1 class="sr-only">Dò Mìn Vô cực</h1>
     <div class="sr-only">
-      <h2>Endless Minesweeper, no borders</h2>
-      <p>Infinisweeper is a free browser minesweeper with no fixed board size — the grid keeps expanding in every direction as you explore. Reveal safe tiles, flag mines, and pan or zoom as far as you like. One wrong click ends the run, so submit your score and climb the <a href="/leaderboard">global leaderboard</a>. No download, no account, unlimited minesweeper straight from the browser.</p>
+      <h2>Dò Mìn Bất tận, không có biên giới</h2>
+      <p>Infinisweeper là một trò chơi dò mìn miễn phí trên trình duyệt không có kích thước bảng cố định — lưới tiếp tục mở rộng theo mọi hướng khi bạn khám phá. Lật ô an toàn, cắm cờ mìn, đồng thời di chuyển hoặc phóng thu phóng tùy thích. Một cú click sai sẽ kết thúc lượt chơi, vì vậy hãy gửi điểm số của bạn và leo lên <a href="/vi/leaderboard">bảng xếp hạng toàn cầu</a>. Không cần tải xuống, không cần tài khoản, dò mìn không giới hạn ngay trên trình duyệt.</p>
     </div>
     <div id="ad-container" class="ad-container"></div>
     <div id="notification" class="notification"></div>
     <div id="board" class="board"></div>
-    <div id="toast" class="toast">Game Over! You hit a mine.</div>
-    <div id="score-overlay" class="score-overlay">Score: 0</div>
+    <div id="toast" class="toast">Trò chơi kết thúc! Bạn đã dẫm phải mìn.</div>
+    <div id="score-overlay" class="score-overlay">Điểm: 0</div>
     <button id="restart-btn" class="restart-btn" onclick="restartGame()">
-      Restart
+      Chơi lại
     </button>
     <button
       id="leaderboard-btn"
       class="leaderboard-btn"
       onclick="gotoLeaderboard()"
     >
-      Leaderboard
+      Bảng xếp hạng
     </button>
     <div id="submit-score" class="submit-score" style="display: none">
-      <input type="text" id="username" placeholder="Enter your username" />
-      <button id="submit-score-button">Submit Score</button>
-      <button id="export-png-btn-gameover" class="export-png-btn" onclick="exportMapPNG()">Export PNG</button>
+      <input type="text" id="username" placeholder="Nhập tên người dùng của bạn" />
+      <button id="submit-score-button">Gửi điểm</button>
+      <button id="export-png-btn-gameover" class="export-png-btn" onclick="exportMapPNG()">Xuất PNG</button>
     </div>
 
     <div id="zoom-controls" class="zoom-controls">
-      <button onclick="zoomIn()" aria-label="Zoom in">+</button>
-      <button onclick="zoomOut()" aria-label="Zoom out">-</button>
+      <button onclick="zoomIn()" aria-label="Phóng to">+</button>
+      <button onclick="zoomOut()" aria-label="Thu nhỏ">-</button>
     </div>
     <div id="mobile-mode-toggle" class="mobile-mode-toggle">
-      <button id="mode-toggle-btn" class="active" onclick="toggleMode()" aria-label="Toggle flag/dig mode"><span class="flag-x" aria-hidden="true">🚩</span></button>
+      <button id="mode-toggle-btn" class="active" onclick="toggleMode()" aria-label="Chuyển chế độ cắm cờ/đào"><span class="flag-x" aria-hidden="true">🚩</span></button>
 
     </div>
 
     <div class="info-area">
       <div class="info-icon">i</div>
       <div class="keybinds-tooltip">
-        <strong>Goal:</strong> Reveal as many safe cells as possible without hitting a mine. Each revealed cell = +1 point. Hit a mine and the game ends — submit your score to the leaderboard.<br><br>
-        <strong>Controls:</strong><br>
-        Left-Click: Reveal cell<br>
-        Right-Click / 🚩 toggle: Flag a mine<br>
-        WASD / Arrows: Pan the board<br>
-        Drag: Pan the board<br>
-        C: Jump to center &nbsp;·&nbsp; L: Jump to last click<br><br>
-        <a href="https://github.com/Hackatoan/infinisweeper" target="_blank" rel="noopener" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">📂 Source Code</a>
-        <button id="export-png-btn-info" class="export-png-btn" onclick="exportMapPNG()">Export PNG Map</button>
+        <strong>Mục tiêu:</strong> Lật càng nhiều ô an toàn càng tốt mà không dẫm phải mìn. Mỗi ô lật được = +1 điểm. Dẫm phải mìn và trò chơi kết thúc — hãy gửi điểm số của bạn lên bảng xếp hạng.<br><br>
+        <strong>Điều khiển:</strong><br>
+        Click Trái: Lật ô<br>
+        Click Phải / Chuyển đổi 🚩: Cắm cờ mìn<br>
+        WASD / Phím mũi tên: Di chuyển bảng<br>
+        Kéo: Di chuyển bảng<br>
+        C: Về giữa &nbsp;·&nbsp; L: Đến cú click cuối<br><br>
+        <a href="https://github.com/Hackatoan/infinisweeper" target="_blank" rel="noopener" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">📂 Mã nguồn</a>
+        <button id="export-png-btn-info" class="export-png-btn" onclick="exportMapPNG()">Xuất Bản đồ PNG</button>
         <br>
-        <button id="info-submit-score-btn" class="export-png-btn" onclick="promptSubmitScore()">Submit Score</button>
+        <button id="info-submit-score-btn" class="export-png-btn" onclick="promptSubmitScore()">Gửi điểm</button>
       </div>
     </div>
     <a href="https://hackatoa.com/" class="hackatoa-banner" target="_blank">Hackatoa.com</a>
-    <a href="https://games.hackatoa.com" class="games-hub-badge" target="_blank" rel="noopener">🎮 All Games</a>
+    <a href="https://games.hackatoa.com" class="games-hub-badge" target="_blank" rel="noopener">🎮 Tất cả Trò chơi</a>
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "1fb943269b344332804cfc907bf18ee5"}'></script><!-- End Cloudflare Web Analytics -->
   <script>
   /* ── THE VOLCANO PROTOCOL — fragment (stage 3) ── */

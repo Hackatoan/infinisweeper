@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "echo 'No build step required'"
+    "build": "echo 'No build step required'",
+    "i18n:auto": "node scripts/i18n-auto.mjs"
   },
   "dependencies": {
     "dotenv": "^16.4.5"

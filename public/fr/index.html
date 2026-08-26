@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
   <head>
     <script>
     /* Consolidate ranking/traffic signals onto the canonical custom domain — Firebase
@@ -16,7 +16,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <script src="/__/firebase/init.js"></script>
-    <script src="script.js"></script>
+    <script src="/script.js"></script>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -27,25 +27,25 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="theme-color" content="#3e2723" />
-    <meta name="description" content="Play Infinisweeper — an endless, infinite-canvas take on classic Minesweeper. Explore as far as you dare, with a live global leaderboard. Free in-browser game." />
+    <meta name="description" content="Jouez à Infinisweeper — une version sans fin et sur canevas infini du Démineur classique. Explorez aussi loin que vous l'osez, avec un classement mondial en direct. Jeu gratuit dans le navigateur." />
   <meta name="author" content="Preston Harris" />
-  <meta name="keywords" content="infinisweeper, infinite minesweeper, endless minesweeper, browser game, minesweeper leaderboard, Hackatoa" />
-  <meta property="og:title" content="Infinisweeper — Infinite Minesweeper" />
-  <meta property="og:description" content="Play Infinisweeper — an endless, infinite-canvas take on classic Minesweeper. Explore as far as you dare, with a live global leaderboard. Free in-browser game." />
+  <meta name="keywords" content="infinisweeper, démineur infini, démineur sans fin, jeu par navigateur, classement démineur, Hackatoa" />
+  <meta property="og:title" content="Infinisweeper — Démineur infini" />
+  <meta property="og:description" content="Jouez à Infinisweeper — une version sans fin et sur canevas infini du Démineur classique. Explorez aussi loin que vous l'osez, avec un classement mondial en direct. Jeu gratuit dans le navigateur." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://infinisweeper.hackatoa.com/" />
+  <meta property="og:url" content="https://infinisweeper.hackatoa.com/fr/" />
   <meta property="og:image" content="https://infinisweeper.hackatoa.com/og.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="Infinisweeper — infinite minesweeper browser game" />
   <meta property="og:site_name" content="Hackatoa" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Infinisweeper — Infinite Minesweeper" />
-  <meta name="twitter:description" content="Play Infinisweeper — an endless, infinite-canvas take on classic Minesweeper. Explore as far as you dare, with a live global leaderboard. Free in-browser game." />
+  <meta name="twitter:title" content="Infinisweeper — Démineur infini" />
+  <meta name="twitter:description" content="Jouez à Infinisweeper — une version sans fin et sur canevas infini du Démineur classique. Explorez aussi loin que vous l'osez, avec un classement mondial en direct. Jeu gratuit dans le navigateur." />
   <meta name="twitter:image" content="https://infinisweeper.hackatoa.com/og.png" />
   <meta name="twitter:site" content="@jhackatoa" />
-  <link rel="canonical" href="https://infinisweeper.hackatoa.com/" />    <meta name="robots" content="index, follow" />    <title>Infinisweeper — Infinite Minesweeper Browser Game | Hackatoa</title>
-    <link rel="stylesheet" href="styles.css" />
+  <link rel="canonical" href="https://infinisweeper.hackatoa.com/fr/" />    <meta name="robots" content="index, follow" />    <title>Infinisweeper — Jeu de démineur infini par navigateur | Hackatoa</title>
+    <link rel="stylesheet" href="/styles.css" />
 
     <script type="application/ld+json">
     {
@@ -78,68 +78,68 @@
   <body>
 <!-- i18n:switcher:start -->
 <nav aria-label="Language" style="position:fixed;top:8px;right:10px;z-index:99999;font-size:12px;font-family:system-ui,-apple-system,sans-serif;background:rgba(6,10,6,.92);border:1px solid #1a3d1a;border-radius:999px;padding:5px 12px;display:flex;gap:9px;box-shadow:0 2px 10px rgba(0,0,0,.5);">
-  <a href="/" hreflang="en" aria-current="true" style="color:#fff;font-weight:700;text-decoration:none;">EN</a>
+  <a href="/" hreflang="en" style="color:#8a8;text-decoration:none;">EN</a>
   <a href="/es/" hreflang="es" style="color:#8a8;text-decoration:none;">ES</a>
   <a href="/pt-br/" hreflang="pt-BR" style="color:#8a8;text-decoration:none;">PT</a>
-  <a href="/fr/" hreflang="fr" style="color:#8a8;text-decoration:none;">FR</a>
+  <a href="/fr/" hreflang="fr" aria-current="true" style="color:#fff;font-weight:700;text-decoration:none;">FR</a>
   <a href="/de/" hreflang="de" style="color:#8a8;text-decoration:none;">DE</a>
   <a href="/vi/" hreflang="vi" style="color:#8a8;text-decoration:none;">VI</a>
   <a href="/th/" hreflang="th" style="color:#8a8;text-decoration:none;">TH</a>
 </nav>
 <!-- i18n:switcher:end -->
-    <h1 class="sr-only">Infinite Minesweeper</h1>
+    <h1 class="sr-only">Démineur infini</h1>
     <div class="sr-only">
-      <h2>Endless Minesweeper, no borders</h2>
-      <p>Infinisweeper is a free browser minesweeper with no fixed board size — the grid keeps expanding in every direction as you explore. Reveal safe tiles, flag mines, and pan or zoom as far as you like. One wrong click ends the run, so submit your score and climb the <a href="/leaderboard">global leaderboard</a>. No download, no account, unlimited minesweeper straight from the browser.</p>
+      <h2>Démineur sans fin, sans frontières</h2>
+      <p>Infinisweeper est un jeu de démineur gratuit par navigateur sans taille de grille fixe — la grille s'étend dans toutes les directions au fur et à mesure que vous explorez. Révélez les cases sûres, signalez les mines et déplacez-vous ou zoomez autant que vous voulez. Un seul mauvais clic met fin à la partie, alors envoyez votre score et grimpez dans le <a href="/fr/leaderboard">classement mondial</a>. Aucun téléchargement, aucun compte, du démineur infini directement depuis votre navigateur.</p>
     </div>
     <div id="ad-container" class="ad-container"></div>
     <div id="notification" class="notification"></div>
     <div id="board" class="board"></div>
-    <div id="toast" class="toast">Game Over! You hit a mine.</div>
-    <div id="score-overlay" class="score-overlay">Score: 0</div>
+    <div id="toast" class="toast">Partie terminée ! Vous avez touché une mine.</div>
+    <div id="score-overlay" class="score-overlay">Score : 0</div>
     <button id="restart-btn" class="restart-btn" onclick="restartGame()">
-      Restart
+      Recommencer
     </button>
     <button
       id="leaderboard-btn"
       class="leaderboard-btn"
       onclick="gotoLeaderboard()"
     >
-      Leaderboard
+      Classement
     </button>
     <div id="submit-score" class="submit-score" style="display: none">
-      <input type="text" id="username" placeholder="Enter your username" />
-      <button id="submit-score-button">Submit Score</button>
-      <button id="export-png-btn-gameover" class="export-png-btn" onclick="exportMapPNG()">Export PNG</button>
+      <input type="text" id="username" placeholder="Entrez votre nom d'utilisateur" />
+      <button id="submit-score-button">Envoyer le score</button>
+      <button id="export-png-btn-gameover" class="export-png-btn" onclick="exportMapPNG()">Exporter en PNG</button>
     </div>
 
     <div id="zoom-controls" class="zoom-controls">
-      <button onclick="zoomIn()" aria-label="Zoom in">+</button>
-      <button onclick="zoomOut()" aria-label="Zoom out">-</button>
+      <button onclick="zoomIn()" aria-label="Zoomer">+</button>
+      <button onclick="zoomOut()" aria-label="Dézoomer">-</button>
     </div>
     <div id="mobile-mode-toggle" class="mobile-mode-toggle">
-      <button id="mode-toggle-btn" class="active" onclick="toggleMode()" aria-label="Toggle flag/dig mode"><span class="flag-x" aria-hidden="true">🚩</span></button>
+      <button id="mode-toggle-btn" class="active" onclick="toggleMode()" aria-label="Basculer en mode drapeau/creusage"><span class="flag-x" aria-hidden="true">🚩</span></button>
 
     </div>
 
     <div class="info-area">
       <div class="info-icon">i</div>
       <div class="keybinds-tooltip">
-        <strong>Goal:</strong> Reveal as many safe cells as possible without hitting a mine. Each revealed cell = +1 point. Hit a mine and the game ends — submit your score to the leaderboard.<br><br>
-        <strong>Controls:</strong><br>
-        Left-Click: Reveal cell<br>
-        Right-Click / 🚩 toggle: Flag a mine<br>
-        WASD / Arrows: Pan the board<br>
-        Drag: Pan the board<br>
-        C: Jump to center &nbsp;·&nbsp; L: Jump to last click<br><br>
-        <a href="https://github.com/Hackatoan/infinisweeper" target="_blank" rel="noopener" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">📂 Source Code</a>
-        <button id="export-png-btn-info" class="export-png-btn" onclick="exportMapPNG()">Export PNG Map</button>
+        <strong>Objectif :</strong> Révélez autant de cases sûres que possible sans toucher de mine. Chaque case révélée = +1 point. Touchez une mine et la partie se termine — envoyez votre score dans le classement.<br><br>
+        <strong>Commandes :</strong><br>
+        Clic gauche : Révéler la case<br>
+        Clic droit / bascule 🚩 : Signaler une mine<br>
+        WASD / Flèches : Déplacer le plateau<br>
+        Glisser : Déplacer le plateau<br>
+        C : Aller au centre &nbsp;·&nbsp; L : Aller au dernier clic<br><br>
+        <a href="https://github.com/Hackatoan/infinisweeper" target="_blank" rel="noopener" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">📂 Code source</a>
+        <button id="export-png-btn-info" class="export-png-btn" onclick="exportMapPNG()">Exporter la carte en PNG</button>
         <br>
-        <button id="info-submit-score-btn" class="export-png-btn" onclick="promptSubmitScore()">Submit Score</button>
+        <button id="info-submit-score-btn" class="export-png-btn" onclick="promptSubmitScore()">Envoyer le score</button>
       </div>
     </div>
     <a href="https://hackatoa.com/" class="hackatoa-banner" target="_blank">Hackatoa.com</a>
-    <a href="https://games.hackatoa.com" class="games-hub-badge" target="_blank" rel="noopener">🎮 All Games</a>
+    <a href="https://games.hackatoa.com" class="games-hub-badge" target="_blank" rel="noopener">🎮 Tous les jeux</a>
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "1fb943269b344332804cfc907bf18ee5"}'></script><!-- End Cloudflare Web Analytics -->
   <script>
   /* ── THE VOLCANO PROTOCOL — fragment (stage 3) ── */

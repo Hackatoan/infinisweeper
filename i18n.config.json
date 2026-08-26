@@ -1,0 +1,15 @@
+{
+  "origin": "https://infinisweeper.hackatoa.com",
+  "locales": ["en", "es", "pt-br", "fr", "de", "vi", "th"],
+  "rootFile": "index.html",
+  "pages": [
+    { "file": "index.html", "urlPath": "/" },
+    { "file": "leaderboard.html", "urlPath": "/leaderboard.html" },
+    { "file": "viewboard.html", "urlPath": "/viewboard.html" }
+  ],
+  "internalLinks": {
+    "/": "/",
+    "/leaderboard": "/leaderboard"
+  },
+  "keepTerms": ["Infinisweeper", "Hackatoa", "PNG"]
+}

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
   <head>
     <script>
     (function(){
@@ -11,30 +11,30 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#3e2723" />
-    <meta name="description" content="Global leaderboard for Infinisweeper. See the top scores from players around the world on the infinite minesweeper challenge." />
+    <meta name="description" content="Globale Bestenliste für Infinisweeper. Sieh dir die Bestleistungen von Spielern aus der ganzen Welt bei der unendlichen Minesweeper-Herausforderung an." />
   <meta name="author" content="Preston Harris" />
-  <meta name="keywords" content="infinisweeper leaderboard, infinite minesweeper scores, top players, Hackatoa" />
-  <meta property="og:title" content="Leaderboard — Infinisweeper" />
-  <meta property="og:description" content="Global leaderboard for Infinisweeper. See the top scores from players around the world on the infinite minesweeper challenge." />
+  <meta name="keywords" content="Infinisweeper Bestenliste, unendliche Minesweeper-Punkte, Top-Spieler, Hackatoa" />
+  <meta property="og:title" content="Bestenliste — Infinisweeper" />
+  <meta property="og:description" content="Globale Bestenliste für Infinisweeper. Sieh dir die Bestleistungen von Spielern aus der ganzen Welt bei der unendlichen Minesweeper-Herausforderung an." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://infinisweeper.hackatoa.com/leaderboard.html" />
+  <meta property="og:url" content="https://infinisweeper.hackatoa.com/de/leaderboard.html" />
   <meta property="og:image" content="https://infinisweeper.hackatoa.com/og.png" />
   <meta property="og:site_name" content="Hackatoa" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Leaderboard — Infinisweeper" />
-  <meta name="twitter:description" content="Global leaderboard for Infinisweeper. See the top scores from players around the world on the infinite minesweeper challenge." />
+  <meta name="twitter:title" content="Bestenliste — Infinisweeper" />
+  <meta name="twitter:description" content="Globale Bestenliste für Infinisweeper. Sieh dir die Bestleistungen von Spielern aus der ganzen Welt bei der unendlichen Minesweeper-Herausforderung an." />
   <meta name="twitter:image" content="https://infinisweeper.hackatoa.com/og.png" />
   <meta name="twitter:site" content="@jhackatoa" />
-  <link rel="canonical" href="https://infinisweeper.hackatoa.com/leaderboard.html" />    <title>Leaderboard — Infinisweeper | Hackatoa</title>
-    <link rel="stylesheet" href="lbstyle.css" />
+  <link rel="canonical" href="https://infinisweeper.hackatoa.com/de/leaderboard.html" />    <title>Bestenliste — Infinisweeper | Hackatoa</title>
+    <link rel="stylesheet" href="/lbstyle.css" />
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <script src="/__/firebase/init.js"></script>
-    <script src="leaderboard.js" defer></script>
-    <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png" />
-    <link rel="manifest" href="./site.webmanifest" />
+    <script src="/leaderboard.js" defer></script>
+    <link rel="apple-touch-icon" sizes="180x180" href="/./apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/./favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/./favicon-16x16.png" />
+    <link rel="manifest" href="/./site.webmanifest" />
 
     <script type="application/ld+json">
     {
@@ -65,50 +65,50 @@
   <body>
 <!-- i18n:switcher:start -->
 <nav aria-label="Language" style="position:fixed;top:8px;right:10px;z-index:99999;font-size:12px;font-family:system-ui,-apple-system,sans-serif;background:rgba(6,10,6,.92);border:1px solid #1a3d1a;border-radius:999px;padding:5px 12px;display:flex;gap:9px;box-shadow:0 2px 10px rgba(0,0,0,.5);">
-  <a href="/leaderboard.html" hreflang="en" aria-current="true" style="color:#fff;font-weight:700;text-decoration:none;">EN</a>
+  <a href="/leaderboard.html" hreflang="en" style="color:#8a8;text-decoration:none;">EN</a>
   <a href="/es/leaderboard.html" hreflang="es" style="color:#8a8;text-decoration:none;">ES</a>
   <a href="/pt-br/leaderboard.html" hreflang="pt-BR" style="color:#8a8;text-decoration:none;">PT</a>
   <a href="/fr/leaderboard.html" hreflang="fr" style="color:#8a8;text-decoration:none;">FR</a>
-  <a href="/de/leaderboard.html" hreflang="de" style="color:#8a8;text-decoration:none;">DE</a>
+  <a href="/de/leaderboard.html" hreflang="de" aria-current="true" style="color:#fff;font-weight:700;text-decoration:none;">DE</a>
   <a href="/vi/leaderboard.html" hreflang="vi" style="color:#8a8;text-decoration:none;">VI</a>
   <a href="/th/leaderboard.html" hreflang="th" style="color:#8a8;text-decoration:none;">TH</a>
 </nav>
 <!-- i18n:switcher:end -->
     <div id="ad-container" class="ad-container"></div>
-    <h1>Leaderboard</h1>
+    <h1>Bestenliste</h1>
 
 
 
     <div class="tabs">
-      <button id="tab-score" class="tab-btn active" onclick="switchTab('score')">Top Scores</button>
-      <button id="tab-recent" class="tab-btn" onclick="switchTab('recent')">Recent</button>
+      <button id="tab-score" class="tab-btn active" onclick="switchTab('score')">Top-Ergebnisse</button>
+      <button id="tab-recent" class="tab-btn" onclick="switchTab('recent')">Neueste</button>
     </div>
     <div id="leaderboard-container">
       <div id="section-score" class="leaderboard-section active-tab">
-        <h2 class="leaderboard-title" style="display:none">Leaderboard by Score</h2>
+        <h2 class="leaderboard-title" style="display:none">Bestenliste nach Punkten</h2>
         <ul id="leaderboard-by-score"></ul>
       </div>
       <div id="section-recent" class="leaderboard-section">
-        <h2 class="leaderboard-title" style="display:none">Leaderboard by Most Recent</h2>
+        <h2 class="leaderboard-title" style="display:none">Bestenliste nach Neueste</h2>
         <ul id="leaderboard-by-recent"></ul>
       </div>
     </div>
     <center>
       <button id="back-btn" class="back-btn" onclick="gotohome()">
-        Return to Game
+        Zum Spiel zurückkehren
       </button>
       <div class="footer-links">
-        <a href="https://games.hackatoa.com" target="_blank">All Games</a> |
+        <a href="https://games.hackatoa.com" target="_blank">Alle Spiele</a> |
         <a href="https://hackatoa.com/" target="_blank">Hackatoa.com</a> |
-        <a href="https://github.com/Hackatoan/infinisweeper" target="_blank">Source Code</a> |
-        <a href="https://buymeacoffee.com/hackatoa" target="_blank">Buy me a coffee</a>
+        <a href="https://github.com/Hackatoan/infinisweeper" target="_blank">Quellcode</a> |
+        <a href="https://buymeacoffee.com/hackatoa" target="_blank">Spendier mir einen Kaffee</a>
       </div>
     </center>
     <div id="rules-container" style="max-width: 800px; margin: 20px auto; padding: 20px; background-color: #261410; color: #fbe9e7; border-radius: 8px;">
-      <h2>Scoring Rules</h2>
-      <p>Points are awarded immediately upon revealing a safe tile:</p>
+      <h2>Punktetabelle</h2>
+      <p>Punkte werden sofort beim Aufdecken eines sicheren Feldes vergeben:</p>
       <ul>
-        <li><strong>Safe Move (1 point):</strong> You earn 1 point for every safely revealed space (not a mine).</li>
+        <li><strong>Sicherer Zug (1 Punkt):</strong> Du erhältst 1 Punkt für jedes sicher aufgedeckte Feld (keine Mine).</li>
       </ul>
     </div>
   <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "1fb943269b344332804cfc907bf18ee5"}'></script><!-- End Cloudflare Web Analytics -->
