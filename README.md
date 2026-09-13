@@ -1,31 +1,39 @@
 # Infinisweeper
 
-![Infinisweeper](https://infinisweeper.hackatoa.com/og.svg)
+Infinite Minesweeper — an endless, scrollable, zoomable minefield with a global leaderboard.
 
-An infinite minesweeper grid that never ends. Reveal as much of the board as you dare — the world expands in every direction.
+🔗 **Live:** [infinisweeper.hackatoa.com](https://infinisweeper.hackatoa.com)   ·   ☕ **Support:** [Buy Me a Coffee](https://buymeacoffee.com/hackatoa)
 
-**▶ Play at [infinisweeper.hackatoa.com](https://infinisweeper.hackatoa.com)**
+## Overview
+
+Minesweeper with no edges. The board generates as you go, so you can scroll and zoom forever. Compete for the best times/scores on the global leaderboard.
 
 ## Features
 
-- Infinitely expanding grid — no edge, no limit
-- Real-time score and global **leaderboard**
-- Flood-fill reveal on zero-adjacent cells
-- Flag mode (right-click or toggle)
-- Firebase Firestore for leaderboard persistence
-- No account or download required
+- Infinite procedurally-generated board (scroll + zoom)
+- Global leaderboard
+- 6-language localization
 
-## Scoring
+## Tech Stack
 
-- +1 point per safe cell revealed
-- Hitting a mine ends the game and submits your score
+HTML · vanilla JS · Firebase · Docker
 
-## Tech stack
+## Development
 
-- Vanilla HTML/CSS/JS
-- Firebase (Firestore for leaderboard)
-- Static hosting
+```bash
+cd public && python3 -m http.server 8080
+```
+
+## Deployment
+
+Docker on the homelab games host; GHCR + Watchtower auto-deploy.
+
+## Support
+
+If this project is useful to you, consider supporting development:
+
+☕ **[Buy Me a Coffee](https://buymeacoffee.com/hackatoa)**
 
 ---
 
-Part of [Hackatoa Games](https://games.hackatoa.com) · [Buy me a coffee](https://buymeacoffee.com/hackatoa)
+Part of the **[Hackatoa](https://hackatoa.com)** ecosystem — self-hosted apps, browser games, and bots. · [All repositories »](https://github.com/Hackatoan)
