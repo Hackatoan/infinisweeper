@@ -357,7 +357,14 @@ function saveGameState() {
 function loadGameState() {
   const savedState = localStorage.getItem("minesweeperGameState");
   if (savedState) {
-    const gameState = JSON.parse(savedState);
+    let gameState;
+    try {
+      gameState = JSON.parse(savedState);
+    } catch (e) {
+      console.error("Corrupted saved game state, resetting:", e);
+      localStorage.removeItem("minesweeperGameState");
+      return false;
+    }
     board = gameState.board;
     offsetX = gameState.offsetX;
     offsetY = gameState.offsetY;
@@ -376,7 +383,9 @@ function loadGameState() {
 }
 
 function getSaveGameState() {
-  return localStorage.getItem("minesweeperGameState") || console.log("error");
+  const state = localStorage.getItem("minesweeperGameState");
+  if (!state) console.error("No saved game state found in localStorage");
+  return state || null;
 }
 
 function getScore() {

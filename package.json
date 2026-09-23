@@ -1,6 +1,8 @@
 {
+  "type": "module",
   "scripts": {
     "build": "echo 'No build step required'",
+    "test": "node --test tests/",
     "i18n:auto": "node scripts/i18n-auto.mjs"
   },
   "dependencies": {
