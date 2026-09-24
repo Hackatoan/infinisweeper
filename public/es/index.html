@@ -94,7 +94,7 @@
     <div id="ad-container" class="ad-container"></div>
     <div id="notification" class="notification"></div>
     <div id="board" class="board"></div>
-    <div id="toast" class="toast">¡Fin del juego! Pisaste una mina.</div>
+    <div id="toast" class="toast" role="alert">¡Fin del juego! Pisaste una mina.</div>
     <div id="score-overlay" class="score-overlay">Puntuación: 0</div>
     <button id="restart-btn" class="restart-btn" onclick="restartGame()">
       Reiniciar
@@ -106,8 +106,8 @@
     >
       Clasificación
     </button>
-    <div id="submit-score" class="submit-score" style="display: none">
-      <input type="text" id="username" placeholder="Introduce tu nombre de usuario" />
+    <div id="submit-score" class="submit-score" style="display: none" role="status">
+      <input type="text" id="username" placeholder="Introduce tu nombre de usuario" aria-label="Introduce tu nombre de usuario" />
       <button id="submit-score-button">Enviar Puntuación</button>
       <button id="export-png-btn-gameover" class="export-png-btn" onclick="exportMapPNG()">Exportar PNG</button>
     </div>

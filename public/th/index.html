@@ -94,7 +94,7 @@
     <div id="ad-container" class="ad-container"></div>
     <div id="notification" class="notification"></div>
     <div id="board" class="board"></div>
-    <div id="toast" class="toast">เกมจบแล้ว! คุณโดนระเบิด</div>
+    <div id="toast" class="toast" role="alert">เกมจบแล้ว! คุณโดนระเบิด</div>
     <div id="score-overlay" class="score-overlay">คะแนน: 0</div>
     <button id="restart-btn" class="restart-btn" onclick="restartGame()">
       เล่นใหม่อีกครั้ง
@@ -106,8 +106,8 @@
     >
       กระดานผู้นำ
     </button>
-    <div id="submit-score" class="submit-score" style="display: none">
-      <input type="text" id="username" placeholder="ป้อนชื่อผู้ใช้ของคุณ" />
+    <div id="submit-score" class="submit-score" style="display: none" role="status">
+      <input type="text" id="username" placeholder="ป้อนชื่อผู้ใช้ของคุณ" aria-label="ป้อนชื่อผู้ใช้ของคุณ" />
       <button id="submit-score-button">ส่งคะแนน</button>
       <button id="export-png-btn-gameover" class="export-png-btn" onclick="exportMapPNG()">ส่งออก PNG</button>
     </div>

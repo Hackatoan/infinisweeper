@@ -94,7 +94,7 @@
     <div id="ad-container" class="ad-container"></div>
     <div id="notification" class="notification"></div>
     <div id="board" class="board"></div>
-    <div id="toast" class="toast">Trò chơi kết thúc! Bạn đã dẫm phải mìn.</div>
+    <div id="toast" class="toast" role="alert">Trò chơi kết thúc! Bạn đã dẫm phải mìn.</div>
     <div id="score-overlay" class="score-overlay">Điểm: 0</div>
     <button id="restart-btn" class="restart-btn" onclick="restartGame()">
       Chơi lại
@@ -106,8 +106,8 @@
     >
       Bảng xếp hạng
     </button>
-    <div id="submit-score" class="submit-score" style="display: none">
-      <input type="text" id="username" placeholder="Nhập tên người dùng của bạn" />
+    <div id="submit-score" class="submit-score" style="display: none" role="status">
+      <input type="text" id="username" placeholder="Nhập tên người dùng của bạn" aria-label="Nhập tên người dùng của bạn" />
       <button id="submit-score-button">Gửi điểm</button>
       <button id="export-png-btn-gameover" class="export-png-btn" onclick="exportMapPNG()">Xuất PNG</button>
     </div>

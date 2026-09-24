@@ -423,7 +423,7 @@ function hideToast() {
 
   // reset submit-score div content in case it was changed by submitScore
   document.getElementById("submit-score").innerHTML = `
-      <input type="text" id="username" placeholder="Enter your username" />
+      <input type="text" id="username" placeholder="Enter your username" aria-label="Enter your username" />
       <button id="submit-score-button">Submit Score</button>
       <button id="export-png-btn-gameover" class="export-png-btn" onclick="exportMapPNG()">Export PNG</button>
   `;
@@ -643,7 +643,7 @@ async function submitScore() {
 
   if (!username) {
     document.getElementById("submit-score").innerHTML = `<p style="color:#e57373;font-weight:bold;">Please enter a username.</p>
-      <input type="text" id="username" placeholder="Enter your username" />
+      <input type="text" id="username" placeholder="Enter your username" aria-label="Enter your username" />
       <button id="submit-score-button" onclick="submitScore()">Submit Score</button>`;
     isSubmitting = false;
     return;
@@ -651,7 +651,7 @@ async function submitScore() {
 
   if (_isBadName(username)) {
     document.getElementById("submit-score").innerHTML = `<p style="color:#e57373;font-weight:bold;">That name isn't allowed. Please choose another.</p>
-      <input type="text" id="username" placeholder="Enter your username" />
+      <input type="text" id="username" placeholder="Enter your username" aria-label="Enter your username" />
       <button id="submit-score-button" onclick="submitScore()">Submit Score</button>`;
     isSubmitting = false;
     return;
