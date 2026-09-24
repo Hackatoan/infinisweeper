@@ -127,7 +127,7 @@
     <div id="ad-container" class="ad-container"></div>
     <div id="notification" class="notification"></div>
     <div id="board" class="board"></div>
-    <div id="toast" class="toast">Game Over! You hit a mine.</div>
+    <div id="toast" class="toast" role="alert">Game Over! You hit a mine.</div>
     <div id="score-overlay" class="score-overlay">Score: 0</div>
     <button id="restart-btn" class="restart-btn" onclick="restartGame()">
       Restart
@@ -139,8 +139,8 @@
     >
       Leaderboard
     </button>
-    <div id="submit-score" class="submit-score" style="display: none">
-      <input type="text" id="username" placeholder="Enter your username" />
+    <div id="submit-score" class="submit-score" style="display: none" role="status">
+      <input type="text" id="username" placeholder="Enter your username" aria-label="Enter your username" />
       <button id="submit-score-button">Submit Score</button>
       <button id="export-png-btn-gameover" class="export-png-btn" onclick="exportMapPNG()">Export PNG</button>
     </div>
