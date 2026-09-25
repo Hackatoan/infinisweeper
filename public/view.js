@@ -8,6 +8,12 @@ const EXTRA_CELLS = 2; // Number of extra cells around the visible area
 
 // Game State
 let board = {};
+// Cache of adjacent-mine counts, keyed the same way as `board`. Mine
+// placement is deterministic per gameSeed and never changes once
+// generated, so a cell's adjacent-mine count is safe to compute once
+// and reuse instead of recalculating on every render (drag/resize/etc.
+// call calculateAdjacentMines for every visible revealed cell each frame).
+let adjacentMinesCache = {};
 let offsetX = 0;
 let offsetY = 0;
 let cellSize = calculateCellSize();
@@ -125,6 +131,7 @@ function initializeBoard() {
 function resetGameState() {
   cellSize = calculateCellSize();
   board = {};
+  adjacentMinesCache = {};
   gameSeed = Math.random() * 10000;
   score = 0;
   gameOver = false;
@@ -355,6 +362,10 @@ function isInBounds(row, col) {
 }
 
 function calculateAdjacentMines(row, col) {
+  const key = `${row},${col}`;
+  const cached = adjacentMinesCache[key];
+  if (cached !== undefined) return cached;
+
   let adjacentMines = 0;
   for (let di = -1; di <= 1; di++) {
     for (let dj = -1; dj <= 1; dj++) {
@@ -370,6 +381,7 @@ function calculateAdjacentMines(row, col) {
       }
     }
   }
+  adjacentMinesCache[key] = adjacentMines;
   return adjacentMines;
 }
 
