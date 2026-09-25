@@ -220,6 +220,7 @@ html {
 .info-icon {
   background-color: rgba(62, 39, 35, 0.8);
   color: #fbe9e7;
+  border: none;
   border-radius: 50%;
   width: 30px;
   height: 30px;
@@ -228,6 +229,9 @@ html {
   align-items: center;
   cursor: pointer;
   font-weight: bold;
+  font-family: inherit;
+  font-size: 1em;
+  padding: 0;
 }
 
 .keybinds-tooltip {
@@ -243,7 +247,8 @@ html {
   width: 250px;
 }
 
-.info-area:hover .keybinds-tooltip {
+.info-area:hover .keybinds-tooltip,
+.info-area:focus-within .keybinds-tooltip {
   display: block;
 }
 
