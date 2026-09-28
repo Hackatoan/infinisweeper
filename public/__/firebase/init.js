@@ -1,11 +1,11 @@
 if (typeof firebase === 'undefined') throw new Error('hosting/init-error: Firebase SDK not detected. You must include it before /__/firebase/init.js');
 firebase.initializeApp({
-  "apiKey": "AIzaSyDxljmVtRsgUzDxmBUpG2DqKMO_y5ZwPdQ",
-  "appId": "1:1032351039520:web:a82823c12bca7a84ba7c45",
-  "authDomain": "infinisweeper.firebaseapp.com",
+  "apiKey": "AIzaSyBeX2zXq8E5-0FqX5lvukxaH4BwPx_u0QM",
+  "appId": "1:333268212443:web:871a98388dc3016c9ccafe",
+  "authDomain": "infinisweeper-19103.firebaseapp.com",
   "databaseURL": "",
-  "measurementId": "G-ZW6HN7WDTP",
-  "messagingSenderId": "1032351039520",
-  "projectId": "infinisweeper",
-  "storageBucket": "infinisweeper.firebasestorage.app"
+  "measurementId": "G-8EKJHQK93R",
+  "messagingSenderId": "333268212443",
+  "projectId": "infinisweeper-19103",
+  "storageBucket": "infinisweeper-19103.firebasestorage.app"
 });
