@@ -157,7 +157,13 @@ function revealInitialZeros() {
   const { rows, cols } = getViewportSize();
   for (let i = offsetY; i < offsetY + rows; i++) {
     for (let j = offsetX; j < offsetX + cols; j++) {
-      if (board[`${i},${j}`] && !board[`${i},${j}`].isMine && calculateAdjacentMines(i, j) === 0) {
+      const cell = board[`${i},${j}`];
+      // Skip cells that are already revealed: revealAdjacentZeros allocates a
+      // queue array + visited Set on every call, and this function re-scans
+      // the whole viewport on every drag frame and keypress move, so without
+      // this check most calls are wasted work re-processing cells that were
+      // already flood-filled in a previous frame.
+      if (cell && !cell.isMine && !cell.isRevealed && calculateAdjacentMines(i, j) === 0) {
         revealAdjacentZeros(i, j);
       }
     }
