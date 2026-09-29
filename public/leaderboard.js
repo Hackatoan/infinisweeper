@@ -18,6 +18,10 @@ function renderLeaderboard(doc, leaderboardElement) {
 
   let viewBtn = document.createElement("button");
   viewBtn.textContent = "VIEW";
+  viewBtn.setAttribute(
+    "aria-label",
+    `View saved board for ${data.name}, score ${data.score}`
+  );
   viewBtn.addEventListener("click", () => {
     handleViewSaveState(data.gamestate);
   });
