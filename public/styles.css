@@ -121,6 +121,10 @@ html {
   left: 90px;
 }
 
+.signin-btn {
+  left: 200px;
+}
+
 .leaderboard-container {
   display: flex;
   flex-direction: column;
