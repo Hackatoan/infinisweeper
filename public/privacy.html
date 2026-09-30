@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://cloudflareinsights.com; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#3e2723" />
+    <meta name="robots" content="noindex, follow" />
+    <meta name="description" content="Privacy Policy for Infinisweeper — what's collected, what isn't, and how to get your data deleted." />
+    <link rel="canonical" href="https://infinisweeper.hackatoa.com/privacy.html" />
+    <title>Privacy Policy | Infinisweeper</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="stylesheet" href="lbstyle.css" />
+    <style>
+      .policy-wrap { max-width: 720px; margin: 40px auto; padding: 16px 24px 40px; }
+      .policy-card { background-color: #4e342e; border-radius: 8px; padding: 24px 28px; }
+      .policy-card h1 { text-align: center; margin-top: 0; color: #fbe9e7; }
+      .policy-card .updated { text-align: center; color: #d7b49a; font-size: 0.85em; margin-bottom: 24px; }
+      .policy-card h2 { color: #ffd54f; font-size: 1.05rem; margin: 22px 0 8px; }
+      .policy-card p, .policy-card li { color: #fbe9e7; line-height: 1.55; }
+      .policy-card ul { margin: 0 0 10px 1.2em; padding: 0; }
+      .policy-card a { color: #ff69b4; }
+      .policy-card a:hover { color: #ffb6c1; }
+      .policy-back { display: block; text-align: center; margin-top: 28px; color: #e28a93; text-decoration: none; font-weight: bold; }
+      .policy-back:hover { text-decoration: underline; }
+    </style>
+  </head>
+  <body style="overflow: auto; display: block;">
+    <div class="policy-wrap">
+      <div class="policy-card">
+        <h1>Privacy Policy</h1>
+        <p class="updated">Last updated: September 30, 2026</p>
+
+        <p>Infinisweeper is a free, hobby-built browser game. Here's exactly what it does and doesn't do with your information.</p>
+
+        <h2>What we collect</h2>
+        <ul>
+          <li><strong>Submitting a leaderboard score (always, whether or not you sign in):</strong> the username you type, your score, the date, and a snapshot of your board state at the time you submit (so the "replay" view works for anyone looking at that entry). This is tied to an anonymous ID that Firebase assigns automatically the first time you load the game — it isn't linked to your name, email, or any other personal information unless you separately choose to sign in.</li>
+          <li><strong>If you choose to sign in with Google (optional):</strong> we receive your email address, display name, and Google account ID via Firebase Authentication. This is used purely to sync your in-progress board across devices, so you can pick up where you left off somewhere else. Signing in is entirely optional and is separate from submitting a leaderboard score — you can do either one without the other.</li>
+          <li>We use Cloudflare Web Analytics for basic aggregate traffic stats (page views, browser/device type). It's cookie-free and doesn't track you across other sites.</li>
+        </ul>
+
+        <h2>What we don't do</h2>
+        <ul>
+          <li>No ads, no ad trackers, no selling or sharing your data with third parties.</li>
+          <li>We never see or store your Google password — sign-in is handled entirely by Google/Firebase.</li>
+        </ul>
+
+        <h2>Where it's stored</h2>
+        <p>Everything lives in Firebase (Google): anonymous leaderboard submissions and board replays in Infinisweeper's own project, and — only if you sign in — your account info and in-progress saved board in a separate shared project used across Hackatoa's games for account sign-in.</p>
+
+        <h2>How long we keep it</h2>
+        <p>Indefinitely. It's a leaderboard and save-game system with no automatic expiry, unless you ask us to delete something (see below).</p>
+
+        <h2>Your choices</h2>
+        <ul>
+          <li>Play without signing in, and only the leaderboard-submission data described above is ever collected.</li>
+          <li>Sign out at any time — your board simply stops syncing across devices.</li>
+          <li>Email <a href="mailto:preston@hackatoa.com">preston@hackatoa.com</a> to request deletion of your account's data, or of a specific leaderboard entry.</li>
+        </ul>
+
+        <h2>Children's privacy</h2>
+        <p>Infinisweeper isn't directed at children under 13, and we don't knowingly collect personal information from them.</p>
+
+        <h2>Changes</h2>
+        <p>If this policy changes in a meaningful way, we'll update the date above.</p>
+
+        <p>Questions? <a href="mailto:preston@hackatoa.com">preston@hackatoa.com</a> &middot; see also our <a href="/terms.html">Terms of Service</a>.</p>
+        <a class="policy-back" href="/">&larr; Back to the game</a>
+      </div>
+    </div>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "1fb943269b344332804cfc907bf18ee5"}'></script><!-- End Cloudflare Web Analytics -->
+  </body>
+</html>
