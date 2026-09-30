@@ -53,6 +53,100 @@ const db = firebase.firestore();
 
 firebase.auth().signInAnonymously().catch(console.error);
 
+// --- Cross-device board sync (Google sign-in, shared games-7e2c4 project) ---
+// Separate named app instance -- the default app above is this game's own
+// infinisweeper-19103 project (anonymous auth + the public leaderboard),
+// untouched. This is purely an optional identity layer: signed-out play
+// keeps working exactly as before via the existing localStorage save.
+const accountApp = firebase.initializeApp({
+  apiKey: 'AIzaSyA_VXg8asalt0D9PItb7JjfDZZ16CZdBlw',
+  authDomain: 'games-7e2c4.firebaseapp.com',
+  projectId: 'games-7e2c4',
+  storageBucket: 'games-7e2c4.firebasestorage.app',
+  messagingSenderId: '672139906513',
+  appId: '1:672139906513:web:b237739890977bdb1724f0',
+}, 'games-7e2c4');
+const accountAuth = accountApp.auth();
+const accountDb = accountApp.firestore();
+const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+let cloudSyncUser = null;
+
+async function pushGameStateToCloud() {
+  if (!cloudSyncUser) return;
+  const state = localStorage.getItem("minesweeperGameState");
+  if (!state) return;
+  try {
+    await accountDb.collection('savedGames').doc(cloudSyncUser.uid).set({
+      gameState: state,
+      updatedAt: firebase.firestore.Timestamp.now(),
+    });
+  } catch (e) {
+    console.warn('[cloud-save] push failed:', e);
+  }
+}
+const debouncedPushGameStateToCloud = debounce(pushGameStateToCloud, DEBOUNCE_DELAY);
+
+// Pulled once right after sign-in -- replaces whatever's currently on
+// screen with the last board saved from ANY device, matching how signing
+// in on the other Hackatoa games resumes your account rather than the
+// browser you happen to be sitting at.
+async function pullGameStateFromCloud() {
+  if (!cloudSyncUser) return;
+  try {
+    const doc = await accountDb.collection('savedGames').doc(cloudSyncUser.uid).get();
+    if (!doc.exists) return;
+    const { gameState } = doc.data();
+    if (!gameState) return;
+    const parsed = JSON.parse(gameState);
+    localStorage.setItem("minesweeperGameState", gameState);
+    board = parsed.board;
+    offsetX = parsed.offsetX;
+    offsetY = parsed.offsetY;
+    startingPosition = parsed.startingPosition;
+    lastRevealedPosition = parsed.lastRevealedPosition;
+    score = parsed.score;
+    gameOver = parsed.gameOver;
+    gameSeed = parsed.gameSeed || Math.random() * 10000;
+    updateBoardView();
+    document.getElementById("score-overlay").textContent = `Score: ${score}`;
+    showToast("Loaded your saved board from another device.");
+  } catch (e) {
+    console.warn('[cloud-save] pull failed:', e);
+  }
+}
+
+function updateSignInButton() {
+  const btn = document.getElementById('signin-btn');
+  if (!btn) return;
+  if (cloudSyncUser) {
+    btn.textContent = 'Signed in';
+    btn.title = `Signed in as ${cloudSyncUser.displayName || cloudSyncUser.email} — your board syncs across devices. Click to sign out.`;
+  } else {
+    btn.textContent = 'Sign in';
+    btn.title = 'Sign in with Google to sync your board across devices';
+  }
+}
+
+accountAuth.onAuthStateChanged(async (user) => {
+  cloudSyncUser = user;
+  updateSignInButton();
+  if (user) await pullGameStateFromCloud();
+});
+
+window.toggleCloudSignIn = async function () {
+  if (cloudSyncUser) {
+    await accountAuth.signOut();
+    return;
+  }
+  try {
+    await accountAuth.signInWithPopup(googleProvider);
+  } catch (e) {
+    console.warn('[cloud-save] sign-in failed:', e);
+    showToast('Sign-in failed or was cancelled.');
+  }
+};
+
 // Function to calculate cell size
 function calculateCellSize() {
   const width = window.innerWidth;
@@ -359,6 +453,7 @@ function saveGameState() {
     gameSeed,
   };
   localStorage.setItem("minesweeperGameState", JSON.stringify(gameState));
+  debouncedPushGameStateToCloud();
 }
 
 function loadGameState() {
