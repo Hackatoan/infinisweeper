@@ -673,7 +673,6 @@ function calculateAdjacentMines(row, col) {
 }
 
 function updateCellElement(cell, row, col) {
-  cell.className = "cell";
   cell.id = `cell_${row}_${col}`;
   cell.dataset.row = row;
   cell.dataset.col = col;
@@ -683,22 +682,23 @@ function updateCellElement(cell, row, col) {
   if (board[`${row},${col}`]) {
     const cellData = board[`${row},${col}`];
     if (cellData.isRevealed) {
-      cell.classList.add("revealed");
+      cell.className = cellData.isMine ? "cell revealed mine" : "cell revealed";
       if (cellData.isMine) {
-        cell.classList.add("mine");
         cell.innerHTML = CELL_MINE;
       } else {
         const adjacentMines = calculateAdjacentMines(row, col);
         cell.innerHTML = adjacentMines > 0 ? adjacentMines : "";
       }
     } else if (cellData.isFlagged) {
-      cell.classList.add("flagged");
+      cell.className = "cell flagged";
       cell.innerHTML = CELL_FLAG;
     } else {
+      cell.className = "cell";
       cell.innerHTML = "";
     }
   } else {
     board[`${row},${col}`] = createCell(row, col);
+    cell.className = "cell";
     cell.innerHTML = "";
   }
 }
