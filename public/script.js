@@ -265,6 +265,7 @@ function revealCell(row, col, directClick = true) {
     if (!board[`${row},${col}`].isMine) {
       if (directClick) {
         score += 1; // +1 point for every safely revealed space
+        if (window.SFX) SFX.play("reveal");
 
         document.getElementById("score-overlay").textContent = `Score: ${score}`;
       }
@@ -274,6 +275,7 @@ function revealCell(row, col, directClick = true) {
       cell.classList.add("mine");
       cell.innerHTML = CELL_MINE;
       gameOver = true;
+      if (window.SFX) SFX.play("boom");
       showToast("Game Over! You hit a mine.");
     } else {
       const adjacentMines = calculateAdjacentMines(row, col);
@@ -340,6 +342,7 @@ function toggleFlag(row, col) {
   const cell = document.getElementById(`cell_${row}_${col}`);
   if (cell && !board[`${row},${col}`].isRevealed) {
     board[`${row},${col}`].isFlagged = !board[`${row},${col}`].isFlagged;
+    if (window.SFX) SFX.play("flag");
     cell.innerHTML = board[`${row},${col}`].isFlagged ? CELL_FLAG : "";
     if (board[`${row},${col}`].isFlagged) {
       cell.classList.add("flagged");
@@ -801,6 +804,7 @@ async function submitScore() {
     })
     .then(() => {
       isSubmitting = false;
+      if (window.SFX) SFX.play("win");
       document.getElementById("submit-score").innerHTML = `<p style="margin-bottom:10px; font-weight:bold;">Score submitted successfully!</p>
         <button onclick="restartGame()">Restart</button>
         <button onclick="gotoLeaderboard()">View Leaderboard</button>`;
