@@ -394,3 +394,32 @@ html {
   border-top: 2px solid #ffeb3b !important;
 }
 
+
+/* HUD row: game buttons + sound/language controls (filled by sfx.js) flow in one line, no overlap */
+.hud-row {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  right: 150px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.hud-row > * {
+  pointer-events: auto;
+}
+
+.hud-row .restart-btn,
+.hud-row .leaderboard-btn {
+  position: static;
+}
+
+.hud-utils {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
