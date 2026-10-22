@@ -1,0 +1,20 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /leaderboard/{entryId} {
+      allow read: if true;
+      allow create: if request.auth != null
+        && request.auth.uid == request.resource.data.uid
+        && request.resource.data.keys().hasOnly(['uid', 'name', 'score', 'date', 'gamestate'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 40
+        && request.resource.data.score is int
+        && request.resource.data.score >= 0 && request.resource.data.score <= 100000
+        && request.resource.data.date == request.time
+        && request.resource.data.gamestate is string
+        && request.resource.data.gamestate.size() <= 900000
+        && request.resource.data.gamestate.matches('.*"score":' + string(request.resource.data.score) + '[,}].*');
+      allow update, delete: if false;
+    }
+  }
+}
