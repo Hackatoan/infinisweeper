@@ -793,13 +793,12 @@ async function submitScore() {
     return;
   }
 
-  const now = new Date();
   db.collection("leaderboard")
     .add({
       uid,
       name: username,
       score: getScore(),
-      date: firebase.firestore.Timestamp.fromDate(now),
+      date: firebase.firestore.FieldValue.serverTimestamp(),
       gamestate,
     })
     .then(() => {
@@ -1076,33 +1075,5 @@ function toggleMode() {
     span.className = "flag-x";
     span.textContent = "🚩";
     btn.appendChild(span);
-  }
-}
-
-async function promptSubmitScore() {
-  const username = prompt("Enter your username to submit your score:");
-  if (username) {
-    const finalScore = score;
-    const finalState = getSaveGameState();
-
-    try {
-      const response = await fetch("/api/leaderboard", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username,
-          score: finalScore,
-          gamestate: finalState,
-        }),
-      });
-      if (response.ok) {
-        alert("Score submitted successfully!");
-      } else {
-        alert("Failed to submit score.");
-      }
-    } catch (error) {
-      console.error("Error submitting score:", error);
-      alert("Error submitting score.");
-    }
   }
 }
