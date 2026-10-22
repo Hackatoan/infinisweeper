@@ -728,7 +728,13 @@ function handleCellRightClick(event, row, col) {
   toggleFlag(row, col);
 }
 
-const _BAD_WORDS = ["nigger","nigga","faggot","chink","spic","kike","tranny","retard","cunt","fuck","shit","ass","bitch","bastard","whore","slut","dick","cock","pussy","twat","piss","crap","damn","hell","sexy","porn","nude","naked","sex","rape","kill","murder","nazi","hitler"];
+// Name filter. Two tiers so ordinary names aren't rejected (Hello, Skillz,
+// Classic, Passion...): unambiguous slurs/profanity match anywhere in the
+// name; short words that live inside lots of innocent ones (ass, hell, kill,
+// sex...) only match as a whole word. Leetspeak (h3ll, @ss) is folded first.
+const _BAD_SUBSTRINGS = ["nigger","nigga","faggot","chink","tranny","kike","cunt","fuck","shit","bitch","whore","pussy","porn","retard","asshole","dickhead","hitler"];
+const _BAD_WORDS = new Set(["ass","hell","damn","crap","sex","sexy","kill","murder","rape","naked","nude","dick","cock","slut","twat","piss","spic","bastard","nazi"]);
+const _LEET = { "0":"o","1":"i","3":"e","4":"a","5":"s","7":"t","@":"a","$":"s","!":"i" };
 
 function _cleanName(name) {
   if (!name) return "";
@@ -740,8 +746,17 @@ function _cleanName(name) {
 }
 
 function _isBadName(name) {
-  const lower = name.toLowerCase().replace(/[^a-z0-9]/g, "");
-  return _BAD_WORDS.some(w => lower.includes(w));
+  if (!name) return false;
+  // Split camelCase ("HellBoy" -> "Hell Boy") before lowercasing
+  const lower = name.toLowerCase();
+  const fold = (str) => str.replace(/[013457@$!]/g, (c) => _LEET[c]);
+  const folded = fold(lower);
+  if (_BAD_SUBSTRINGS.some((w) => folded.replace(/[^a-z]/g, "").includes(w))) return true;
+  // Whole-word check on the plain, leet-folded and camelCase-split forms
+  // ("ass123", "h3ll", "HellBoy"; the unsplit form still catches "HeLL")
+  const spaced = fold(name.replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase());
+  const tokens = [lower, folded, spaced].flatMap((x) => x.split(/[^a-z]+/)).filter(Boolean);
+  return tokens.some((t) => _BAD_WORDS.has(t) || (t.endsWith("s") && _BAD_WORDS.has(t.slice(0, -1))) || (t.endsWith("es") && _BAD_WORDS.has(t.slice(0, -2))));
 }
 
 async function submitScore() {
