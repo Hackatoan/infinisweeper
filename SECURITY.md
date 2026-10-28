@@ -2,20 +2,32 @@
 
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Infinisweeper is a static web application without versioned releases. Security updates are applied directly to the live deployment.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+| Status  | Version              |
+| ------- | -------------------- |
+| Current | Live (infinisweeper.hackatoa.com) |
+
+## Security Measures
+
+- **Firestore Rules**: Leaderboard submissions are validated server-side with strict Firestore Security Rules. Score data is verified to match submitted gamestate to prevent cheating.
+- **Input Validation**: Username input is sanitized, trimmed, length-limited (40 chars), and filtered for profanity and slurs.
+- **Content-Security-Policy**: Configured to restrict script execution to trusted sources (Firebase, Google, Cloudflare).
+- **HTTPS Only**: All traffic is encrypted in transit.
+- **Anonymous Auth**: No accounts required; optional Google Sign-In for cross-device board sync (games-7e2c4 project).
+
+## Known Limitations
+
+- **No Rate Limiting**: Firestore has no per-user rate limit in the rules (relies on Firebase backend limits). An attacker could theoretically spam leaderboard submissions using multiple anonymous sessions.
+- **Hardcoded Firebase Key**: The games-7e2c4 API key is embedded in script.js for cross-device sync. This is unavoidable on a static-hosting site without a backend, and the key is restricted in the Firebase console to games-7e2c4 project only.
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+Report security issues responsibly to **jacobprestonharris at gmail.com** with the subject line "Security: infinisweeper".
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+Please include:
+- Description of the vulnerability
+- Steps to reproduce
+- Potential impact
+
+We request 30 days to patch before public disclosure.
