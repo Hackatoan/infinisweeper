@@ -739,7 +739,7 @@ const _LEET = { "0":"o","1":"i","3":"e","4":"a","5":"s","7":"t","@":"a","$":"s",
 function _cleanName(name) {
   if (!name) return "";
   // Trim, collapse whitespace, limit length
-  let cleaned = name.trim().replace(/\s+/g, " ").slice(0, 24);
+  let cleaned = name.trim().replace(/\s+/g, " ").slice(0, 40);
   // Strip non-printable characters
   cleaned = cleaned.replace(/[^\x20-\x7E]/g, "");
   return cleaned;

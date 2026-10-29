@@ -61,7 +61,8 @@ test('_isBadName handles whitespace and empty input', () => {
 
 test('_cleanName trims, collapses whitespace, limits length, strips non-ASCII', () => {
   assert.strictEqual(_cleanName('  a   b  '), 'a b');
-  assert.strictEqual(_cleanName('x'.repeat(40)).length, 24);
+  assert.strictEqual(_cleanName('x'.repeat(40)).length, 40);
+  assert.strictEqual(_cleanName('x'.repeat(50)).length, 40);
   assert.strictEqual(_cleanName('café\u{1F600}x'), 'cafx');
   assert.strictEqual(_cleanName(''), '');
   assert.strictEqual(_cleanName(undefined), '');
