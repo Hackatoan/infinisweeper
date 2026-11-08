@@ -444,9 +444,31 @@ function updateBoardView() {
   }
 }
 
+// Every cell that has ever been on screen lives in `board`, but an untouched
+// cell is fully reproducible from gameSeed via createCell(). Only persist
+// cells whose state differs from that default (revealed/flagged, or a mine
+// layout that doesn't match the seed, e.g. legacy seedless saves), so the
+// save stays proportional to what was played instead of to how far the
+// player panned. Missing cells are regenerated lazily on load, as before.
+function serializeBoard() {
+  const saved = {};
+  for (const key in board) {
+    const cell = board[key];
+    if (cell.isRevealed || cell.isFlagged || cell.isVisited) {
+      saved[key] = cell;
+      continue;
+    }
+    const comma = key.indexOf(",");
+    const row = +key.slice(0, comma);
+    const col = +key.slice(comma + 1);
+    if (cell.isMine !== (pseudoRandom(row, col) < MINE_DENSITY)) saved[key] = cell;
+  }
+  return saved;
+}
+
 function saveGameState() {
   const gameState = {
-    board,
+    board: serializeBoard(),
     offsetX,
     offsetY,
     startingPosition,
