@@ -8,6 +8,8 @@ service cloud.firestore {
         && request.resource.data.keys().hasOnly(['uid', 'name', 'score', 'date', 'gamestate'])
         && request.resource.data.name is string
         && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 40
+        // Mirror the client's _cleanName(): printable ASCII only, no leading/trailing space
+        && request.resource.data.name.matches('^[!-~]([ -~]*[!-~])?$')
         && request.resource.data.score is int
         && request.resource.data.score >= 0 && request.resource.data.score <= 100000
         && request.resource.data.date == request.time

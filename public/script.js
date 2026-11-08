@@ -738,11 +738,16 @@ const _LEET = { "0":"o","1":"i","3":"e","4":"a","5":"s","7":"t","@":"a","$":"s",
 
 function _cleanName(name) {
   if (!name) return "";
-  // Trim, collapse whitespace, limit length
-  let cleaned = name.trim().replace(/\s+/g, " ").slice(0, 40);
-  // Strip non-printable characters
-  cleaned = cleaned.replace(/[^\x20-\x7E]/g, "");
-  return cleaned;
+  // Collapse whitespace, strip non-printable characters, then trim/limit
+  // length so the result always satisfies the firestore.rules name check
+  // (printable ASCII, 1-40 chars, no leading/trailing space).
+  return name
+    .replace(/\s+/g, " ")
+    .replace(/[^\x20-\x7E]/g, "")
+    .replace(/ +/g, " ")
+    .trim()
+    .slice(0, 40)
+    .trim();
 }
 
 function _isBadName(name) {
