@@ -94,7 +94,7 @@
     </div>
     <div id="ad-container" class="ad-container"></div>
     <div id="notification" class="notification"></div>
-    <div id="board" class="board"></div>
+    <div id="board" class="board" tabindex="0" role="application" aria-label="Tablero de buscaminas. Las flechas o WASD lo mueven bajo la casilla central resaltada; Espacio o Intro la revela, F la marca con una bandera."></div>
     <div id="toast" class="toast" role="alert">¡Fin del juego! Pisaste una mina.</div>
     <div id="score-overlay" class="score-overlay">Puntuación: 0</div>
     <div class="hud-row">
@@ -134,7 +134,8 @@
         Clic derecho / 🚩 alternar: Marcar una mina<br>
         WASD / Flechas: Desplazar el tablero<br>
         Arrastrar: Desplazar el tablero<br>
-        C: Ir al centro &nbsp;·&nbsp; L: Ir al último clic<br><br>
+        C: Ir al centro &nbsp;·&nbsp; L: Ir al último clic<br>
+        Tab hasta el tablero, luego Espacio/Intro: Revelar la casilla central &nbsp;·&nbsp; F: Marcarla<br><br>
         <a href="https://github.com/Hackatoan/infinisweeper" target="_blank" rel="noopener" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">📂 Código Fuente</a> <a href="https://github.com/Hackatoan/infinisweeper/issues/new" target="_blank" rel="noopener" target="_blank" rel="noopener" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">Report an issue</a> <a href="/privacy.html" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">Privacy</a> <a href="/terms.html" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">Terms</a>
         <button id="export-png-btn-info" class="export-png-btn" onclick="exportMapPNG()">Exportar Mapa PNG</button>
         <br>

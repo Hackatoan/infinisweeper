@@ -127,7 +127,7 @@
     </div>
     <div id="ad-container" class="ad-container"></div>
     <div id="notification" class="notification"></div>
-    <div id="board" class="board"></div>
+    <div id="board" class="board" tabindex="0" role="application" aria-label="Minesweeper board. Arrow keys or WASD move it under the highlighted center cell; Space or Enter reveals it, F flags it."></div>
     <div id="toast" class="toast" role="alert">Game Over! You hit a mine.</div>
     <div id="score-overlay" class="score-overlay">Score: 0</div>
     <div class="hud-row">
@@ -175,7 +175,8 @@
         Right-Click / 🚩 toggle: Flag a mine<br>
         WASD / Arrows: Pan the board<br>
         Drag: Pan the board<br>
-        C: Jump to center &nbsp;·&nbsp; L: Jump to last click<br><br>
+        C: Jump to center &nbsp;·&nbsp; L: Jump to last click<br>
+        Tab to the board, then Space/Enter: Reveal center cell &nbsp;·&nbsp; F: Flag it<br><br>
         <a href="https://github.com/Hackatoan/infinisweeper" target="_blank" rel="noopener" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">📂 Source Code</a> <a href="https://github.com/Hackatoan/infinisweeper/issues/new" target="_blank" rel="noopener" target="_blank" rel="noopener" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">Report an issue</a> <a href="/privacy.html" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">Privacy</a> <a href="/terms.html" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">Terms</a>
         <button id="export-png-btn-info" class="export-png-btn" onclick="exportMapPNG()">Export PNG Map</button>
         <br>
