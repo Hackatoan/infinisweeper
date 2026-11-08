@@ -723,6 +723,13 @@ async function exportMapPNG() {
 }
 
 function restartGame() {
+  // Guard an in-progress board against a stray click on the HUD Restart
+  // button (it sits right next to Leaderboard). No prompt once the game is
+  // over or before anything has been revealed. Text is localized in the page.
+  if (!gameOver && score > 0) {
+    const msg = document.getElementById("restart-confirm-text");
+    if (!window.confirm(msg ? msg.textContent : "Restart? Your current board and score will be lost.")) return;
+  }
   hideToast();
   localStorage.removeItem("minesweeperGameState");
   initializeBoard();
