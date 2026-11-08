@@ -66,4 +66,12 @@ test('_cleanName trims, collapses whitespace, limits length, strips non-ASCII', 
   assert.strictEqual(_cleanName('café\u{1F600}x'), 'cafx');
   assert.strictEqual(_cleanName(''), '');
   assert.strictEqual(_cleanName(undefined), '');
+  // Output must always match the firestore.rules name regex
+  assert.strictEqual(_cleanName('\u00e9 Bob'), 'Bob');
+  assert.strictEqual(_cleanName('Bob \u{1F600}'), 'Bob');
+  assert.strictEqual(_cleanName('a \u202E b'), 'a b');
+  assert.strictEqual(_cleanName('x'.repeat(39) + ' y'), 'x'.repeat(39));
+  for (const n of ['\u00e9 Bob', ' x ', 'x'.repeat(39) + ' yz', 'a\u200Bb']) {
+    assert.match(_cleanName(n), /^[!-~]([ -~]*[!-~])?$/);
+  }
 });
