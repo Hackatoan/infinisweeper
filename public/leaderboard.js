@@ -145,6 +145,21 @@ leaderboardByRecent.addEventListener("scroll", () => {
   }
 });
 
+// The page ships a localized "Loading scores…" placeholder in each list
+// (and a hidden, localized error string) so there's feedback during the
+// multi-second Firestore round-trip instead of a blank box.
+function finishLoading(listEl, failed) {
+  listEl.setAttribute("aria-busy", "false");
+  const status = listEl.querySelector(".lb-status");
+  if (!status) return;
+  if (failed) {
+    const msg = document.getElementById("lb-error-text");
+    status.textContent = msg ? msg.textContent : "Couldn't load the leaderboard.";
+  } else {
+    status.remove();
+  }
+}
+
 function initialLoadLeaderboard() {
   db.collection("leaderboard")
     .orderBy("score", "desc")
@@ -156,6 +171,7 @@ function initialLoadLeaderboard() {
       } else {
         hasMoreEntriesScore = false;
       }
+      finishLoading(leaderboardByScore, false);
       querySnapshot.forEach((doc) => {
         renderLeaderboard(doc, leaderboardByScore);
       });
@@ -165,6 +181,7 @@ function initialLoadLeaderboard() {
         "Error loading initial entries for score leaderboard:",
         error
       );
+      finishLoading(leaderboardByScore, true);
     });
 
   db.collection("leaderboard")
@@ -177,6 +194,7 @@ function initialLoadLeaderboard() {
       } else {
         hasMoreEntriesRecent = false;
       }
+      finishLoading(leaderboardByRecent, false);
       querySnapshot.forEach((doc) => {
         renderLeaderboard(doc, leaderboardByRecent);
       });
@@ -186,6 +204,7 @@ function initialLoadLeaderboard() {
         "Error loading initial entries for recent leaderboard:",
         error
       );
+      finishLoading(leaderboardByRecent, true);
     });
 }
 

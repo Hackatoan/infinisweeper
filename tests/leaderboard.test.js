@@ -27,6 +27,7 @@ test('leaderboard.js navigation functions', async (t) => {
     addEventListener: () => {},
     style: {},
     setAttribute: () => {},
+    querySelector: () => null,
     textContent: '',
     className: ''
   });

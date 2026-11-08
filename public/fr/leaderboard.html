@@ -83,14 +83,15 @@
       <button id="tab-score" class="tab-btn active" aria-pressed="true" onclick="switchTab('score')">Meilleurs scores</button>
       <button id="tab-recent" class="tab-btn" aria-pressed="false" onclick="switchTab('recent')">Récents</button>
     </div>
+    <p id="lb-error-text" hidden>Impossible de charger le classement. Veuillez réessayer plus tard.</p>
     <div id="leaderboard-container">
       <div id="section-score" class="leaderboard-section active-tab">
         <h2 class="leaderboard-title" style="display:none">Classement par score</h2>
-        <ul id="leaderboard-by-score"></ul>
+        <ul id="leaderboard-by-score" aria-busy="true"><li class="lb-status">Chargement des scores…</li></ul>
       </div>
       <div id="section-recent" class="leaderboard-section">
         <h2 class="leaderboard-title" style="display:none">Classement par récence</h2>
-        <ul id="leaderboard-by-recent"></ul>
+        <ul id="leaderboard-by-recent" aria-busy="true"><li class="lb-status">Chargement des scores…</li></ul>
       </div>
     </div>
     <center>
