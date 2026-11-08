@@ -29,6 +29,7 @@ let startDragY = 0;
 let panX = 0;
 let panY = 0;
 let hasDragged = false;
+let rafPending = false;
 
 // Debounced Functions
 const debouncedSaveGameState = debounce(saveGameState, DEBOUNCE_DELAY);
@@ -505,11 +506,17 @@ function onDOMContentLoaded() {
       moved = true;
     }
 
-    if (moved) {
-      revealInitialZeros();
-      updateBoardView();
-    } else {
-      document.getElementById("board").style.transform = `translate(${panX}px, ${panY}px)`;
+    // Always apply the sub-cell transform immediately for smooth feedback,
+    // but batch the full board rebuild into at most one rAF per frame
+    // (high-rate mice/touch can fire several cell-crossing events per frame).
+    document.getElementById("board").style.transform = `translate(${panX}px, ${panY}px)`;
+    if (moved && !rafPending) {
+      rafPending = true;
+      requestAnimationFrame(() => {
+        rafPending = false;
+        revealInitialZeros();
+        updateBoardView();
+      });
     }
   }
 
