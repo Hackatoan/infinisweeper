@@ -83,14 +83,15 @@
       <button id="tab-score" class="tab-btn active" aria-pressed="true" onclick="switchTab('score')">Melhores Pontuações</button>
       <button id="tab-recent" class="tab-btn" aria-pressed="false" onclick="switchTab('recent')">Recentes</button>
     </div>
+    <p id="lb-error-text" hidden>Não foi possível carregar o placar. Tente novamente mais tarde.</p>
     <div id="leaderboard-container">
       <div id="section-score" class="leaderboard-section active-tab">
         <h2 class="leaderboard-title" style="display:none">Placar por Pontuação</h2>
-        <ul id="leaderboard-by-score"></ul>
+        <ul id="leaderboard-by-score" aria-busy="true"><li class="lb-status">Carregando pontuações…</li></ul>
       </div>
       <div id="section-recent" class="leaderboard-section">
         <h2 class="leaderboard-title" style="display:none">Placar por Mais Recentes</h2>
-        <ul id="leaderboard-by-recent"></ul>
+        <ul id="leaderboard-by-recent" aria-busy="true"><li class="lb-status">Carregando pontuações…</li></ul>
       </div>
     </div>
     <center>

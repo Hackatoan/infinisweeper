@@ -83,14 +83,15 @@
       <button id="tab-score" class="tab-btn active" aria-pressed="true" onclick="switchTab('score')">คะแนนสูงสุด</button>
       <button id="tab-recent" class="tab-btn" aria-pressed="false" onclick="switchTab('recent')">ล่าสุด</button>
     </div>
+    <p id="lb-error-text" hidden>ไม่สามารถโหลดกระดานผู้นำได้ โปรดลองอีกครั้งในภายหลัง</p>
     <div id="leaderboard-container">
       <div id="section-score" class="leaderboard-section active-tab">
         <h2 class="leaderboard-title" style="display:none">กระดานผู้นำตามคะแนน</h2>
-        <ul id="leaderboard-by-score"></ul>
+        <ul id="leaderboard-by-score" aria-busy="true"><li class="lb-status">กำลังโหลดคะแนน…</li></ul>
       </div>
       <div id="section-recent" class="leaderboard-section">
         <h2 class="leaderboard-title" style="display:none">กระดานผู้นำตามล่าสุด</h2>
-        <ul id="leaderboard-by-recent"></ul>
+        <ul id="leaderboard-by-recent" aria-busy="true"><li class="lb-status">กำลังโหลดคะแนน…</li></ul>
       </div>
     </div>
     <center>
