@@ -81,30 +81,38 @@ function createBoard() {
   }
 }
 
+// Text a cell shows for CELL_FLAG once parsed (U+2691), so it can be compared
+// against textContent without going through innerHTML.
+const CELL_FLAG_TEXT = "\u2691";
+
 function updateCellElement(cell, row, col) {
   cell.id = `cell_${row}_${col}`;
   cell.dataset.row = row;
   cell.dataset.col = col;
 
-  cell.className = "cell";
-  cell.innerHTML = "";
+  const key = `${row},${col}`;
+  let cellData = board[key];
+  if (!cellData) cellData = board[key] = createCell(row, col);
 
-  if (board[`${row},${col}`]) {
-    const cellData = board[`${row},${col}`];
-    if (cellData.isRevealed) {
-      cell.classList.add("revealed");
-      if (cellData.isMine) {
-        cell.classList.add("mine");
-      } else {
-        const adjacentMines = calculateAdjacentMines(row, col);
-        cell.innerHTML = adjacentMines > 0 ? adjacentMines : "";
-      }
-    } else if (cellData.isFlagged) {
-      cell.innerHTML = CELL_FLAG;
+  let className = "cell";
+  let text = "";
+  if (cellData.isRevealed) {
+    if (cellData.isMine) {
+      className = "cell revealed mine";
+    } else {
+      className = "cell revealed";
+      const adjacentMines = calculateAdjacentMines(row, col);
+      text = adjacentMines > 0 ? String(adjacentMines) : "";
     }
-  } else {
-    board[`${row},${col}`] = createCell(row, col);
+  } else if (cellData.isFlagged) {
+    text = CELL_FLAG_TEXT;
   }
+
+  // Runs for every visible cell on every rebuild, and most cells keep the
+  // same class/content between frames: only touch the DOM on change instead
+  // of resetting className + innerHTML and re-adding classes every time.
+  if (cell.className !== className) cell.className = className;
+  if (cell.textContent !== text) cell.textContent = text;
 }
 
 function initializeBoard() {
