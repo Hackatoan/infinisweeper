@@ -95,7 +95,7 @@
     <div id="ad-container" class="ad-container"></div>
     <div id="notification" class="notification"></div>
     <p id="restart-confirm-text" hidden>Chơi lại? Bàn chơi và điểm số hiện tại của bạn sẽ bị mất.</p>
-    <div id="board" class="board"></div>
+    <div id="board" class="board" tabindex="0" role="application" aria-label="Bàn chơi dò mìn. Phím mũi tên hoặc WASD di chuyển bàn dưới ô trung tâm được tô sáng; Space hoặc Enter để mở ô, F để cắm cờ."></div>
     <div id="toast" class="toast" role="alert">Trò chơi kết thúc! Bạn đã dẫm phải mìn.</div>
     <div id="score-overlay" class="score-overlay">Điểm: 0</div>
     <div class="hud-row">
@@ -135,7 +135,8 @@
         Click Phải / Chuyển đổi 🚩: Cắm cờ mìn<br>
         WASD / Phím mũi tên: Di chuyển bảng<br>
         Kéo: Di chuyển bảng<br>
-        C: Về giữa &nbsp;·&nbsp; L: Đến cú click cuối<br><br>
+        C: Về giữa &nbsp;·&nbsp; L: Đến cú click cuối<br>
+        Nhấn Tab tới bàn chơi, sau đó Space/Enter: Mở ô trung tâm &nbsp;·&nbsp; F: Cắm cờ<br><br>
         <a href="https://github.com/Hackatoan/infinisweeper" target="_blank" rel="noopener" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">📂 Mã nguồn</a> <a href="https://github.com/Hackatoan/infinisweeper/issues/new" target="_blank" rel="noopener" target="_blank" rel="noopener" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">Report an issue</a> <a href="/privacy.html" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">Privacy</a> <a href="/terms.html" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">Terms</a>
         <button id="export-png-btn-info" class="export-png-btn" onclick="exportMapPNG()">Xuất Bản đồ PNG</button>
         <br>

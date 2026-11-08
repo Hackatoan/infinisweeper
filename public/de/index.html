@@ -95,7 +95,7 @@
     <div id="ad-container" class="ad-container"></div>
     <div id="notification" class="notification"></div>
     <p id="restart-confirm-text" hidden>Neu starten? Dein aktuelles Spielfeld und deine Punktzahl gehen verloren.</p>
-    <div id="board" class="board"></div>
+    <div id="board" class="board" tabindex="0" role="application" aria-label="Minesweeper-Spielfeld. Pfeiltasten oder WASD verschieben es unter das hervorgehobene mittlere Feld; Leertaste oder Enter deckt es auf, F markiert es."></div>
     <div id="toast" class="toast" role="alert">Game Over! Du bist auf eine Mine getreten.</div>
     <div id="score-overlay" class="score-overlay">Punkte: 0</div>
     <div class="hud-row">
@@ -135,7 +135,8 @@
         Rechtsklick / 🚩 umschalten: Mine markieren<br>
         WASD / Pfeiltasten: Spielfeld verschieben<br>
         Ziehen: Spielfeld verschieben<br>
-        C: Zur Mitte springen &nbsp;·&nbsp; L: Zum letzten Klick springen<br><br>
+        C: Zur Mitte springen &nbsp;·&nbsp; L: Zum letzten Klick springen<br>
+        Mit Tab zum Spielfeld, dann Leertaste/Enter: Mittleres Feld aufdecken &nbsp;·&nbsp; F: Markieren<br><br>
         <a href="https://github.com/Hackatoan/infinisweeper" target="_blank" rel="noopener" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">📂 Quellcode</a> <a href="https://github.com/Hackatoan/infinisweeper/issues/new" target="_blank" rel="noopener" target="_blank" rel="noopener" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">Report an issue</a> <a href="/privacy.html" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">Privacy</a> <a href="/terms.html" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">Terms</a>
         <button id="export-png-btn-info" class="export-png-btn" onclick="exportMapPNG()">PNG-Karte exportieren</button>
         <br>

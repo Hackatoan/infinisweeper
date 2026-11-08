@@ -95,7 +95,7 @@
     <div id="ad-container" class="ad-container"></div>
     <div id="notification" class="notification"></div>
     <p id="restart-confirm-text" hidden>Reiniciar? Seu tabuleiro e sua pontuação atuais serão perdidos.</p>
-    <div id="board" class="board"></div>
+    <div id="board" class="board" tabindex="0" role="application" aria-label="Tabuleiro do campo minado. As setas ou WASD o movem sob a célula central destacada; Espaço ou Enter a revela, F a marca com uma bandeira."></div>
     <div id="toast" class="toast" role="alert">Fim de Jogo! Você atingiu uma mina.</div>
     <div id="score-overlay" class="score-overlay">Pontuação: 0</div>
     <div class="hud-row">
@@ -135,7 +135,8 @@
         Clique Direito / 🚩 alternar: Marcar mina<br>
         WASD / Setas: Mover o tabuleiro<br>
         Arrastar: Mover o tabuleiro<br>
-        C: Ir para o centro &nbsp;·&nbsp; L: Ir para o último clique<br><br>
+        C: Ir para o centro &nbsp;·&nbsp; L: Ir para o último clique<br>
+        Tab até o tabuleiro, depois Espaço/Enter: Revelar a célula central &nbsp;·&nbsp; F: Marcá-la<br><br>
         <a href="https://github.com/Hackatoan/infinisweeper" target="_blank" rel="noopener" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">📂 Código-Fonte</a> <a href="https://github.com/Hackatoan/infinisweeper/issues/new" target="_blank" rel="noopener" target="_blank" rel="noopener" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">Report an issue</a> <a href="/privacy.html" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">Privacy</a> <a href="/terms.html" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">Terms</a>
         <button id="export-png-btn-info" class="export-png-btn" onclick="exportMapPNG()">Exportar Mapa PNG</button>
         <br>

@@ -353,11 +353,44 @@ function toggleFlag(row, col) {
   debouncedSaveGameState();
 }
 
+// Keyboard play: while the board itself has focus, the cell at the center
+// of the viewport is the target (highlighted via .kbd-target). Panning keys
+// slide the board under it; Space/Enter reveals it and F flags it.
+function getKeyboardTarget() {
+  const { rows, cols } = getViewportSize();
+  return {
+    row: offsetY + Math.floor(rows / 2) - EXTRA_CELLS,
+    col: offsetX + Math.floor(cols / 2) - EXTRA_CELLS,
+  };
+}
+
+function handleBoardActionKey(key) {
+  const { row, col } = getKeyboardTarget();
+  const keyId = `${row},${col}`;
+  if (!board[keyId]) board[keyId] = createCell(row, col);
+  if (key === "f") {
+    toggleFlag(row, col);
+  } else if (!board[keyId].isFlagged) {
+    if (!startingPosition) startingPosition = { row, col };
+    revealCell(row, col);
+  }
+}
+
 function handleKeyEvents(event) {
   if (gameOver) return;
 
   const key = event.key;
   let moved = false;
+
+  if (
+    document.activeElement &&
+    document.activeElement.id === "board" &&
+    (key === " " || key === "Enter" || key === "f")
+  ) {
+    event.preventDefault();
+    handleBoardActionKey(key);
+    return;
+  }
 
   switch (key) {
     case "ArrowUp":
@@ -442,6 +475,10 @@ function updateBoardView() {
       }
     }
   }
+  // updateCellElement resets className, so re-mark the keyboard target.
+  const target =
+    boardContainer.children[Math.floor(rows / 2) * cols + Math.floor(cols / 2)];
+  if (target) target.classList.add("kbd-target");
 }
 
 // Every cell that has ever been on screen lives in `board`, but an untouched

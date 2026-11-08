@@ -50,6 +50,17 @@ html {
   font-weight: bold;
 }
 
+/* Keyboard play: the board's own focus ring would sit off-screen (it's
+   larger than the viewport), so the highlighted center cell serves as the
+   focus indicator instead. Only shown for keyboard focus. */
+.board:focus {
+  outline: none;
+}
+.board:focus-visible .cell.kbd-target {
+  outline: 3px solid #ffeb3b;
+  outline-offset: -3px;
+}
+
 .cell.revealed {
   background-color: #6d4c41;
   background-image: repeating-linear-gradient(

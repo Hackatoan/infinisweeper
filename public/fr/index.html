@@ -95,7 +95,7 @@
     <div id="ad-container" class="ad-container"></div>
     <div id="notification" class="notification"></div>
     <p id="restart-confirm-text" hidden>Recommencer ? Votre plateau et votre score actuels seront perdus.</p>
-    <div id="board" class="board"></div>
+    <div id="board" class="board" tabindex="0" role="application" aria-label="Plateau du démineur. Les flèches ou WASD le déplacent sous la case centrale en surbrillance ; Espace ou Entrée la révèle, F y place un drapeau."></div>
     <div id="toast" class="toast" role="alert">Partie terminée ! Vous avez touché une mine.</div>
     <div id="score-overlay" class="score-overlay">Score : 0</div>
     <div class="hud-row">
@@ -135,7 +135,8 @@
         Clic droit / bascule 🚩 : Signaler une mine<br>
         WASD / Flèches : Déplacer le plateau<br>
         Glisser : Déplacer le plateau<br>
-        C : Aller au centre &nbsp;·&nbsp; L : Aller au dernier clic<br><br>
+        C : Aller au centre &nbsp;·&nbsp; L : Aller au dernier clic<br>
+        Tab jusqu'au plateau, puis Espace/Entrée : Révéler la case centrale &nbsp;·&nbsp; F : Y placer un drapeau<br><br>
         <a href="https://github.com/Hackatoan/infinisweeper" target="_blank" rel="noopener" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">📂 Code source</a> <a href="https://github.com/Hackatoan/infinisweeper/issues/new" target="_blank" rel="noopener" target="_blank" rel="noopener" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">Report an issue</a> <a href="/privacy.html" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">Privacy</a> <a href="/terms.html" style="color:#ffd54f;text-decoration:none;font-size:0.85em;">Terms</a>
         <button id="export-png-btn-info" class="export-png-btn" onclick="exportMapPNG()">Exporter la carte en PNG</button>
         <br>
