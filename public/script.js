@@ -1091,4 +1091,8 @@ function toggleMode() {
     span.textContent = "🚩";
     btn.appendChild(span);
   }
+  // Expose the current mode to assistive tech: the button's only visual cue
+  // (plain flag vs crossed-out flag) is an emoji, which screen readers can't
+  // interpret as on/off. Pressed = flag mode.
+  btn.setAttribute("aria-pressed", inputMode === "flag" ? "true" : "false");
 }
