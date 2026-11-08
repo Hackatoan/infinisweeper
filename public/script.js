@@ -538,6 +538,9 @@ function hideToast() {
 // first use instead of as a render-blocking <script> in <head> on every load.
 const HTML2CANVAS_SRC =
   "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+// Subresource Integrity: the browser refuses the script if the CDN copy changes.
+const HTML2CANVAS_SRI =
+  "sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==";
 let html2canvasPromise = null;
 
 function loadHtml2Canvas() {
@@ -546,6 +549,8 @@ function loadHtml2Canvas() {
     html2canvasPromise = new Promise((resolve, reject) => {
       const script = document.createElement("script");
       script.src = HTML2CANVAS_SRC;
+      script.integrity = HTML2CANVAS_SRI;
+      script.crossOrigin = "anonymous";
       script.onload = () => resolve(window.html2canvas);
       script.onerror = () => {
         html2canvasPromise = null; // allow a retry on the next click
