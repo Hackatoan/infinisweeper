@@ -800,6 +800,7 @@ async function submitScore() {
     document.getElementById("submit-score").innerHTML = `<p style="color:#e57373;font-weight:bold;">Please enter a username.</p>
       <input type="text" id="username" placeholder="Enter your username" aria-label="Enter your username" />
       <button id="submit-score-button" onclick="submitScore()">Submit Score</button>`;
+    document.getElementById("username").focus(); // re-render dropped focus
     isSubmitting = false;
     return;
   }
@@ -808,6 +809,7 @@ async function submitScore() {
     document.getElementById("submit-score").innerHTML = `<p style="color:#e57373;font-weight:bold;">That name isn't allowed. Please choose another.</p>
       <input type="text" id="username" placeholder="Enter your username" aria-label="Enter your username" />
       <button id="submit-score-button" onclick="submitScore()">Submit Score</button>`;
+    document.getElementById("username").focus(); // re-render dropped focus
     isSubmitting = false;
     return;
   }
@@ -883,6 +885,15 @@ function onResize() {
 function onDOMContentLoaded() {
   const gameLoaded = loadGameState();
   if (!gameLoaded) initializeBoard();
+
+  // Let Enter in the username field submit the score. Delegated on the
+  // container because submitScore()/hideToast() re-render its innerHTML.
+  document.getElementById("submit-score").addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && e.target.id === "username") {
+      e.preventDefault();
+      submitScore();
+    }
+  });
 
   const boardContainer = document.getElementById("board");
   boardContainer.addEventListener("click", (e) => {
