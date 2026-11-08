@@ -931,6 +931,22 @@ function onDOMContentLoaded() {
   const gameLoaded = loadGameState();
   if (!gameLoaded) initializeBoard();
 
+  // The help tooltip opens on hover/focus. WCAG 1.4.13: let Escape dismiss it
+  // without moving the pointer or focus; it re-arms once both leave.
+  const infoArea = document.querySelector(".info-area");
+  if (infoArea) {
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") infoArea.classList.add("dismissed");
+    });
+    const rearm = () => {
+      if (!infoArea.matches(":hover") && !infoArea.contains(document.activeElement)) {
+        infoArea.classList.remove("dismissed");
+      }
+    };
+    infoArea.addEventListener("mouseleave", rearm);
+    infoArea.addEventListener("focusout", () => setTimeout(rearm, 0));
+  }
+
   // Let Enter in the username field submit the score. Delegated on the
   // container because submitScore()/hideToast() re-render its innerHTML.
   document.getElementById("submit-score").addEventListener("keydown", (e) => {
