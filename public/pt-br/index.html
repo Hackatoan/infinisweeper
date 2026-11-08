@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
   <head>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://cdnjs.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://*.googleapis.com https://cloudflareinsights.com; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://apis.google.com https://cdnjs.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://*.googleapis.com https://cloudflareinsights.com; frame-src https://infinisweeper-19103.firebaseapp.com https://games-7e2c4.firebaseapp.com https://accounts.google.com; object-src 'none'; base-uri 'self'; form-action 'self'" />
     <script>
     /* Consolidate ranking/traffic signals onto the canonical custom domain — Firebase
        also serves this exact content, unredirected, on *.web.app / *.firebaseapp.com,
@@ -95,6 +95,8 @@
     <div id="ad-container" class="ad-container"></div>
     <div id="notification" class="notification"></div>
     <p id="restart-confirm-text" hidden>Reiniciar? Seu tabuleiro e sua pontuação atuais serão perdidos.</p>
+    <p id="signin-label-in" hidden>Conectado</p>
+    <p id="signin-title-in" hidden>Conectado como {name} — seu tabuleiro é sincronizado entre dispositivos. Clique para sair.</p>
     <div id="board" class="board" tabindex="0" role="application" aria-label="Tabuleiro do campo minado. As setas ou WASD o movem sob a célula central destacada; Espaço ou Enter a revela, F a marca com uma bandeira."></div>
     <div id="toast" class="toast" role="alert">Fim de Jogo! Você atingiu uma mina.</div>
     <div id="score-overlay" class="score-overlay">Pontuação: 0</div>
@@ -108,6 +110,14 @@
       onclick="gotoLeaderboard()"
     >
       Placar
+    </button>
+    <button
+      id="signin-btn"
+      class="leaderboard-btn signin-btn"
+      title="Entre com o Google para sincronizar seu tabuleiro entre dispositivos"
+      onclick="toggleCloudSignIn()"
+    >
+      Entrar
     </button>
     <div id="site-utils" class="hud-utils"></div>
     </div>

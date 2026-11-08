@@ -34,7 +34,7 @@ Return ONLY a JSON array of the same length and order — exactly one translatio
 Rules:
 - Natural, idiomatic for native speakers. This is a video-game website.
 - Preserve leading/trailing whitespace of each string.
-- Keep emoji, symbols (↓ ⬇ · — ✕ etc.), HTML entities (&nbsp; &amp; …) and any %%N%% tokens EXACTLY.
+- Keep {name}-style placeholders, emoji, symbols (↓ ⬇ · — ✕ etc.), HTML entities (&nbsp; &amp; …) and any %%N%% tokens EXACTLY.
 - Do NOT translate brand/proper names or technical tokens: ${(cfg.keepTerms || []).join(', ')}.
 - If a string is only a number/symbol/token, return it unchanged.
 Input:
@@ -60,7 +60,7 @@ function collect(html) {
   const tm = out.match(/<title>([^<]+)<\/title>/i); if (tm && hasLetter(tm[1])) set.add(tm[1]);
   out.replace(/<meta\s+name="(?:description|keywords|twitter:title|twitter:description)"\s+content="([^"]*)"/gi, (m, c) => { if (hasLetter(c)) set.add(c); return m; });
   out.replace(/<meta\s+property="(?:og:title|og:description)"\s+content="([^"]*)"/gi, (m, c) => { if (hasLetter(c)) set.add(c); return m; });
-  out.replace(/(?:placeholder|alt|aria-label)="([^"]*)"/gi, (m, v) => { if (hasLetter(v)) set.add(v); return m; });
+  out.replace(/\b(?:placeholder|alt|aria-label|title)="([^"]*)"/gi, (m, v) => { if (hasLetter(v)) set.add(v); return m; });
   return [...set];
 }
 
@@ -73,7 +73,7 @@ function apply(html, map) {
     .replace(/<title>([^<]+)<\/title>/i, (m, t) => (hasLetter(t) ? `<title>${tr(t)}</title>` : m))
     .replace(/(<meta\s+name="(?:description|keywords|twitter:title|twitter:description)"\s+content=")([^"]*)(")/gi, (m, p, c, q) => `${p}${tr(c)}${q}`)
     .replace(/(<meta\s+property="(?:og:title|og:description)"\s+content=")([^"]*)(")/gi, (m, p, c, q) => `${p}${tr(c)}${q}`)
-    .replace(/((?:placeholder|alt|aria-label)=")([^"]*)(")/gi, (m, p, v, q) => (hasLetter(v) ? `${p}${tr(v)}${q}` : m));
+    .replace(/(\b(?:placeholder|alt|aria-label|title)=")([^"]*)(")/gi, (m, p, v, q) => (hasLetter(v) ? `${p}${tr(v)}${q}` : m));
   return restore(s, blocks);
 }
 
