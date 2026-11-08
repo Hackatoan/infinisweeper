@@ -734,35 +734,46 @@ function calculateAdjacentMines(row, col) {
   return adjacentMines;
 }
 
+// Text a cell shows for CELL_FLAG once parsed (U+2691), so it can be compared
+// against textContent without going through innerHTML.
+const CELL_FLAG_TEXT = "\u2691";
+
 function updateCellElement(cell, row, col) {
   cell.id = `cell_${row}_${col}`;
   cell.dataset.row = row;
   cell.dataset.col = col;
-  cell.style.width = `${cellSize}px`;
-  cell.style.height = `${cellSize}px`;
 
-  if (board[`${row},${col}`]) {
-    const cellData = board[`${row},${col}`];
-    if (cellData.isRevealed) {
-      cell.className = cellData.isMine ? "cell revealed mine" : "cell revealed";
-      if (cellData.isMine) {
-        cell.innerHTML = CELL_MINE;
-      } else {
-        const adjacentMines = calculateAdjacentMines(row, col);
-        cell.innerHTML = adjacentMines > 0 ? adjacentMines : "";
-      }
-    } else if (cellData.isFlagged) {
-      cell.className = "cell flagged";
-      cell.innerHTML = CELL_FLAG;
+  // This runs for every visible cell on every drag frame / key move, and most
+  // cells keep the same size, class and content between frames (unrevealed
+  // blanks, same-number neighbours). Only touch the DOM when something
+  // actually changes: re-assigning innerHTML discards and re-parses the
+  // cell's children, and every style/class write dirties style recalc.
+  const size = `${cellSize}px`;
+  if (cell.style.width !== size) cell.style.width = size;
+  if (cell.style.height !== size) cell.style.height = size;
+
+  const key = `${row},${col}`;
+  let cellData = board[key];
+  if (!cellData) cellData = board[key] = createCell(row, col);
+
+  let className = "cell";
+  let text = "";
+  if (cellData.isRevealed) {
+    if (cellData.isMine) {
+      className = "cell revealed mine";
+      text = CELL_MINE;
     } else {
-      cell.className = "cell";
-      cell.innerHTML = "";
+      className = "cell revealed";
+      const adjacentMines = calculateAdjacentMines(row, col);
+      text = adjacentMines > 0 ? String(adjacentMines) : "";
     }
-  } else {
-    board[`${row},${col}`] = createCell(row, col);
-    cell.className = "cell";
-    cell.innerHTML = "";
+  } else if (cellData.isFlagged) {
+    className = "cell flagged";
+    text = CELL_FLAG_TEXT;
   }
+
+  if (cell.className !== className) cell.className = className;
+  if (cell.textContent !== text) cell.textContent = text;
 }
 
 function createCellElement(row, col) {
