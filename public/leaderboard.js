@@ -43,6 +43,9 @@ window.switchTab = function(tab) {
     document.getElementById("tab-recent").classList.add("active");
     document.getElementById("tab-score").classList.remove("active");
   }
+  // Mirror the .active highlight for screen readers, which can't see it.
+  document.getElementById("tab-score").setAttribute("aria-pressed", String(tab === "score"));
+  document.getElementById("tab-recent").setAttribute("aria-pressed", String(tab !== "score"));
 };
 
 function handleViewSaveState(saveState) {
