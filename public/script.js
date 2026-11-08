@@ -534,6 +534,30 @@ function hideToast() {
   `;
 }
 
+// html2canvas (~200KB) is only needed for "Export PNG", so it's fetched on
+// first use instead of as a render-blocking <script> in <head> on every load.
+const HTML2CANVAS_SRC =
+  "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+let html2canvasPromise = null;
+
+function loadHtml2Canvas() {
+  if (window.html2canvas) return Promise.resolve(window.html2canvas);
+  if (!html2canvasPromise) {
+    html2canvasPromise = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = HTML2CANVAS_SRC;
+      script.onload = () => resolve(window.html2canvas);
+      script.onerror = () => {
+        html2canvasPromise = null; // allow a retry on the next click
+        script.remove();
+        reject(new Error("Failed to load html2canvas"));
+      };
+      document.head.appendChild(script);
+    });
+  }
+  return html2canvasPromise;
+}
+
 async function exportMapPNG() {
   let minRow = Infinity,
     maxRow = -Infinity,
@@ -614,6 +638,7 @@ async function exportMapPNG() {
   }
 
   try {
+    const html2canvas = await loadHtml2Canvas();
     const canvas = await html2canvas(tempContainer, {
       width: cols * (cellSize + 1),
       height: rows * (cellSize + 1),
