@@ -119,12 +119,23 @@ async function pullGameStateFromCloud() {
 function updateSignInButton() {
   const btn = document.getElementById('signin-btn');
   if (!btn) return;
+  // Labels come from the (localized) page markup so /es/, /fr/, … keep their
+  // translations; the English strings are only a fallback.
+  if (btn.dataset.labelOut === undefined) {
+    btn.dataset.labelOut = btn.textContent.trim() || 'Sign in';
+    btn.dataset.titleOut = btn.title || 'Sign in with Google to sync your board across devices';
+  }
+  const pageText = (id, fallback) => {
+    const el = document.getElementById(id);
+    return (el && el.textContent.trim()) || fallback;
+  };
   if (cloudSyncUser) {
-    btn.textContent = 'Signed in';
-    btn.title = `Signed in as ${cloudSyncUser.displayName || cloudSyncUser.email} — your board syncs across devices. Click to sign out.`;
+    const name = cloudSyncUser.displayName || cloudSyncUser.email || '';
+    btn.textContent = pageText('signin-label-in', 'Signed in');
+    btn.title = pageText('signin-title-in', 'Signed in as {name} — your board syncs across devices. Click to sign out.').replace('{name}', name);
   } else {
-    btn.textContent = 'Sign in';
-    btn.title = 'Sign in with Google to sync your board across devices';
+    btn.textContent = btn.dataset.labelOut;
+    btn.title = btn.dataset.titleOut;
   }
 }
 
