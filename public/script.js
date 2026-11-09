@@ -317,9 +317,9 @@ function revealAdjacentZeros(row, col, isAutoDiscover = false) {
     board[key].isRevealed = true;
     if (!isAutoDiscover) { score += 1; }
 
-    cellsToUpdate.push({ row, col });
-
     const adjacentMines = calculateAdjacentMines(row, col);
+    cellsToUpdate.push({ row, col, adjacentMines });
+
     if (adjacentMines === 0) {
       for (let di = -1; di <= 1; di++) {
         for (let dj = -1; dj <= 1; dj++) {
@@ -336,11 +336,10 @@ function revealAdjacentZeros(row, col, isAutoDiscover = false) {
     }
   }
 
-  cellsToUpdate.forEach(({ row, col }) => {
+  cellsToUpdate.forEach(({ row, col, adjacentMines }) => {
     const cell = document.getElementById(`cell_${row}_${col}`);
     if (cell) {
       cell.classList.add("revealed");
-      const adjacentMines = calculateAdjacentMines(row, col);
       cell.textContent = adjacentMines > 0 ? adjacentMines : "";
     }
   });
