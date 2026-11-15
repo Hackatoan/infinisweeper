@@ -14,6 +14,7 @@ Minesweeper with no edges. The board generates as you go, so you can scroll and 
 - Global leaderboard
 - Personal best score saved locally, shown on game over
 - Keyboard zoom: `+` / `-` (alongside the on-screen zoom buttons)
+- Share score: one-tap copy/share of your result from the game-over screen
 - 6-language localization
 
 ## Tech Stack
