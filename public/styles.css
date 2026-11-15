@@ -105,7 +105,7 @@ html {
   font-size: 18px;
   padding: 20px;
   position: fixed;
-  bottom: 20px;
+  bottom: calc(20px + var(--ck-lift, 0px));
   left: 20px;
   z-index: 1000;
 }
@@ -183,7 +183,7 @@ html {
   padding: 20px;
   border-radius: 5px;
   position: fixed;
-  bottom: 10%;
+  bottom: calc(10% + var(--ck-lift, 0px));
   left: 50%;
   transform: translate(-50%, -50%);
 }
