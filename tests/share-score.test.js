@@ -23,9 +23,10 @@ test('fills score and url into a localized template', () => {
 });
 
 test('falls back to English when the template is missing', () => {
-  const out = _shareScoreText('', 7, URL);
-  assert.ok(out.includes('7 safe cells'));
-  assert.ok(out.endsWith(URL));
+  assert.strictEqual(
+    _shareScoreText('', 7, URL),
+    `I revealed 7 safe cells in Infinisweeper — can you beat it? ${URL}`,
+  );
 });
 
 test('trims template whitespace from textContent', () => {
