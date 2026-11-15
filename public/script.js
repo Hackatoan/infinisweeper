@@ -570,12 +570,38 @@ function getUsername() {
   return document.getElementById("username").value.trim();
 }
 
+// Personal best: the highest score this browser has reached, kept locally
+// (never sent anywhere). Pure so it can be unit-tested in isolation.
+const BEST_SCORE_KEY = "minesweeperBestScore";
+function _nextBestScore(current, storedBest) {
+  const prev = Number.isFinite(storedBest) && storedBest > 0 ? Math.floor(storedBest) : 0;
+  return current > prev ? { best: current, isNew: true } : { best: prev, isNew: false };
+}
+
+function showBestScore(toast) {
+  let stored = 0;
+  try { stored = parseInt(localStorage.getItem(BEST_SCORE_KEY), 10); } catch (e) {}
+  const { best, isNew } = _nextBestScore(score, stored);
+  if (isNew) {
+    try { localStorage.setItem(BEST_SCORE_KEY, String(best)); } catch (e) {}
+  }
+  if (best <= 0) return;
+  const tplId = isNew ? "best-score-new-text" : "best-score-text";
+  const tpl = document.getElementById(tplId);
+  const fallback = isNew ? "New personal best: {best}!" : "Personal best: {best}";
+  const line = document.createElement("div");
+  line.className = "best-score" + (isNew ? " best-score-new" : "");
+  line.textContent = (tpl ? tpl.textContent : fallback).replace("{best}", best);
+  toast.appendChild(line);
+}
+
 function showToast(message) {
   const toast = document.getElementById("toast");
   toast.textContent = message;
   toast.style.display = "block";
 
   if (gameOver && message.includes("Game Over!")) {
+    showBestScore(toast);
     document.getElementById("submit-score").style.display = "block";
     const usernameInput = document.getElementById("username");
     if (usernameInput) {
