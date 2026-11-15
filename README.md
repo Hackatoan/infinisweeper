@@ -12,6 +12,7 @@ Minesweeper with no edges. The board generates as you go, so you can scroll and 
 
 - Infinite procedurally-generated board (scroll + zoom)
 - Global leaderboard
+- Personal best score saved locally, shown on game over
 - 6-language localization
 
 ## Tech Stack

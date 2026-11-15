@@ -110,6 +110,18 @@ html {
   z-index: 1000;
 }
 
+.best-score {
+  font-size: 15px;
+  margin-top: 6px;
+  opacity: 0.85;
+}
+
+.best-score-new {
+  color: #ffd54f;
+  font-weight: bold;
+  opacity: 1;
+}
+
 .restart-btn,
 .leaderboard-btn {
   background-color: #e28a93;
