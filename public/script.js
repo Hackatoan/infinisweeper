@@ -616,6 +616,50 @@ function showBestScore(toast) {
   toast.appendChild(line);
 }
 
+// Share score: a button in the game-over toast that hands a short brag line
+// to the native share sheet (mobile) or copies it to the clipboard. Text comes
+// from the page's hidden template so it's localized. Pure helper for tests.
+function _shareScoreText(template, score, url) {
+  const t = template || "I revealed {score} safe cells in Infinisweeper — can you beat it? {url}";
+  return t.replace("{score}", score).replace("{url}", url).trim();
+}
+
+function _tplText(id, fallback) {
+  const el = document.getElementById(id);
+  return el ? el.textContent : fallback;
+}
+
+function addShareScoreButton(toast) {
+  if (score <= 0) return;
+  const canonical = document.querySelector('link[rel="canonical"]');
+  const url = canonical ? canonical.href : location.origin + "/";
+  const text = _shareScoreText(_tplText("share-score-text", ""), score, url);
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "share-score-btn";
+  const label = _tplText("share-score-label", "Share score");
+  btn.textContent = label;
+  const flash = (msg) => {
+    btn.textContent = msg;
+    setTimeout(() => { btn.textContent = label; }, 2000);
+  };
+  btn.addEventListener("click", async () => {
+    // Prefer the native share sheet on touch devices; desktop gets a copy.
+    if (navigator.share && matchMedia("(pointer: coarse)").matches) {
+      try { await navigator.share({ text }); return; } catch (e) {
+        if (e && e.name === "AbortError") return;
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      flash(_tplText("share-score-copied", "Copied!"));
+    } catch (e) {
+      window.prompt(label, text);
+    }
+  });
+  toast.appendChild(btn);
+}
+
 // The cookie notice (#ck-notice) is pinned to the bottom of the viewport with a
 // huge z-index, so it would cover the game-over toast and score form. While
 // it's open, --ck-lift (used in styles.css) raises them above it; it resets
@@ -641,6 +685,7 @@ function showToast(message) {
 
   if (gameOver && message.includes("Game Over!")) {
     showBestScore(toast);
+    addShareScoreButton(toast);
     document.getElementById("submit-score").style.display = "block";
     const usernameInput = document.getElementById("username");
     if (usernameInput) {

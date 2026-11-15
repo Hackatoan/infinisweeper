@@ -122,6 +122,22 @@ html {
   opacity: 1;
 }
 
+.share-score-btn {
+  display: block;
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  padding: 8px 12px;
+  background-color: #5d4037;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+}
+
+.share-score-btn:hover {
+  background-color: #4e342e;
+}
+
 .restart-btn,
 .leaderboard-btn {
   background-color: #e28a93;
