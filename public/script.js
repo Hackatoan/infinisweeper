@@ -595,10 +595,28 @@ function showBestScore(toast) {
   toast.appendChild(line);
 }
 
+// The cookie notice (#ck-notice) is pinned to the bottom of the viewport with a
+// huge z-index, so it would cover the game-over toast and score form. While
+// it's open, --ck-lift (used in styles.css) raises them above it; it resets
+// once the notice is dismissed (the notice emits `cookie-consent` just before
+// removing itself, hence the setTimeout).
+function updateCookieNoticeLift() {
+  const notice = document.getElementById("ck-notice");
+  document.documentElement.style.setProperty(
+    "--ck-lift",
+    notice ? `${window.innerHeight - notice.getBoundingClientRect().top}px` : "0px",
+  );
+}
+document.addEventListener("cookie-consent", () =>
+  setTimeout(updateCookieNoticeLift, 0),
+);
+window.addEventListener("resize", updateCookieNoticeLift);
+
 function showToast(message) {
   const toast = document.getElementById("toast");
   toast.textContent = message;
   toast.style.display = "block";
+  updateCookieNoticeLift();
 
   if (gameOver && message.includes("Game Over!")) {
     showBestScore(toast);
