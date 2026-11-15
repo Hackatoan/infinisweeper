@@ -386,7 +386,28 @@ function handleBoardActionKey(key) {
   }
 }
 
+// Keyboard zoom: + / = zooms in, - / _ zooms out (numpad too). Ignored while
+// typing in a field or with Ctrl/Cmd/Alt held, so browser zoom (Ctrl +/-) and
+// the username box keep working. Pure so it can be unit-tested in isolation.
+function _zoomKeyDirection(event) {
+  if (event.ctrlKey || event.metaKey || event.altKey) return 0;
+  const t = event.target;
+  if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return 0;
+  if (event.key === "+" || event.key === "=") return 1;
+  if (event.key === "-" || event.key === "_") return -1;
+  return 0;
+}
+
 function handleKeyEvents(event) {
+  // Zoom stays available after game over, e.g. to frame the board for Export PNG.
+  const zoomDir = _zoomKeyDirection(event);
+  if (zoomDir) {
+    event.preventDefault();
+    if (zoomDir > 0) zoomIn();
+    else zoomOut();
+    return;
+  }
+
   if (gameOver) return;
 
   const key = event.key;
@@ -1045,6 +1066,11 @@ function onDOMContentLoaded() {
       e.preventDefault();
       submitScore();
     }
+  });
+
+  // Advertise the zoom shortcuts to assistive tech on the on-screen buttons.
+  document.querySelectorAll("#zoom-controls button").forEach((btn, i) => {
+    btn.setAttribute("aria-keyshortcuts", i === 0 ? "+" : "-");
   });
 
   const boardContainer = document.getElementById("board");
