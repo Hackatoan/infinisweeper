@@ -152,6 +152,12 @@ html {
   z-index: 1000;
 }
 
+.restart-btn:focus-visible,
+.leaderboard-btn:focus-visible {
+  outline: 3px solid #ffeb3b;
+  outline-offset: 2px;
+}
+
 .restart-btn {
   left: 10px;
 }
@@ -162,6 +168,11 @@ html {
 
 .signin-btn {
   left: 200px;
+}
+
+.signin-btn:focus-visible {
+  outline: 3px solid #ffeb3b;
+  outline-offset: 2px;
 }
 
 .leaderboard-container {
@@ -225,6 +236,11 @@ html {
   background-color: #4e342e;
 }
 
+.submit-score button:focus-visible, .export-png-btn:focus-visible {
+  outline: 3px solid #ffeb3b;
+  outline-offset: 2px;
+}
+
 .notification {
   display: none; /* Hidden by default */
   position: fixed;
@@ -275,6 +291,11 @@ html {
   font-family: inherit;
   font-size: 1em;
   padding: 0;
+}
+
+.info-icon:focus-visible {
+  outline: 3px solid #ffeb3b;
+  outline-offset: 2px;
 }
 
 .keybinds-tooltip {
@@ -366,6 +387,11 @@ html {
   cursor: pointer;
 }
 
+.zoom-controls button:focus-visible {
+  outline: 3px solid #ffeb3b;
+  outline-offset: 2px;
+}
+
 .mobile-mode-toggle {
   position: fixed;
   bottom: 20px;
@@ -402,6 +428,11 @@ html {
 .mobile-mode-toggle button.active {
   background-color: rgba(255, 255, 255, 0.2);
   border-color: #fbe9e7;
+}
+
+.mobile-mode-toggle button:focus-visible {
+  outline: 3px solid #ffeb3b;
+  outline-offset: 2px;
 }
 
 @media (min-width: 768px) {
